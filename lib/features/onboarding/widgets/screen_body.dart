@@ -20,16 +20,17 @@ class Package extends StatelessWidget {
         SizedBox(height: 48.h),
         Text(
           heading ?? '',
-          style: TextStyle(fontSize: 16.sp, color: Colors.white),
+          style: TextStyle(fontSize: 16.sp, color: Colors.white , fontWeight: FontWeight.w400),
         ),
         SizedBox(height: 16.h),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 27.w),
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
           child: Text(
             textAlign: TextAlign.center,
             subTitle ?? '',
             style: TextStyle(
-              fontSize: 18.sp,
+              
+              fontSize: 16.sp,
               color: Color(0XFFffffff).withOpacity(0.6),
               fontWeight: FontWeight.w400,
             ),

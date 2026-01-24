@@ -1,3 +1,4 @@
+import 'package:examify/features/login/ui/screens/login_view.dart';
 import 'package:examify/features/onboarding/onboarding.dart';
 import 'package:flutter/material.dart';
 
@@ -6,8 +7,8 @@ class AppRouter {
     switch (settings.name) {
       case '/onboarding':
         return MaterialPageRoute(builder: (context) => const Onboarding());
-      // case '/login':
-      //   return MaterialPageRoute(builder: (context) => const LoginScreen());
+      case '/login':
+        return MaterialPageRoute(builder: (context) => const LoginView());
       // case '/studentHome':
       //   return MaterialPageRoute(
       //     builder: (context) => const StudentHomeScreen(),

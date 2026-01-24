@@ -11,14 +11,15 @@ class PageIndecator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SmoothPageIndicator(
+      
       controller: controller,
       count: screens.length,
       effect: ExpandingDotsEffect(
         spacing: 8,
         dotHeight: 8.h,
         dotWidth: 8.w,
-        activeDotColor: Color.fromARGB(255, 255, 255, 255),
-        dotColor: Colors.grey,
+        activeDotColor: Color(0xffffffff),
+        dotColor: Colors.white.withAlpha((255 * .2).round()),
       ),
     );
   }

@@ -20,13 +20,13 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (_, child) {
         return MaterialApp(
+          //color: Colors.white,
           onGenerateRoute: AppRouter().getapprouter,
           initialRoute: Routes.onboarding,
           debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            backgroundColor: Color(0xff0F111A),
-            body: const Onboarding(),
-          ),
+          home:
+            const Onboarding(),
+          
         );
       },
     );
