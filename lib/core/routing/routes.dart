@@ -2,5 +2,8 @@ class Routes {
   static const String onboarding = '/onboarding';
   static const String loginScreen = '/login';
   static const String studentHomeScreen = '/studentHomeScreen';
-  
+  static const String signupScreen = '/signup';
+  static const String roleSelectionScreen = '/roleSelection';
+  static const String forgotPasswordScreen = '/forgotPassword';
+  static const String resetPasswordScreen = '/resetPassword';
 }

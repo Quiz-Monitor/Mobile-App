@@ -1,6 +1,7 @@
 import 'package:examify/core/routing/app_router.dart';
 import 'package:examify/core/routing/routes.dart';
 import 'package:examify/features/onboarding/onboarding.dart';
+import 'package:examify/core/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -21,12 +22,11 @@ class MyApp extends StatelessWidget {
       builder: (_, child) {
         return MaterialApp(
           //color: Colors.white,
+          theme: ThemeData(scaffoldBackgroundColor: AppColors.primaryBlack),
           onGenerateRoute: AppRouter().getapprouter,
           initialRoute: Routes.onboarding,
           debugShowCheckedModeBanner: false,
-          home:
-            const Onboarding(),
-          
+          home: const Onboarding(),
         );
       },
     );

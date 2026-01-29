@@ -11,4 +11,5 @@ class AppColors {
   static Color blueAlpha10 = Color(0xff00B8DB).withAlpha((255 * .1).round());
   static Color greenAlpha10 = Color(0xff00C950).withAlpha((255 * .1).round());
   static Color greenBorder = Color(0xff00C950).withAlpha((255 * .3).round());
+  static Color greyText = Color(0xff99A1AF);
 }
