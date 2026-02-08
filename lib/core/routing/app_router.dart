@@ -8,6 +8,7 @@ import 'package:examify/features/profile/ui/views/settings_view.dart';
 import 'package:examify/features/signup/ui/views/role_selection_view.dart';
 import 'package:examify/features/signup/ui/views/signup.dart';
 import 'package:examify/features/login/ui/screens/forgot_password.dart';
+import 'package:examify/features/profile/ui/views/notifications_settings.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -35,6 +36,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => const MainNavigation());
       case Routes.settingsScreen:
         return MaterialPageRoute(builder: (context) => const SettingsView());
+      case Routes.notificationsSettingsScreen:
+        return MaterialPageRoute(
+          builder: (context) => const NotificationsSettings(),
+        );
       default:
         return MaterialPageRoute(
           builder: (context) => const Text('No route found'),
