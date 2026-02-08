@@ -75,14 +75,14 @@ class _NavBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected ? AppColors.blueBorder : AppColors.greyText;
+    final color = isSelected ? AppColors.blueBorder : AppColors.greyIcon;
     return GestureDetector(
       onTap: () => onTap(index),
       behavior: HitTestBehavior.deferToChild,
-      child: Padding(  
-        padding:  EdgeInsets.symmetric(horizontal: 18.w , vertical: 8.h), 
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
         child: Column(
-         // mainAxisSize: MainAxisSize.max,
+          // mainAxisSize: MainAxisSize.max,
           //   mainAxisAlignment: MainAxisAlignment.end,
           children: [
             SizedBox(height: 12),
@@ -90,8 +90,8 @@ class _NavBarItem extends StatelessWidget {
               iconUrl,
               colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             ),
-        
-           SizedBox(height: 3.h),
+
+            SizedBox(height: 3.h),
             Text(
               label,
               style: TextStyle(

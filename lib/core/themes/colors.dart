@@ -21,6 +21,7 @@ class AppColors {
   static Color greenAlpha20 = Color(0xff00C950).withAlpha((255 * .2).round());
   static Color greenBorder = Color(0xff00C950).withAlpha((255 * .3).round());
   static Color greyText = Color(0xff99A1AF);
+  static Color greyIcon = Color(0xff787878);
   static Color brownText = Color(0xffFDC700);
   static Color brown20alpha = Color(0xffF0B100).withAlpha((255 * .2).toInt());
   static Color brown30alpha = Color(0xffF0B100).withAlpha((255 * .3).toInt());

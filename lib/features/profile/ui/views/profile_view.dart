@@ -37,6 +37,9 @@ class ProfileView extends StatelessWidget {
             SizedBox(height: 24.h),
             Text('Ali Ahamd Taha', style: AppTextStyles.grey16w400),
             Text('ali.ahmed@gmail.com', style: AppTextStyles.whit14w400alpha60),
+            Text('Role: Student', style: AppTextStyles.whit14w400alpha60),
+            Text('ID: 929', style: AppTextStyles.whit14w400alpha60),
+            Text('Phone Number: +201015023441', style: AppTextStyles.whit14w400alpha60),
             SizedBox(height: 20.h),
             ProfileSettingsCard(
               iconPath: 'assets/icons/editprofile.svg',

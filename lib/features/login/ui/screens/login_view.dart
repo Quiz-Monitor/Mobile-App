@@ -64,12 +64,12 @@ class _LoginViewState extends State<LoginView> {
                   hintText: 'your.email@example.com',
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                      return 'Please enter a valid email';
-                    }
+                    // if (value == null || value.isEmpty) {
+                    //   return 'Please enter your email';
+                    // }
+                    // if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                    //   return 'Please enter a valid email';
+                    // }
                     return null;
                   },
                 ),
@@ -85,9 +85,14 @@ class _LoginViewState extends State<LoginView> {
                           Routes.forgotPasswordScreen,
                         );
                       },
-                      child: Text(
-                        'Forgot Password?  ',
-                        style: AppTextStyles.blue14w400,
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.pushNamed(context, Routes.forgotPasswordScreen);
+                        },
+                        child: Text(
+                          'Forgot Password?  ',
+                          style: AppTextStyles.blue14w400,
+                        ),
                       ),
                     ),
                   ],
@@ -99,12 +104,12 @@ class _LoginViewState extends State<LoginView> {
                   hintText: 'Enter your password',
                   isPassword: true,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
+                    // if (value == null || value.isEmpty) {
+                    //   return 'Please enter your password';
+                    // }
+                    // if (value.length < 6) {
+                    //   return 'Password must be at least 6 characters';
+                    // }
                     return null;
                   },
                 ),

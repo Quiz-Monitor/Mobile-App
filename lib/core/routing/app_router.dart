@@ -1,5 +1,6 @@
 import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/widgets/main_navigation.dart';
+import 'package:examify/features/login/ui/screens/check_email_view.dart';
 import 'package:examify/features/login/ui/screens/login_view.dart';
 import 'package:examify/features/onboarding/onboarding.dart';
 import 'package:examify/features/profile/ui/views/change_password_view.dart';
@@ -22,13 +23,14 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => const RoleSelectionView(),
         );
-      case Routes.resetPasswordScreen:
+      case Routes.forgotPasswordScreen:
         return MaterialPageRoute(builder: (context) => const ForgotPassword());
+      case Routes.checkEmailScreen:
+        return MaterialPageRoute(builder: (context) => CheckEmailView());
       case Routes.changePasswordScreen:
         return MaterialPageRoute(
           builder: (context) => const ChangePasswordView(),
         );
-
       case Routes.homeScreen:
         return MaterialPageRoute(builder: (context) => const MainNavigation());
       case Routes.settingsScreen:
