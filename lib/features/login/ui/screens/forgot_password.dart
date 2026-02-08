@@ -111,7 +111,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
                   // Send Button
                   CustomButton(
-                    text: 'Send Reset Link',
+                    buttonContent:  Text('Send Rest Link', style: AppTextStyles.white16w400),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         // TODO: Implement Reset Logic

@@ -1,3 +1,4 @@
+import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/core/widgets/custom_button.dart';
 import 'package:examify/core/widgets/custom_textfield.dart';
@@ -18,7 +19,7 @@ class _SignupState extends State<Signup> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
+  bool _islaoding = false;
   @override
   void dispose() {
     _nameController.dispose();
@@ -144,9 +145,23 @@ class _SignupState extends State<Signup> {
                 ),
                 SizedBox(height: 24.h),
                 CustomButton(
-                  text: 'Sign Up',
+                  buttonContent: _islaoding
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : Text('Sign Up', style: AppTextStyles.white16w400),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        _islaoding = true;
+                      });
+                      Future.delayed(Duration(seconds: 2), () {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.loginScreen,
+                        );
+                        setState(() {
+                          _islaoding = false;
+                        });
+                      });
                       // Sign Up logic here
                       print(
                         'Name: ${_nameController.text}, Email: ${_emailController.text}, Password: ${_passwordController.text}',
@@ -156,6 +171,7 @@ class _SignupState extends State<Signup> {
                 ),
                 SizedBox(height: 24.h),
                 AlreadyHaveAccount(),
+                SizedBox(height: 10),
               ],
             ),
           ),

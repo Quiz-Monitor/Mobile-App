@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (_, child) {
         return MaterialApp(
-          //color: Colors.white,
           theme: ThemeData(scaffoldBackgroundColor: AppColors.primaryBlack),
           onGenerateRoute: AppRouter().getapprouter,
           initialRoute: Routes.onboarding,

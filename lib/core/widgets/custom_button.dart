@@ -1,12 +1,11 @@
 import 'package:examify/core/themes/colors.dart';
-import 'package:examify/core/themes/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({super.key, this.onPressed, required this.text});
+  const CustomButton({super.key, this.onPressed, required this.buttonContent});
   final void Function()? onPressed;
-  final String text;
+  final Widget buttonContent;
   @override
   Widget build(BuildContext context) {
     return FilledButton(
@@ -18,10 +17,7 @@ class CustomButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Text(text, style: AppTextStyles.white16w400),
-      ),
+      child: FittedBox(fit: BoxFit.scaleDown, child: buttonContent),
     );
   }
 }

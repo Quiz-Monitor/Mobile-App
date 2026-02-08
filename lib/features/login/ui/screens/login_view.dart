@@ -17,11 +17,13 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+
     super.dispose();
   }
 
@@ -78,7 +80,10 @@ class _LoginViewState extends State<LoginView> {
                     Spacer(),
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, Routes.forgotPasswordScreen);
+                        Navigator.pushNamed(
+                          context,
+                          Routes.forgotPasswordScreen,
+                        );
                       },
                       child: Text(
                         'Forgot Password?  ',
@@ -105,9 +110,21 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 SizedBox(height: 24.h),
                 CustomButton(
-                  text: 'Log In',
+                  buttonContent: _isLoading
+                      ? CircularProgressIndicator(color: Colors.white , strokeWidth: 3, )
+                      : Text('Log in', style: AppTextStyles.white16w400),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      Future.delayed(Duration(seconds: 2), () {
+                        Navigator.pushNamed(context, Routes.homeScreen);
+
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      });
                       // Login logic here
                       print(
                         'Email: ${_emailController.text}, Password: ${_passwordController.text}',

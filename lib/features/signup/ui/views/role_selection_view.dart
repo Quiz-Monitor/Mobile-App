@@ -5,7 +5,6 @@ import 'package:examify/core/widgets/custom_button.dart';
 import 'package:examify/features/signup/ui/widgets/role_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 class RoleSelectionView extends StatefulWidget {
   const RoleSelectionView({super.key});
@@ -17,6 +16,7 @@ class RoleSelectionView extends StatefulWidget {
 class _RoleSelectionViewState extends State<RoleSelectionView> {
   // 0: Educator, 1: Student, -1: None
   int _selectedRoleIndex = 1;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +75,19 @@ class _RoleSelectionViewState extends State<RoleSelectionView> {
 
               const Spacer(),
               CustomButton(
-                text: 'Continue',
+                buttonContent: isLoading
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text('Continue', style: AppTextStyles.white16w400),
                 onPressed: () {
-                  Navigator.pushNamed(context, Routes.signupScreen);
+                  setState(() {
+                    isLoading = true;
+                  });
+                  Future.delayed(Duration(seconds: 2), () {
+                    Navigator.pushNamed(context, Routes.signupScreen);
+                    setState(() {
+                      isLoading = false;
+                    });
+                  });
                   // TODO: Navigate to next screen
                 },
               ),

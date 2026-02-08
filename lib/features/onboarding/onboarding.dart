@@ -1,4 +1,3 @@
-import 'package:examify/core/routing/app_router.dart';
 import 'package:examify/core/routing/routes.dart';
 import 'package:examify/features/onboarding/widgets/action_button.dart';
 import 'package:examify/features/onboarding/widgets/const_screens.dart';
@@ -40,7 +39,6 @@ class _OnboardingState extends State<Onboarding> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff0F111A),
       body: SafeArea(
         child: Column(
           children: [
