@@ -1,15 +1,18 @@
 import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/widgets/main_navigation.dart';
-import 'package:examify/features/login/ui/screens/check_email_view.dart';
-import 'package:examify/features/login/ui/screens/login_view.dart';
-import 'package:examify/features/onboarding/onboarding.dart';
-import 'package:examify/features/profile/ui/views/change_password_view.dart';
-import 'package:examify/features/profile/ui/views/settings_view.dart';
-import 'package:examify/features/signup/ui/views/role_selection_view.dart';
-import 'package:examify/features/signup/ui/views/signup.dart';
-import 'package:examify/features/login/ui/screens/forgot_password.dart';
-import 'package:examify/features/profile/ui/views/notifications_settings.dart';
+import 'package:examify/features/auth/login/ui/screens/check_email_view.dart';
+import 'package:examify/features/auth/login/ui/screens/login_view.dart';
+import 'package:examify/features/auth/onboarding/onboarding.dart';
+import 'package:examify/features/student/profile/ui/views/change_password_view.dart';
+import 'package:examify/features/student/profile/ui/views/settings_view.dart';
+import 'package:examify/features/auth/signup/ui/views/role_selection_view.dart';
+import 'package:examify/features/auth/signup/ui/views/signup.dart';
+import 'package:examify/features/auth/login/ui/screens/forgot_password.dart';
+import 'package:examify/features/student/profile/ui/views/notifications_settings.dart';
+import 'package:examify/core/di/service_locator.dart';
+import 'package:examify/features/auth/signup/logic/cubit/signup_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRouter {
   MaterialPageRoute<dynamic> getapprouter(RouteSettings settings) {
@@ -19,7 +22,12 @@ class AppRouter {
       case Routes.loginScreen:
         return MaterialPageRoute(builder: (context) => const LoginView());
       case Routes.signupScreen:
-        return MaterialPageRoute(builder: (context) => const Signup());
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => getit<SignupCubit>(),
+            child: const Signup(),
+          ),
+        );
       case Routes.roleSelectionScreen:
         return MaterialPageRoute(
           builder: (context) => const RoleSelectionView(),

@@ -21,7 +21,7 @@ class CustomBottomNavBar extends StatelessWidget {
         color: AppColors.primaryBlack, // Dark background matching your UI
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _NavBarItem(
             index: 0,
@@ -80,12 +80,12 @@ class _NavBarItem extends StatelessWidget {
       onTap: () => onTap(index),
       behavior: HitTestBehavior.deferToChild,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
         child: Column(
           // mainAxisSize: MainAxisSize.max,
-          //   mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            SizedBox(height: 12),
+            SizedBox(height: 12.h),
             SvgPicture.asset(
               iconUrl,
               colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
@@ -96,7 +96,7 @@ class _NavBarItem extends StatelessWidget {
               label,
               style: TextStyle(
                 color: color,
-                fontSize: 11,
+                fontSize: 11.sp,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               ),
             ),
@@ -117,15 +117,16 @@ class _CenterAddButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 30),
+        padding: EdgeInsets.all( 12),
+        margin: EdgeInsets.symmetric(horizontal: 10.w),
         width: 56,
         height: 56,
         decoration: BoxDecoration(
           color: AppColors.blueBorder,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
         ),
-        child: const Icon(Icons.add_rounded, color: Colors.white, size: 35),
+        child: const Icon(Icons.add_rounded, color: Colors.white, size: 32),
       ),
     );
   }
