@@ -13,6 +13,7 @@ import 'package:examify/features/student/home/ui/screens/home_view.dart';
 import 'package:examify/core/di/service_locator.dart';
 import 'package:examify/features/auth/signup/logic/cubit/signup_cubit.dart';
 import 'package:examify/features/auth/login/logic/login_cubit.dart';
+import 'package:examify/features/instructor/navigation/ui/views/instructor_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,6 +52,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => const HomeView());
       case Routes.homeScreen:
         return MaterialPageRoute(builder: (context) => const MainNavigation());
+      case Routes.instructorHomeScreen:
+        return MaterialPageRoute(
+          builder: (context) => const InstructorNavigation(),
+        );
       case Routes.settingsScreen:
         return MaterialPageRoute(builder: (context) => const SettingsView());
       case Routes.notificationsSettingsScreen:

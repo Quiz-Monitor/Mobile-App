@@ -32,8 +32,8 @@ class LoginView extends StatelessWidget {
               } else if (role == 'Instructor') {
                 Navigator.pushReplacementNamed(
                   context,
-                  Routes.homeScreen,
-                ); // Assuming homeScreen for instructor
+                  Routes.instructorHomeScreen,
+                );
               } else {
                 Navigator.pushReplacementNamed(context, Routes.homeScreen);
               }
@@ -153,7 +153,7 @@ class LoginView extends StatelessWidget {
                       // }
                       Navigator.pushReplacementNamed(
                         context,
-                        Routes.studentHomeScreen,
+                        Routes.instructorHomeScreen,
                       );
                     },
                     buttonContent: BlocBuilder<LoginCubit, LoginState>(
