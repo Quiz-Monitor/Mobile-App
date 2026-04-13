@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'signup_response.dart';
+part of 'login_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-SignupResponse _$SignupResponseFromJson(Map<String, dynamic> json) =>
-    SignupResponse(
+LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
+    LoginResponse(
       token: json['token'] as String?,
       message: json['message'] as String?,
       refreshToken: json['refreshToken'] as String?,
@@ -17,7 +17,7 @@ SignupResponse _$SignupResponseFromJson(Map<String, dynamic> json) =>
           : User.fromJson(json['user'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$SignupResponseToJson(SignupResponse instance) =>
+Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
     <String, dynamic>{
       'token': instance.token,
       'message': instance.message,

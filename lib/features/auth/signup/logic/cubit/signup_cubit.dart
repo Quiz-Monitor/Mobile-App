@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:examify/core/networking/api_error_handler.dart';
 import 'package:examify/core/networking/api_result.dart';
 import 'package:examify/features/auth/signup/data/repo/signup_repo.dart';
 import 'package:examify/features/auth/signup/logic/cubit/signup_state.dart';
@@ -18,13 +17,7 @@ class SignupCubit extends Cubit<SignupState> {
 
   final formkey = GlobalKey<FormState>();
 
-  Future<void> signup({
-    required String fullName,
-    required String email,
-    required String password,
-    String? phoneNumber,
-    required UserRole role,
-  }) async {
+  void emitSignupState({required UserRole role}) async {
     emit(SignupState.loading());
     final response = await signupRepo.signup(
       fullName: nameController.text,
@@ -35,15 +28,11 @@ class SignupCubit extends Cubit<SignupState> {
     );
     response.when(
       success: (signupResponse) async {
-        emit(SignupState.success(role: role));
+        emit(SignupState.success(signupResponse));
       },
       failure: (error) {
         emit(
-          SignupState.error(
-            error:
-                error.apiErrorModel.message ??
-                'There is something went wrong , try again',
-          ),
+          SignupState.failure(error: error),
         );
       },
     );

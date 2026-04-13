@@ -4,7 +4,7 @@ import 'package:examify/core/widgets/bottom_nav_bar.dart';
 import 'package:examify/core/widgets/custom_button.dart';
 import 'package:examify/core/widgets/custom_textfield.dart';
 import 'package:examify/features/student/history/ui/views/exams_history.dart';
-import 'package:examify/features/student/home/ui/screens/home_view.dart.dart';
+import 'package:examify/features/student/home/ui/screens/home_view.dart';
 import 'package:examify/features/student/notifications/ui/screens/notifications_view.dart';
 import 'package:examify/features/student/profile/ui/views/profile_view.dart';
 import 'package:flutter/material.dart';

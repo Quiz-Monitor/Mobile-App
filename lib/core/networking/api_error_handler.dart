@@ -160,17 +160,13 @@ ApiErrorModel _handleError(DioException error) {
     case DioExceptionType.receiveTimeout:
       return DataSource.RECIEVE_TIMEOUT.getFailure();
     case DioExceptionType.badResponse:
-      if (error.response != null &&
-          error.response?.statusCode != null &&
-          error.response?.statusMessage != null) {
+      if (error.response != null && error.response?.data != null) {
         return ApiErrorModel.fromJson(error.response!.data);
       } else {
         return DataSource.DEFAULT.getFailure();
       }
     case DioExceptionType.unknown:
-      if (error.response != null &&
-          error.response?.statusCode != null &&
-          error.response?.statusMessage != null) {
+      if (error.response != null && error.response?.data != null) {
         return ApiErrorModel.fromJson(error.response!.data);
       } else {
         return DataSource.DEFAULT.getFailure();

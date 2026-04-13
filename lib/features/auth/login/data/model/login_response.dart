@@ -1,18 +1,25 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-part 'signup_response.g.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'login_response.g.dart';
 
 @JsonSerializable()
-class SignupResponse {
+class LoginResponse {
   final String? token;
   final String? message;
   final String? refreshToken;
   final String? expiresAt;
   final User? user;
 
-  SignupResponse({this.token, this.message, this.refreshToken, this.expiresAt, this.user});
+  LoginResponse({
+    this.token,
+    this.message,
+    this.refreshToken,
+    this.expiresAt,
+    this.user,
+  });
 
-  factory SignupResponse.fromJson(Map<String, dynamic> json) =>
-      _$SignupResponseFromJson(json);
+  factory LoginResponse.fromJson(Map<String, dynamic> json) =>
+      _$LoginResponseFromJson(json);
 }
 
 @JsonSerializable()

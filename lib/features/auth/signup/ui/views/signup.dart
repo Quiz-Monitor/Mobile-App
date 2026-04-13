@@ -21,15 +21,16 @@ class Signup extends StatelessWidget {
             current is SignupSuccess || current is SignupFailure,
         listener: (context, state) {
           state.whenOrNull(
-            success: (role) {
+            success: (signupResponse) {
               Navigator.pushReplacementNamed(context, Routes.loginScreen);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
+                  backgroundColor: Colors.green,
                   content: Text('Signup Successful! Please Login'),
                 ),
               );
             },
-            error: (errorMessage) {
+            failure: (errorMessage) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(errorMessage.toString()),
@@ -154,27 +155,52 @@ class Signup extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: 24.h),
-                  BlocBuilder<SignupCubit, SignupState>(
-                    builder: (context, state) {
-                      return CustomButton(
-                        buttonContent: state is Loading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                              )
-                            : Text('Sign Up', style: AppTextStyles.white16w400),
-                        onPressed: () {
-                          if (context.read<SignupCubit>().formkey.currentState!.validate()) {
-                            final selectedRole = context.read<RoleCubit>().state;
-                            context.read<SignupCubit>().signup(
-                              fullName: context.read<SignupCubit>().nameController.text,
-                              email: context.read<SignupCubit>().emailController.text,
-                              password: context.read<SignupCubit>().passwordController.text,
-                              role: selectedRole,
-                            );
-                          }
-                        },
-                      );
+                  // BlocBuilder<SignupCubit, SignupState>(
+                  //   builder: (context, state) {
+                  //     return CustomButton(
+                  //       buttonContent: state is Loading
+                  //           ? const CircularProgressIndicator(
+                  //               color: Colors.white,
+                  //             )
+                  //           : Text('Sign Up', style: AppTextStyles.white16w400),
+                  //       onPressed: () {
+                  //         if (context.read<SignupCubit>().formkey.currentState!.validate()) {
+                  //           final selectedRole = context.read<RoleCubit>().state;
+                  //           context.read<SignupCubit>().emitSignupState(
+                  //             role: selectedRole,
+                  //           );
+                  //         }
+                  //       },
+                  //     );
+                  //   },
+                  // ),
+                  CustomButton(
+                    onPressed: () {
+                      if (context
+                          .read<SignupCubit>()
+                          .formkey
+                          .currentState!
+                          .validate()) {
+                        final selectedRole = context.read<RoleCubit>().state;
+                        context.read<SignupCubit>().emitSignupState(
+                          role: selectedRole,
+                        );
+                      }
                     },
+                    buttonContent: BlocBuilder<SignupCubit, SignupState>(
+                      builder: (context, state) {
+                        return state.when(
+                          initial: () =>
+                              Text('Sign up', style: AppTextStyles.white16w400),
+                          loading: () =>
+                              CircularProgressIndicator(color: Colors.white),
+                          success: (SignupResponse) =>
+                              Text('Sign up', style: AppTextStyles.white16w400),
+                          failure: (error) =>
+                              Text('Sign up', style: AppTextStyles.white16w400),
+                        );
+                      },
+                    ),
                   ),
                   SizedBox(height: 24.h),
                   const AlreadyHaveAccount(),
