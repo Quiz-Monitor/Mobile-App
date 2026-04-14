@@ -108,7 +108,7 @@ class InstructorHomeView extends StatelessWidget {
                             style: TextStyle(
                               color: const Color(0xff05DF72),
                               fontSize: 12.sp,
-                              fontWeight: FontWeight.w400
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ],
@@ -127,13 +127,10 @@ class InstructorHomeView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Upcoming Exams',
-                      style: AppTextStyles.white16w400
-                    ),
+                    Text('Upcoming Exams', style: AppTextStyles.white16w400),
                     TextButton.icon(
                       onPressed: () {},
-                     
+
                       label: Text(
                         'View All',
                         style: TextStyle(
@@ -175,7 +172,6 @@ class InstructorHomeView extends StatelessWidget {
   }
 }
 
-
 class _UpcomingExamCard extends StatelessWidget {
   final String title;
   final String time;
@@ -192,20 +188,30 @@ class _UpcomingExamCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 18.h),
       decoration: BoxDecoration(
-        color: AppColors.white2,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.white10),
+        color: AppColors.white5,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: AppColors.white10, width: 1.74.w),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            width: 50.w,
-            height: 50.w,
+            width: 48.w,
+            height: 48.w,
             decoration: BoxDecoration(
-              color: const Color(0xff00D3F2).withAlpha(20),
-              borderRadius: BorderRadius.circular(12.r),
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xff00B8DB).withAlpha(50),
+                  const Color(0xff2B7FFF).withAlpha(50),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(
+                color: const Color(0xff00D3F3).withAlpha(75),
+                width: 1.74.w,
+              ),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -213,16 +219,17 @@ class _UpcomingExamCard extends StatelessWidget {
                 Text(
                   'Feb',
                   style: TextStyle(
-                    color: const Color(0xff00D3F2),
-                    fontSize: 10.sp,
+                    color: const Color(0xff00D3F3),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 Text(
                   '9',
                   style: TextStyle(
-                    color: const Color(0xff00D3F2),
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
@@ -233,27 +240,46 @@ class _UpcomingExamCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTextStyles.white16w400),
-                verticalSpace(4),
+                Text(
+                  title,
+                  style: AppTextStyles.white16w400.copyWith(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp,
+                  ),
+                ),
+                verticalSpace(6),
                 Row(
                   children: [
                     Icon(
-                      Icons.access_time,
-                      color: AppColors.white40,
-                      size: 14.sp,
+                      Icons.access_time_rounded,
+                      color: AppColors.white60,
+                      size: 16.sp,
                     ),
-                    horizontalSpace(4),
-                    Text(time, style: AppTextStyles.white12w400alpha40),
-                    horizontalSpace(12),
-                    Icon(
-                      Icons.groups_outlined,
-                      color: AppColors.white40,
-                      size: 14.sp,
+                    horizontalSpace(6),
+                    Text(
+                      time,
+                      style: AppTextStyles.white12w400alpha40.copyWith(
+                        color: AppColors.white60,
+                      ),
                     ),
-                    horizontalSpace(4),
+                    horizontalSpace(16),
+                    SizedBox(
+                      width: 12.w,
+                      height: 12.w,
+                      child: SvgPicture.asset(
+                        'assets/icons/students.svg',
+                        colorFilter: ColorFilter.mode(
+                          AppColors.white60,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                    horizontalSpace(6),
                     Text(
                       '$participants',
-                      style: AppTextStyles.white12w400alpha40,
+                      style: AppTextStyles.white12w400alpha40.copyWith(
+                        color: AppColors.white60,
+                      ),
                     ),
                   ],
                 ),
@@ -261,15 +287,19 @@ class _UpcomingExamCard extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+            width: 40.w,
+            height: 40.w,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.white5,
               borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: AppColors.white10, width: 1.74.w),
             ),
             child: Text(
               daysLeft,
               style: AppTextStyles.white12w400alpha40.copyWith(
                 color: Colors.white70,
+                fontSize: 12.sp,
               ),
             ),
           ),
