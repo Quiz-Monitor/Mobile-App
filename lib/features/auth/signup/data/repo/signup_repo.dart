@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:examify/core/networking/api_error_handler.dart';
 import 'package:examify/core/networking/api_result.dart';
 import 'package:examify/core/networking/api_service.dart';
@@ -32,7 +31,9 @@ class SignupRepo {
 
       return ApiResult.success(response);
     } catch (e) {
-      return ApiResult.failure(e.toString());
+      return ApiResult.failure(
+        ErrorHandler.handle(e).apiErrorModel.getAllErrorMessages(),
+      );
     }
   }
 }

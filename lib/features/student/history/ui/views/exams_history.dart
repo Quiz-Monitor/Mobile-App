@@ -7,35 +7,45 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ExamsHistory extends StatelessWidget {
   ExamsHistory({super.key});
-  List<CustomExamCard> exItems = [
-    CustomExamCard(exHistoryModel: ExamsHistoryModel(
-      title: 'Computer Science',
-      date: 'Nov 28, 2024',
-      isPending: true,
-    )),
-    CustomExamCard(exHistoryModel: ExamsHistoryModel(
-      title: 'Advanced Physics',
-      date: 'Nov 25, 2024',
-      isPending: true,
-    )),
-    CustomExamCard(exHistoryModel: ExamsHistoryModel(
-      title: 'Machine Learning',
-      date: 'Nov 20, 2024',
-      isPending: false,
-      garade: 18,
-    )),
-    CustomExamCard(exHistoryModel: ExamsHistoryModel(
-      title: 'Cuantum Computing',
-      date: 'Nov 20, 2024',
-      isPending: false,
-      garade: 15
-    )),
-    CustomExamCard(exHistoryModel: ExamsHistoryModel(
-      title: 'Data Structures',
-      date: 'Nov 20, 2024',
-      isPending: false,
-      garade: 20
-    )),
+  final List<CustomExamCard> exItems = [
+    CustomExamCard(
+      exHistoryModel: ExamsHistoryModel(
+        title: 'Computer Science',
+        date: 'Nov 28, 2024',
+        isPending: true,
+      ),
+    ),
+    CustomExamCard(
+      exHistoryModel: ExamsHistoryModel(
+        title: 'Advanced Physics',
+        date: 'Nov 25, 2024',
+        isPending: true,
+      ),
+    ),
+    CustomExamCard(
+      exHistoryModel: ExamsHistoryModel(
+        title: 'Machine Learning',
+        date: 'Nov 20, 2024',
+        isPending: false,
+        garade: 18,
+      ),
+    ),
+    CustomExamCard(
+      exHistoryModel: ExamsHistoryModel(
+        title: 'Cuantum Computing',
+        date: 'Nov 20, 2024',
+        isPending: false,
+        garade: 15,
+      ),
+    ),
+    CustomExamCard(
+      exHistoryModel: ExamsHistoryModel(
+        title: 'Data Structures',
+        date: 'Nov 20, 2024',
+        isPending: false,
+        garade: 20,
+      ),
+    ),
   ];
   @override
   Widget build(BuildContext context) {
@@ -59,7 +69,6 @@ class ExamsHistory extends StatelessWidget {
             SizedBox(height: 28.h),
             Expanded(
               child: ListView.builder(
-
                 itemCount: exItems.length,
                 itemBuilder: (context, index) {
                   return exItems[index];

@@ -1,4 +1,3 @@
-import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/themes/colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/core/widgets/custom_button.dart';
@@ -99,8 +98,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              CheckEmailView(email: _emailController.text.toString()),
+                          builder: (context) => CheckEmailView(
+                            email: _emailController.text.toString(),
+                          ),
                         ),
                       );
                       // TODO: Implement Reset Logic

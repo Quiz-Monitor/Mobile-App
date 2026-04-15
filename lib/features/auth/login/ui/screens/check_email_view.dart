@@ -1,6 +1,4 @@
 import 'package:examify/core/routing/routes.dart';
-import 'package:examify/core/widgets/custom_button.dart';
-import 'package:examify/core/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:examify/core/themes/colors.dart';
@@ -11,7 +9,6 @@ class CheckEmailView extends StatelessWidget {
   CheckEmailView({super.key, this.email});
 
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
   final String? email;
   @override
   Widget build(BuildContext context) {

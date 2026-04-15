@@ -1,7 +1,6 @@
 import 'package:examify/core/routing/app_router.dart';
 import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/themes/app_colors.dart';
-import 'package:examify/features/auth/onboarding/onboarding.dart';
 import 'package:examify/features/auth/role_selection/logic/role_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +23,6 @@ class MyApp extends StatelessWidget {
             onGenerateRoute: AppRouter().getapprouter,
             initialRoute: Routes.onboarding,
             debugShowCheckedModeBanner: false,
-            home: const Onboarding(),
           ),
         );
       },

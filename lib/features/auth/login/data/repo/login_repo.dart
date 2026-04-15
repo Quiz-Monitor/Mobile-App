@@ -20,7 +20,9 @@ class LoginRepo {
 
       return ApiResult.success(response);
     } catch (e) {
-      return ApiResult.failure(e.toString());
+      return ApiResult.failure(
+        ErrorHandler.handle(e).apiErrorModel.getAllErrorMessages(),
+      );
     }
   }
 }

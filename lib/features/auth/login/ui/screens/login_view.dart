@@ -151,10 +151,7 @@ class LoginView extends StatelessWidget {
                       //     .validate()) {
                       //   context.read<LoginCubit>().emitLoginState();
                       // }
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.instructorHomeScreen,
-                      );
+                      Navigator.pushNamed(context, Routes.homeScreen);
                     },
                     buttonContent: BlocBuilder<LoginCubit, LoginState>(
                       builder: (context, state) {
