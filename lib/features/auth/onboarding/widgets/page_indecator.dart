@@ -1,4 +1,5 @@
 import 'package:examify/features/auth/onboarding/widgets/const_screens.dart';
+import 'package:examify/core/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -11,15 +12,14 @@ class PageIndecator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SmoothPageIndicator(
-      
       controller: controller,
       count: screens.length,
       effect: ExpandingDotsEffect(
         spacing: 8,
         dotHeight: 8.h,
         dotWidth: 8.w,
-        activeDotColor: Color(0xffffffff),
-        dotColor: Colors.white.withAlpha((255 * .2).round()),
+        activeDotColor: const Color(0xff8F3DFF),
+        dotColor: AppColors.white20,
       ),
     );
   }

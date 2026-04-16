@@ -26,14 +26,21 @@ class ApiErrorModel {
 
   Map<String, dynamic> toJson() => _$ApiErrorModelToJson(this);
 
-  /// Returns a combined error message from [message], [title], or [errors].
   String getAllErrorMessages() {
     if (message != null && message!.isNotEmpty) {
+      // Don't show generic defaultError if we can avoid it.
+      if (message == 'defaultError' ||
+          message == 'An unexpected error occurred. Please try again.') {
+        return message!;
+      }
       return message!;
     }
     if (errors != null && errors!.isNotEmpty) {
       return errors!.values.expand((element) => element).join('\n');
     }
-    return title ?? 'Unknown error occurred';
+    if (title != null && title!.isNotEmpty) {
+      return title!;
+    }
+    return 'An unexpected error occurred. Please try again.';
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:examify/core/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,7 +21,11 @@ class Package extends StatelessWidget {
         SizedBox(height: 48.h),
         Text(
           heading ?? '',
-          style: TextStyle(fontSize: 16.sp, color: Colors.white , fontWeight: FontWeight.w400),
+          style: TextStyle(
+            fontSize: 16.sp,
+            color: AppColors.white60,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         SizedBox(height: 16.h),
         Padding(
@@ -29,10 +34,10 @@ class Package extends StatelessWidget {
             textAlign: TextAlign.center,
             subTitle ?? '',
             style: TextStyle(
-              
               fontSize: 16.sp,
-              color: Color(0XFFffffff).withOpacity(0.6),
+              color: AppColors.white40,
               fontWeight: FontWeight.w400,
+              height: 1.5,
             ),
           ),
         ),

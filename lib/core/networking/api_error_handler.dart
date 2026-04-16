@@ -145,13 +145,45 @@ class ErrorHandler implements Exception {
       // dio error so its an error from response of the API or from dio itself
       apiErrorModel = _handleError(error);
     } else {
-      // default error
-      apiErrorModel = DataSource.DEFAULT.getFailure();
+      // Preserve the original error message when the failure is not a DioException.
+      apiErrorModel = ApiErrorModel(message: error.toString());
     }
   }
 }
 
 ApiErrorModel _handleError(DioException error) {
+  ApiErrorModel _parseResponseData(dynamic responseData) {
+    if (responseData is Map<String, dynamic>) {
+      final errorModel = ApiErrorModel.fromJson(responseData);
+
+      if (errorModel.message != null && errorModel.message!.trim().isNotEmpty) {
+        return errorModel;
+      }
+
+      final fallbackMessage =
+          responseData['error']?.toString() ??
+          responseData['title']?.toString() ??
+          responseData['detail']?.toString() ??
+          responseData['message']?.toString();
+
+      if (fallbackMessage != null && fallbackMessage.trim().isNotEmpty) {
+        return ApiErrorModel(message: fallbackMessage);
+      }
+
+      return errorModel;
+    }
+
+    if (responseData is Map) {
+      return _parseResponseData(responseData.cast<String, dynamic>());
+    }
+
+    if (responseData is String && responseData.trim().isNotEmpty) {
+      return ApiErrorModel(message: responseData);
+    }
+
+    return ApiErrorModel(message: ResponseMessage.DEFAULT);
+  }
+
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
       return DataSource.CONNECT_TIMEOUT.getFailure();
@@ -160,24 +192,38 @@ ApiErrorModel _handleError(DioException error) {
     case DioExceptionType.receiveTimeout:
       return DataSource.RECIEVE_TIMEOUT.getFailure();
     case DioExceptionType.badResponse:
-      if (error.response != null && error.response?.data != null) {
-        return ApiErrorModel.fromJson(error.response!.data);
-      } else {
-        return DataSource.DEFAULT.getFailure();
+      final responseData = error.response?.data;
+      if (responseData != null) {
+        return _parseResponseData(responseData);
       }
+      return ApiErrorModel(
+        message:
+            error.response?.statusMessage ??
+            error.message ??
+            ResponseMessage.DEFAULT,
+      );
     case DioExceptionType.unknown:
-      if (error.response != null && error.response?.data != null) {
-        return ApiErrorModel.fromJson(error.response!.data);
-      } else {
-        return DataSource.DEFAULT.getFailure();
+      final responseData = error.response?.data;
+      if (responseData != null) {
+        return _parseResponseData(responseData);
       }
+
+      final rootError = error.error?.toString();
+      if (rootError != null && rootError.trim().isNotEmpty) {
+        return ApiErrorModel(message: rootError);
+      }
+
+      return ApiErrorModel(message: error.message ?? ResponseMessage.DEFAULT);
     case DioExceptionType.cancel:
       return DataSource.CANCEL.getFailure();
     case DioExceptionType.connectionError:
-      return DataSource.DEFAULT.getFailure();
+      return ApiErrorModel(
+        message: error.message ?? ResponseMessage.NO_INTERNET_CONNECTION,
+      );
     case DioExceptionType.badCertificate:
-      return DataSource.DEFAULT.getFailure();
-
+      return ApiErrorModel(
+        message: error.message ?? 'Certificate validation failed',
+      );
   }
 }
 

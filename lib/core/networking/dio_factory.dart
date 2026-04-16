@@ -2,16 +2,23 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:examify/core/networking/auth_interceptor.dart';
+import 'package:examify/core/storage/session_storage.dart';
 //import 'package:flutter_complete_project/core/helpers/constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-//import '../helpers/shared_pref_helper.dart';
 
 class DioFactory {
   /// private constructor as I don't want to allow creating an instance of this class
   DioFactory._();
 
   static Dio? dio;
+  static SessionStorage? _sessionStorage;
+
+  static void initSessionStorage(SessionStorage sessionStorage) {
+    _sessionStorage = sessionStorage;
+  }
 
   static Dio getDio() {
     Duration timeOut = const Duration(seconds: 30);
@@ -30,7 +37,6 @@ class DioFactory {
         return client;
       };
 
-      //addDioHeaders();
       addDioInterceptor();
       return dio!;
     } else {
@@ -38,21 +44,15 @@ class DioFactory {
     }
   }
 
-  // static void addDioHeaders() async {
-  //   dio?.options.headers = {
-  //     'Accept': 'application/json',
-  //     'Authorization':
-  //         'Bearer ${await SharedPrefHelper.getSecuredString(SharedPrefKeys.userToken)}',
-  //   };
-  // }
-
-  // static void setTokenIntoHeaderAfterLogin(String token) {
-  //   dio?.options.headers = {
-  //     'Authorization': 'Bearer $token',
-  //   };
-  // }
-
   static void addDioInterceptor() {
+    if (_sessionStorage != null) {
+      dio?.interceptors.add(AuthInterceptor(_sessionStorage!));
+    }
+
+    if (!kDebugMode) {
+      return;
+    }
+
     dio?.interceptors.add(
       PrettyDioLogger(
         requestBody: true,

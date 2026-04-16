@@ -20,6 +20,20 @@ class LoginResponse {
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>
       _$LoginResponseFromJson(json);
+
+  factory LoginResponse.fromNullableJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return const LoginResponse.empty();
+    }
+    return LoginResponse.fromJson(json);
+  }
+
+  const LoginResponse.empty()
+    : token = null,
+      message = null,
+      refreshToken = null,
+      expiresAt = null,
+      user = null;
 }
 
 @JsonSerializable()
@@ -45,4 +59,21 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  factory User.fromNullableJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return const User.empty();
+    }
+    return User.fromJson(json);
+  }
+
+  const User.empty()
+    : userId = null,
+      email = null,
+      fullName = null,
+      role = null,
+      phoneNumber = null,
+      profilePicture = null,
+      lastLogin = null,
+      createdAt = null;
 }

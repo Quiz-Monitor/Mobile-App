@@ -1,12 +1,16 @@
 import 'package:bloc/bloc.dart';
 import 'package:examify/core/networking/api_result.dart';
+import 'package:examify/core/storage/session_storage.dart';
+import 'package:examify/features/auth/login/data/model/login_request_body.dart';
 import 'package:examify/features/auth/login/data/repo/login_repo.dart';
 import 'package:examify/features/auth/login/logic/login_state.dart';
 import 'package:flutter/widgets.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final LoginRepo loginRepo;
-  LoginCubit(this.loginRepo) : super(LoginState.initial());
+  final SessionStorage sessionStorage;
+
+  LoginCubit(this.loginRepo, this.sessionStorage) : super(LoginState.initial());
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -16,16 +20,28 @@ class LoginCubit extends Cubit<LoginState> {
   void emitLoginState() async {
     emit(LoginState.loading());
     final response = await loginRepo.login(
-      email: emailController.text,
-      password: passwordController.text,
+      LoginRequestBody(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      ),
     );
     response.when(
       success: (loginResponse) async {
+        //final token = loginResponse.token;
+        // if (token != null && token.isNotEmpty) {
+        //   await sessionStorage.saveSession(
+        //     accessToken: token,
+        //     refreshToken: loginResponse.refreshToken,
+        //     role: loginResponse.user?.role,
+        //     userId: loginResponse.user?.userId,
+        //   );
+        // }
+        // Skip tokens as requested and just login
         emit(LoginState.success(loginResponse));
       },
       failure: (error) {
         emit(
-          LoginState.failure(error: error),
+          LoginState.failure(error: error.apiErrorModel.getAllErrorMessages()),
         );
       },
     );

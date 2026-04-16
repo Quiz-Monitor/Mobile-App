@@ -22,14 +22,13 @@ class LoginView extends StatelessWidget {
         listener: (context, state) {
           state.whenOrNull(
             success: (loginResponse) {
-              // Navigate based on role
-              final role = loginResponse.user?.role;
-              if (role == 'Student') {
+              final role = loginResponse.user?.role?.trim().toLowerCase();
+              if (role == 'student') {
                 Navigator.pushReplacementNamed(
                   context,
-                  Routes.studentHomeScreen,
+                  Routes.homeScreen,
                 );
-              } else if (role == 'Instructor') {
+              } else if (role == 'instructor' || role == 'teacher') {
                 Navigator.pushReplacementNamed(
                   context,
                   Routes.instructorHomeScreen,
@@ -144,14 +143,7 @@ class LoginView extends StatelessWidget {
                   SizedBox(height: 24.h),
                   CustomButton(
                     onPressed: () {
-                      // if (context
-                      //     .read<LoginCubit>()
-                      //     .formkey
-                      //     .currentState!
-                      //     .validate()) {
-                      //   context.read<LoginCubit>().emitLoginState();
-                      // }
-                      Navigator.pushNamed(context, Routes.homeScreen);
+                      validateThenDoLogin(context);
                     },
                     buttonContent: BlocBuilder<LoginCubit, LoginState>(
                       builder: (context, state) {
@@ -179,5 +171,11 @@ class LoginView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void validateThenDoLogin(BuildContext context) {
+    if (context.read<LoginCubit>().formkey.currentState!.validate()) {
+      context.read<LoginCubit>().emitLoginState();
+    }
   }
 }

@@ -18,7 +18,7 @@ class SignupRepo {
     required String? phoneNumber,
   }) async {
     try {
-      final roleString = role == UserRole.student ? 'Student' : 'Teacher';
+      final roleString = role == UserRole.student ? 'Student' : 'Instructor';
       final response = await apiService.signup(
         SignupRequestBody(
           fullName: fullName,
@@ -32,7 +32,7 @@ class SignupRepo {
       return ApiResult.success(response);
     } catch (e) {
       return ApiResult.failure(
-        ErrorHandler.handle(e).apiErrorModel.getAllErrorMessages(),
+        ErrorHandler.handle(e),
       );
     }
   }

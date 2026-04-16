@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:examify/core/themes/colors.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
@@ -20,18 +21,29 @@ class ActionButton extends StatelessWidget {
         width: 327.w,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xff2B7FFF), Color(0xff9810FA)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [Color(0xff2b7FFF), Color(0xff9810FA)],
           ),
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.mainIndego.withOpacity(0.22),
+              blurRadius: 28,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
         child: Center(
           child: Text(
             textAlign: TextAlign.center,
             'Continue',
-            style: TextStyle(color: Color(0xffffffff), fontSize: 16.sp),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ),

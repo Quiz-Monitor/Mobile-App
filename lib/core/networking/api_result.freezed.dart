@@ -128,11 +128,11 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( T data)?  success,TResult Function( String errorMessage)?  failure,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( T data)?  success,TResult Function( ErrorHandler errorHandler)?  failure,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case Success() when success != null:
 return success(_that.data);case Failure() when failure != null:
-return failure(_that.errorMessage);case _:
+return failure(_that.errorHandler);case _:
   return orElse();
 
 }
@@ -150,11 +150,11 @@ return failure(_that.errorMessage);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( T data)  success,required TResult Function( String errorMessage)  failure,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( T data)  success,required TResult Function( ErrorHandler errorHandler)  failure,}) {final _that = this;
 switch (_that) {
 case Success():
 return success(_that.data);case Failure():
-return failure(_that.errorMessage);case _:
+return failure(_that.errorHandler);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -171,11 +171,11 @@ return failure(_that.errorMessage);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( T data)?  success,TResult? Function( String errorMessage)?  failure,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( T data)?  success,TResult? Function( ErrorHandler errorHandler)?  failure,}) {final _that = this;
 switch (_that) {
 case Success() when success != null:
 return success(_that.data);case Failure() when failure != null:
-return failure(_that.errorMessage);case _:
+return failure(_that.errorHandler);case _:
   return null;
 
 }
@@ -259,10 +259,10 @@ as T,
 
 
 class Failure<T> with DiagnosticableTreeMixin implements ApiResult<T> {
-  const Failure(this.errorMessage);
+  const Failure(this.errorHandler);
   
 
- final  String errorMessage;
+ final  ErrorHandler errorHandler;
 
 /// Create a copy of ApiResult
 /// with the given fields replaced by the non-null parameter values.
@@ -275,21 +275,21 @@ $FailureCopyWith<T, Failure<T>> get copyWith => _$FailureCopyWithImpl<T, Failure
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ApiResult<$T>.failure'))
-    ..add(DiagnosticsProperty('errorMessage', errorMessage));
+    ..add(DiagnosticsProperty('errorHandler', errorHandler));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Failure<T>&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Failure<T>&&(identical(other.errorHandler, errorHandler) || other.errorHandler == errorHandler));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,errorMessage);
+int get hashCode => Object.hash(runtimeType,errorHandler);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ApiResult<$T>.failure(errorMessage: $errorMessage)';
+  return 'ApiResult<$T>.failure(errorHandler: $errorHandler)';
 }
 
 
@@ -300,7 +300,7 @@ abstract mixin class $FailureCopyWith<T,$Res> implements $ApiResultCopyWith<T, $
   factory $FailureCopyWith(Failure<T> value, $Res Function(Failure<T>) _then) = _$FailureCopyWithImpl;
 @useResult
 $Res call({
- String errorMessage
+ ErrorHandler errorHandler
 });
 
 
@@ -317,10 +317,10 @@ class _$FailureCopyWithImpl<T,$Res>
 
 /// Create a copy of ApiResult
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? errorMessage = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? errorHandler = null,}) {
   return _then(Failure<T>(
-null == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String,
+null == errorHandler ? _self.errorHandler : errorHandler // ignore: cast_nullable_to_non_nullable
+as ErrorHandler,
   ));
 }
 

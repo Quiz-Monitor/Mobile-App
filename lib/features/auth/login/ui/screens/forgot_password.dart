@@ -1,7 +1,10 @@
+import 'package:examify/core/di/service_locator.dart';
+import 'package:examify/core/networking/api_result.dart';
 import 'package:examify/core/themes/colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/core/widgets/custom_button.dart';
 import 'package:examify/core/widgets/custom_textfield.dart';
+import 'package:examify/features/auth/login/data/repo/login_repo.dart';
 import 'package:examify/features/auth/login/ui/screens/check_email_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +20,7 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -90,22 +94,36 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 // Send Button
                 CustomButton(
                   buttonContent: Text(
-                    'Send Rest Link',
+                    _isLoading ? 'Sending...' : 'Send Rest Link',
                     style: AppTextStyles.white16w400,
                   ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CheckEmailView(
-                            email: _emailController.text.toString(),
-                          ),
-                        ),
-                      );
-                      // TODO: Implement Reset Logic
-                      print('Reset email sent to ${_emailController.text}');
-                    }
+                  onPressed: () async {
+                    // if (_formKey.currentState!.validate()) {
+                    //   setState(() => _isLoading = true);
+                    //   final result = await getit<LoginRepo>().forgotPassword(
+                    //     email: _emailController.text.trim(),
+                    //   );
+                    //   if (!mounted) {
+                    //     return;
+                    //   }
+                    //   setState(() => _isLoading = false);
+
+                    //   switch (result) {
+                    //     case Success():
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //           builder: (context) => CheckEmailView(
+                    //             email: _emailController.text.trim(),
+                    //           ),
+                    //         ),
+                    //       );
+                    //     case Failure(:final errorMessage):
+                    //       ScaffoldMessenger.of(
+                    //         context,
+                    //       ).showSnackBar(SnackBar(content: Text(errorMessage)));
+                    //   }
+                    // }
                   },
                 ),
                 SizedBox(height: 22.h),

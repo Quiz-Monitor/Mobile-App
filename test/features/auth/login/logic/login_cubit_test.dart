@@ -1,0 +1,60 @@
+import 'package:examify/core/networking/api_service.dart';
+import 'package:examify/core/storage/session_storage.dart';
+import 'package:examify/features/auth/login/data/model/login_request_body.dart';
+import 'package:examify/features/auth/login/data/model/login_response.dart';
+import 'package:examify/features/auth/login/data/repo/login_repo.dart';
+import 'package:examify/features/auth/login/logic/login_cubit.dart';
+import 'package:examify/features/auth/login/logic/login_state.dart';
+import 'package:examify/features/auth/signup/data/models/signup_request_body.dart'
+    as signup_models;
+import 'package:examify/features/auth/signup/data/models/signup_response.dart'
+    as signup_models;
+import 'package:flutter_test/flutter_test.dart';
+
+class _FakeApiService implements ApiService {
+  @override
+  Future<LoginResponse> login(LoginRequestBody body) async {
+    return LoginResponse(
+      token: 'fake_token',
+      refreshToken: 'fake_refresh',
+      message: 'ok',
+      user: User(
+        userId: 1,
+        email: body.email,
+        fullName: 'Fake',
+        role: 'Student',
+      ),
+    );
+  }
+
+  @override
+  Future<signup_models.SignupResponse> signup(
+    signup_models.SignupRequestBody body,
+  ) {
+    throw UnimplementedError();
+  }
+}
+
+void main() {
+  test('LoginCubit emits loading then success', () async {
+    final cubit = LoginCubit(
+      LoginRepo(_FakeApiService()),
+      InMemorySessionStorage(),
+    );
+
+    cubit.emailController.text = 'student@examify.test';
+    cubit.passwordController.text = '123456';
+
+    final states = <LoginState>[];
+    final sub = cubit.stream.listen(states.add);
+
+    cubit.emitLoginState();
+    await Future<void>.delayed(const Duration(milliseconds: 900));
+
+    expect(states.first, isA<Loading>());
+    expect(states.last, isA<LoginSuccess>());
+
+    await sub.cancel();
+    await cubit.close();
+  });
+}
