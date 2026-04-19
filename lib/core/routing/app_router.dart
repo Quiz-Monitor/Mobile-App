@@ -54,7 +54,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => const MainNavigation());
       case Routes.instructorHomeScreen:
         return MaterialPageRoute(
-          builder: (context) => const InstructorNavigation(),
+          builder: (context) => const InstructorNavigation()
         );
       case Routes.settingsScreen:
         return MaterialPageRoute(builder: (context) => const SettingsView());
