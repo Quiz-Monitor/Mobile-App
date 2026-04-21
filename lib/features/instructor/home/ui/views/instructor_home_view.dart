@@ -1,6 +1,8 @@
 import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/core/themes/app_colors.dart';
+import 'package:examify/core/di/service_locator.dart';
 import 'package:examify/core/helpers/spacing.dart';
+import 'package:examify/core/storage/session_storage.dart';
 import 'package:examify/features/instructor/home/ui/widgets/live_exams.dart';
 import 'package:examify/features/instructor/home/ui/widgets/state_card.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,21 @@ import 'package:flutter_svg/svg.dart';
 
 class InstructorHomeView extends StatelessWidget {
   const InstructorHomeView({super.key});
+
+  Future<String> _getDisplayName() async {
+    final storage = getit<SessionStorage>();
+    final fullName = (await storage.getFullName())?.trim();
+    if (fullName != null && fullName.isNotEmpty) {
+      return fullName;
+    }
+
+    final email = (await storage.getEmail())?.trim();
+    if (email != null && email.isNotEmpty) {
+      return email.split('@').first;
+    }
+
+    return 'Instructor';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +39,15 @@ class InstructorHomeView extends StatelessWidget {
               children: [
                 verticalSpace(8),
                 Text('Dashboard', style: AppTextStyles.white16w400),
-                Text(
-                  'Welcome back, Dr. Ahmed',
-                  style: AppTextStyles.white14w400alpha70,
+                FutureBuilder<String>(
+                  future: _getDisplayName(),
+                  builder: (context, snapshot) {
+                    final name = snapshot.data ?? 'Instructor';
+                    return Text(
+                      'Welcome back, $name',
+                      style: AppTextStyles.white14w400alpha70,
+                    );
+                  },
                 ),
                 verticalSpace(24),
                 // Stats Grid

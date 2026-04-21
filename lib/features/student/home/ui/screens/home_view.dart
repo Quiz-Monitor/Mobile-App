@@ -1,3 +1,4 @@
+import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/core/widgets/custom_textfield.dart';
 import 'package:examify/features/student/home/data/model/exam_model.dart';
@@ -19,13 +20,13 @@ class HomeView extends StatelessWidget {
           children: [
             CustomHomeAppbar(),
             SizedBox(height: 20.h),
-            CustomTextfield(hintText: 'Search for exams'),
+            CustomTextfield(hintText: 'Search for exams', prefixIcon: Icon(Icons.search_rounded , color: AppColors.white40,  size: 28,)),
             SizedBox(height: 20.h),
             Text('Upcoming Exams', style: AppTextStyles.white16w400),
             SizedBox(height: 16.h),
             Expanded(
               child: SingleChildScrollView(
-               // physics: BouncingScrollPhysics(),
+                // physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [

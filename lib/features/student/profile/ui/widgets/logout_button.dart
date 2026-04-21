@@ -1,3 +1,4 @@
+import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +12,7 @@ class LogoutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pop(context);
+        Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
       },
       child: Container(
         width: double.infinity,

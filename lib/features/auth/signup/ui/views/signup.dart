@@ -9,6 +9,7 @@ import 'package:examify/features/role/logic/cubit/role_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:toastification/toastification.dart';
 
 class Signup extends StatelessWidget {
   const Signup({super.key});
@@ -23,19 +24,25 @@ class Signup extends StatelessWidget {
           state.whenOrNull(
             success: (signupResponse) {
               Navigator.pushReplacementNamed(context, Routes.loginScreen);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  backgroundColor: Colors.green,
-                  content: Text('Signup Successful! Please Login'),
+              toastification.show(
+                autoCloseDuration: const Duration(seconds: 5),
+                style: ToastificationStyle.fillColored,
+                description: RichText(
+                  text: const TextSpan(text: 'Signup Successful! Please Login'),
                 ),
+                context: context,
+                type: ToastificationType.success,
               );
             },
             failure: (errorMessage) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(errorMessage.toString()),
-                  backgroundColor: Colors.red,
+              toastification.show(
+                autoCloseDuration: const Duration(seconds: 5),
+                style: ToastificationStyle.fillColored,
+                description: RichText(
+                  text: TextSpan(text: errorMessage.toString()),
                 ),
+                context: context,
+                type: ToastificationType.error,
               );
             },
           );

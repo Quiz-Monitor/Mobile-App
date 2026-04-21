@@ -27,16 +27,15 @@ class LoginCubit extends Cubit<LoginState> {
     );
     response.when(
       success: (loginResponse) async {
-        //final token = loginResponse.token;
-        // if (token != null && token.isNotEmpty) {
-        //   await sessionStorage.saveSession(
-        //     accessToken: token,
-        //     refreshToken: loginResponse.refreshToken,
-        //     role: loginResponse.user?.role,
-        //     userId: loginResponse.user?.userId,
-        //   );
-        // }
-        // Skip tokens as requested and just login
+        await sessionStorage.saveSession(
+          accessToken: loginResponse.token,
+          refreshToken: loginResponse.refreshToken,
+          role: loginResponse.user?.role,
+          userId: loginResponse.user?.userId,
+          fullName: loginResponse.user?.fullName,
+          email: loginResponse.user?.email,
+        );
+
         emit(LoginState.success(loginResponse));
       },
       failure: (error) {

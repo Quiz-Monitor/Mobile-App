@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:examify/core/config/cache/cache_helper.dart';
 import 'package:examify/core/constants/api_constants.dart';
 import 'package:examify/core/networking/api_service.dart';
 import 'package:examify/core/networking/dio_factory.dart';
@@ -8,19 +9,15 @@ import 'package:examify/features/auth/login/data/repo/login_repo.dart';
 import 'package:examify/features/auth/login/logic/login_cubit.dart';
 import 'package:examify/features/auth/signup/data/repo/signup_repo.dart';
 import 'package:examify/features/auth/signup/logic/cubit/signup_cubit.dart';
-import 'package:examify/features/instructor/exams/data/repo/instructor_exams_repo.dart';
-import 'package:examify/features/instructor/home/data/repo/instructor_home_repo.dart';
-import 'package:examify/features/instructor/reports/data/repo/instructor_reports_repo.dart';
-import 'package:examify/features/student/history/data/repos/student_history_repo.dart';
-import 'package:examify/features/student/home/data/repo/student_home_repo.dart';
-import 'package:examify/features/student/profile/data/repo/student_profile_repo.dart';
 import 'package:get_it/get_it.dart';
 
 final getit = GetIt.instance;
 
 Future<void> init() async {
+  await CacheHelper.init();
+
   if (!getit.isRegistered<SessionStorage>()) {
-    getit.registerLazySingleton<SessionStorage>(() => InMemorySessionStorage());
+    getit.registerLazySingleton<SessionStorage>(() => SecureSessionStorage());
   }
   if (!getit.isRegistered<SessionManager>()) {
     getit.registerLazySingleton<SessionManager>(

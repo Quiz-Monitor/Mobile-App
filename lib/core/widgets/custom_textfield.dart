@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CustomTextfield extends StatefulWidget {
   const CustomTextfield({
     super.key,
+    this.prefixIcon,
     required this.hintText,
     this.suffixIcon,
     this.isPassword = false,
@@ -15,6 +16,7 @@ class CustomTextfield extends StatefulWidget {
 
   final String hintText;
   final IconData? suffixIcon;
+  final Widget? prefixIcon;
   final bool isPassword;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -39,7 +41,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
       keyboardType: widget.keyboardType,
       style: AppTextStyles.white16w400,
       decoration: InputDecoration(
-        
+        prefixIcon: widget.prefixIcon,
         suffixIcon: widget.isPassword
             ? IconButton(
                 onPressed: () {
