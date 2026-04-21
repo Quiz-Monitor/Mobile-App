@@ -35,7 +35,7 @@ class HomeView extends StatelessWidget {
                         title: 'Advanced Physics',
                         prof: 'Dr. Sarah Mitchel',
                         isLive: true,
-                        dateTime: DateTime(2026, 2, 5, 18, 30),
+                        dateTime: DateTime.now(),
                       ),
                     ),
                     SizedBox(height: 10),

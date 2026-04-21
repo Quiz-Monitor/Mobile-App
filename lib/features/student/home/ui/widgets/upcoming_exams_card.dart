@@ -1,6 +1,8 @@
+import 'package:examify/core/helpers/spacing.dart';
 import 'package:examify/core/themes/colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/features/student/home/data/model/exam_model.dart';
+import 'package:examify/features/student/home/ui/widgets/time_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,25 +33,25 @@ class UpcomingExamsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final duration = _remainingDuration();
-    final days = duration.inDays;
-    final hours = duration.inHours.remainder(24);
-    final minutes = duration.inMinutes.remainder(60);
-    final seconds = duration.inSeconds.remainder(60);
+    // final duration = _remainingDuration();
+    // final days = duration.inDays;
+    // final hours = duration.inHours.remainder(24);
+    // final minutes = duration.inMinutes.remainder(60);
+    // final seconds = duration.inSeconds.remainder(60);
 
     return AspectRatio(
-      aspectRatio: 341 / 262,
+      aspectRatio: 341/ 262,
       child: Container(
-        padding: EdgeInsets.all(22.w),
+        padding: EdgeInsets.symmetric(horizontal: 22.w),
         decoration: BoxDecoration(
           gradient: examModel.isLive
               ? LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                   colors: [
                     AppColors.greenAlpha10,
                     AppColors.blueBorder.withAlpha(25),
-                    AppColors.blueBorder.withAlpha(25),
+                    // AppColors.blueBorder.withAlpha(25),
                   ],
                 )
               : null,
@@ -58,8 +60,12 @@ class UpcomingExamsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
+          
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            verticalSpace(22) ,
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
@@ -82,32 +88,10 @@ class UpcomingExamsCard extends StatelessWidget {
                   ),
                   child: SvgPicture.asset('assets/icons/pc.svg'),
                 ),
+                Text(examModel.title, style: AppTextStyles.whit18w400alpha90),
 
                 SizedBox(width: 8.w),
-                // Expanded(
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //     Text(examModel.title, style: AppTextStyles.white16w400),
-                //       SizedBox(height: 10.h),
-                //       Container(
-                //         padding: EdgeInsets.symmetric(
-                //           horizontal: 12.w,
-                //           vertical: 6.h,
-                //         ),
-                //         decoration: BoxDecoration(
-                //           color: AppColors.blueAlpha10,
-                //           borderRadius: BorderRadius.circular(12.r),
-                //           border: Border.all(color: AppColors.blueBorder),
-                //         ),
-                //         child: Text(
-                //           '# ${_examCode()}',
-                //           style: AppTextStyles.blue14w400,
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
+               
                 if (examModel.isLive)
                   Container(
                     padding: EdgeInsets.symmetric(
@@ -115,8 +99,16 @@ class UpcomingExamsCard extends StatelessWidget {
                       vertical: 8.h,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.greenAlpha20,
-                      border: Border.all(color: AppColors.mainGreen),
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xff00C950).withAlpha(50),
+                          Color(0xff05DF72).withAlpha(50),
+                        ],
+                      ),
+                      border: Border.all(
+                        color: Color(0xff05DF72).withAlpha(100),
+                        width: 1.74,
+                      ),
                       borderRadius: BorderRadius.circular(20.r),
                       boxShadow: [
                         BoxShadow(
@@ -128,20 +120,14 @@ class UpcomingExamsCard extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Container(
-                          width: 9.w,
-                          height: 9.w,
-                          decoration: BoxDecoration(
-                            color: AppColors.mainGreen,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
+                        SvgPicture.asset('assets/icons/greendot.svg'),
                         SizedBox(width: 8.w),
                         Text(
                           'Live Now',
                           style: AppTextStyles.blue14w400.copyWith(
                             color: AppColors.mainGreen,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12.sp,
                           ),
                         ),
                       ],
@@ -149,60 +135,83 @@ class UpcomingExamsCard extends StatelessWidget {
                   ),
               ],
             ),
-            SizedBox(height: 18.h),
+            SizedBox(height: 8.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.blueBorder.withAlpha(25),
+                    AppColors.blueBorder.withAlpha(50),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: AppColors.blueBorder.withAlpha(75) , width: 1.74.w),
+              ),
+              child: Text(
+                '# ${_examCode()}',
+                style: TextStyle(
+                  color: AppColors.blueBorder,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _TimeBox(value: days, unit: 'DAYS'),
-                _TimeBox(value: hours, unit: 'HOURS'),
-                _TimeBox(value: minutes, unit: 'MINS'),
-                _TimeBox(value: seconds, unit: 'SECS'),
+                TimeBox(value: examModel.dateTime.day, unit: 'DAYS'),
+                TimeBox(value: examModel.dateTime.hour, unit: 'HOURS'),
+                TimeBox(value: examModel.dateTime.minute, unit: 'MINS'),
+                TimeBox(value: examModel.dateTime.second, unit: 'SECS'),
               ],
             ),
             SizedBox(height: 16.h),
             Divider(color: AppColors.white10, thickness: 1),
-            SizedBox(height: 8.h),
+            SizedBox(height: 6.h),
             Row(
               children: [
-                Icon(
-                  Icons.person_outline,
-                  color: AppColors.greyIcon,
-                  size: 18.sp,
+                SvgPicture.asset(
+                  'assets/icons/students.svg',
+                  color: AppColors.white40,
                 ),
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
                     examModel.prof,
-                    style: AppTextStyles.grey16w400,
+                    style: AppTextStyles.whit14w400alpha60,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 if (!examModel.isLive)
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 6.h,
+                      horizontal: 4.w,
+                      vertical: 4.h,
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.white5,
-                      borderRadius: BorderRadius.circular(14.r),
-                      border: Border.all(color: AppColors.white10),
+                      borderRadius: BorderRadius.circular(10.r),
+                      border: Border.all(
+                        color: AppColors.white10,
+                        width: 1.74.w,
+                      ),
                     ),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.calendar_month_outlined,
-                          size: 16.sp,
-                          color: AppColors.mainBlue,
-                        ),
+                        SvgPicture.asset('assets/icons/calendar.svg'),
                         SizedBox(width: 6.w),
                         Text(
                           'Scheduled',
-                          style: AppTextStyles.whit14w400alpha60,
+                          style: AppTextStyles.white12w400alpha40,
                         ),
                       ],
                     ),
+                    
+                    
                   ),
+                  SizedBox(height: 27.h,)
               ],
             ),
           ],
@@ -212,43 +221,3 @@ class UpcomingExamsCard extends StatelessWidget {
   }
 }
 
-class _TimeBox extends StatelessWidget {
-  const _TimeBox({required this.value, required this.unit});
-
-  final int value;
-  final String unit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 80.w,
-      height: 96.h,
-      decoration: BoxDecoration(
-        color: AppColors.white5,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.white10),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            value.toString().padLeft(2, '0'),
-            style: AppTextStyles.white16w400.copyWith(
-              fontSize: 40.sp,
-              fontWeight: FontWeight.w600,
-              height: 1,
-            ),
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            unit,
-            style: AppTextStyles.whit14w400alpha60.copyWith(
-              fontSize: 16.sp,
-              letterSpacing: 0.6,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

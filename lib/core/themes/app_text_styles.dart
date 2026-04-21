@@ -39,4 +39,9 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     color: Colors.white.withAlpha((255 * .6).round()),
   );
+  static TextStyle whit18w400alpha90 = TextStyle(
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w400,
+    color: Colors.white.withAlpha((255 * .9).round()),
+  );
 }
