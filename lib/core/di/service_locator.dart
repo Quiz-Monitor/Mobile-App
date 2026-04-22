@@ -9,6 +9,8 @@ import 'package:examify/features/auth/login/data/repo/login_repo.dart';
 import 'package:examify/features/auth/login/logic/login_cubit.dart';
 import 'package:examify/features/auth/signup/data/repo/signup_repo.dart';
 import 'package:examify/features/auth/signup/logic/cubit/signup_cubit.dart';
+import 'package:examify/features/student/join_exam/data/repo/join_exam_repo.dart';
+import 'package:examify/features/student/join_exam/logic/join_exam_cubit.dart';
 import 'package:get_it/get_it.dart';
 
 final getit = GetIt.instance;
@@ -53,6 +55,17 @@ Future<void> init() async {
   if (!getit.isRegistered<LoginCubit>()) {
     getit.registerFactory<LoginCubit>(
       () => LoginCubit(getit.get<LoginRepo>(), getit.get<SessionStorage>()),
+    );
+  }
+
+  if (!getit.isRegistered<JoinExamRepo>()) {
+    getit.registerLazySingleton<JoinExamRepo>(
+      () => JoinExamRepo(getit.get<ApiService>()),
+    );
+  }
+  if (!getit.isRegistered<JoinExamCubit>()) {
+    getit.registerFactory<JoinExamCubit>(
+      () => JoinExamCubit(getit.get<JoinExamRepo>()),
     );
   }
 

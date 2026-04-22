@@ -1,4 +1,6 @@
 import 'package:examify/core/networking/api_service.dart';
+import 'package:examify/core/networking/models/refresh_token_request_body.dart';
+import 'package:examify/core/networking/models/refresh_token_response.dart';
 import 'package:examify/core/storage/session_storage.dart';
 import 'package:examify/features/auth/login/data/model/login_request_body.dart';
 import 'package:examify/features/auth/login/data/model/login_response.dart';
@@ -9,6 +11,8 @@ import 'package:examify/features/auth/signup/data/models/signup_request_body.dar
     as signup_models;
 import 'package:examify/features/auth/signup/data/models/signup_response.dart'
     as signup_models;
+import 'package:examify/features/student/join_exam/data/model/join_exam_request_body.dart';
+import 'package:examify/features/student/join_exam/data/model/join_exam_response.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeApiService implements ApiService {
@@ -31,6 +35,16 @@ class _FakeApiService implements ApiService {
   Future<signup_models.SignupResponse> signup(
     signup_models.SignupRequestBody body,
   ) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<RefreshTokenResponse> refreshToken(RefreshTokenRequestBody body) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<JoinExamResponse> joinExam(JoinExamRequestBody body) {
     throw UnimplementedError();
   }
 }

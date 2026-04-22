@@ -152,9 +152,21 @@ class ErrorHandler implements Exception {
 }
 
 ApiErrorModel _handleError(DioException error) {
-  ApiErrorModel _parseResponseData(dynamic responseData) {
+  ApiErrorModel _parseResponseData(dynamic responseData, {int? statusCode}) {
     if (responseData is Map<String, dynamic>) {
       final errorModel = ApiErrorModel.fromJson(responseData);
+
+      if (errorModel.code == null && statusCode != null) {
+        return ApiErrorModel(
+          code: statusCode,
+          message: errorModel.message,
+          status: errorModel.status,
+          title: errorModel.title,
+          type: errorModel.type,
+          traceId: errorModel.traceId,
+          errors: errorModel.errors,
+        );
+      }
 
       if (errorModel.message != null && errorModel.message!.trim().isNotEmpty) {
         return errorModel;
@@ -167,21 +179,32 @@ ApiErrorModel _handleError(DioException error) {
           responseData['message']?.toString();
 
       if (fallbackMessage != null && fallbackMessage.trim().isNotEmpty) {
-        return ApiErrorModel(message: fallbackMessage);
+        return ApiErrorModel(code: statusCode, message: fallbackMessage);
       }
 
-      return errorModel;
+      return ApiErrorModel(
+        code: errorModel.code ?? statusCode,
+        message: errorModel.message,
+        status: errorModel.status,
+        title: errorModel.title,
+        type: errorModel.type,
+        traceId: errorModel.traceId,
+        errors: errorModel.errors,
+      );
     }
 
     if (responseData is Map) {
-      return _parseResponseData(responseData.cast<String, dynamic>());
+      return _parseResponseData(
+        responseData.cast<String, dynamic>(),
+        statusCode: statusCode,
+      );
     }
 
     if (responseData is String && responseData.trim().isNotEmpty) {
-      return ApiErrorModel(message: responseData);
+      return ApiErrorModel(code: statusCode, message: responseData);
     }
 
-    return ApiErrorModel(message: ResponseMessage.DEFAULT);
+    return ApiErrorModel(code: statusCode, message: ResponseMessage.DEFAULT);
   }
 
   switch (error.type) {
@@ -194,9 +217,13 @@ ApiErrorModel _handleError(DioException error) {
     case DioExceptionType.badResponse:
       final responseData = error.response?.data;
       if (responseData != null) {
-        return _parseResponseData(responseData);
+        return _parseResponseData(
+          responseData,
+          statusCode: error.response?.statusCode,
+        );
       }
       return ApiErrorModel(
+        code: error.response?.statusCode,
         message:
             error.response?.statusMessage ??
             error.message ??
@@ -205,7 +232,10 @@ ApiErrorModel _handleError(DioException error) {
     case DioExceptionType.unknown:
       final responseData = error.response?.data;
       if (responseData != null) {
-        return _parseResponseData(responseData);
+        return _parseResponseData(
+          responseData,
+          statusCode: error.response?.statusCode,
+        );
       }
 
       final rootError = error.error?.toString();

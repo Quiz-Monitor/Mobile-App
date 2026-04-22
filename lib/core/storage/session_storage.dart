@@ -15,6 +15,19 @@ abstract class SessionStorage {
 
   Future<String?> getRefreshToken();
 
+  Future<void> saveAccessToken(String accessToken);
+
+  Future<void> saveRefreshToken(String refreshToken);
+
+  Future<void> deleteAccessToken();
+
+  Future<void> deleteRefreshToken();
+
+  Future<void> updateTokens({
+    required String accessToken,
+    String? refreshToken,
+  });
+
   Future<String?> getRole();
 
   Future<int?> getUserId();
@@ -69,6 +82,37 @@ class SecureSessionStorage implements SessionStorage {
   @override
   Future<String?> getRefreshToken() async {
     return CacheHelper.getRefreshToken();
+  }
+
+  @override
+  Future<void> saveAccessToken(String accessToken) async {
+    await CacheHelper.setAccessToken(accessToken);
+  }
+
+  @override
+  Future<void> saveRefreshToken(String refreshToken) async {
+    await CacheHelper.setRefreshToken(refreshToken);
+  }
+
+  @override
+  Future<void> deleteAccessToken() async {
+    await CacheHelper.removeAccessToken();
+  }
+
+  @override
+  Future<void> deleteRefreshToken() async {
+    await CacheHelper.removeRefreshToken();
+  }
+
+  @override
+  Future<void> updateTokens({
+    required String accessToken,
+    String? refreshToken,
+  }) async {
+    await saveAccessToken(accessToken);
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      await saveRefreshToken(refreshToken);
+    }
   }
 
   @override
@@ -127,6 +171,37 @@ class InMemorySessionStorage implements SessionStorage {
 
   @override
   Future<String?> getRefreshToken() async => _refreshToken;
+
+  @override
+  Future<void> saveAccessToken(String accessToken) async {
+    _accessToken = accessToken;
+  }
+
+  @override
+  Future<void> saveRefreshToken(String refreshToken) async {
+    _refreshToken = refreshToken;
+  }
+
+  @override
+  Future<void> deleteAccessToken() async {
+    _accessToken = null;
+  }
+
+  @override
+  Future<void> deleteRefreshToken() async {
+    _refreshToken = null;
+  }
+
+  @override
+  Future<void> updateTokens({
+    required String accessToken,
+    String? refreshToken,
+  }) async {
+    _accessToken = accessToken;
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      _refreshToken = refreshToken;
+    }
+  }
 
   @override
   Future<String?> getRole() async => _role;

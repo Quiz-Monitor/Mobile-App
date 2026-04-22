@@ -8,7 +8,6 @@ import 'package:examify/core/storage/session_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-
 class DioFactory {
   /// private constructor as I don't want to allow creating an instance of this class
   DioFactory._();
@@ -21,7 +20,7 @@ class DioFactory {
   }
 
   static Dio getDio() {
-    Duration timeOut = const Duration(seconds: 10);    
+    Duration timeOut = const Duration(seconds: 10);
 
     if (dio == null) {
       dio = Dio();
@@ -46,7 +45,7 @@ class DioFactory {
 
   static void addDioInterceptor() {
     if (_sessionStorage != null) {
-      dio?.interceptors.add(AuthInterceptor(_sessionStorage!));
+      dio?.interceptors.add(AuthInterceptor(_sessionStorage!, dio!));
     }
 
     if (!kDebugMode) {

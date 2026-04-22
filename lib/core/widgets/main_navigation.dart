@@ -1,14 +1,14 @@
+import 'package:examify/core/di/service_locator.dart';
 import 'package:examify/core/themes/colors.dart';
-import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/core/widgets/bottom_nav_bar.dart';
-import 'package:examify/core/widgets/custom_button.dart';
-import 'package:examify/core/widgets/custom_textfield.dart';
+import 'package:examify/features/student/join_exam/logic/join_exam_cubit.dart';
+import 'package:examify/features/student/join_exam/ui/widgets/join_exam_bottom_sheet.dart';
 import 'package:examify/features/student/history/ui/views/exams_history.dart';
 import 'package:examify/features/student/home/ui/screens/home_view.dart';
 import 'package:examify/features/student/notifications/ui/screens/notifications_view.dart';
 import 'package:examify/features/student/profile/ui/views/profile_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // TODO: Import your actual screen views when ready
 // import 'package:examify/features/exam/ui/views/exam_code_entry_view.dart';
@@ -24,6 +24,7 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
+  final TextEditingController _examCodeController = TextEditingController();
 
   // TODO: Replace these placeholders with your actual screen widgets
   final List<Widget> _screens = [
@@ -53,57 +54,34 @@ class _MainNavigationState extends State<MainNavigation> {
   }
 
   void _showExamCodeEntry() {
-    // Show exam code entry as modal bottom sheet
     showModalBottomSheet(
       enableDrag: true,
       context: context,
       isScrollControlled: true,
-
       backgroundColor: AppColors.primaryBlack.withAlpha(242),
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.3177,
+      builder: (context) => BlocProvider(
+        create: (_) => getit<JoinExamCubit>(),
+        child: JoinExamBottomSheet(
+          examCodeController: _examCodeController,
+          onJoinSuccess: () {
+            if (!mounted) {
+              return;
+            }
 
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-        
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 13,
-            right: 20,
-            left: 20,
-            bottom: 32,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: AppColors.white40,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-              ),
-              CustomTextfield(hintText: 'Enter exam code'),
-              SizedBox(height: 20.h),
-              CustomButton(
-                buttonContent: Text(
-                  'Join Exam',
-                  style: AppTextStyles.white16w400.copyWith(),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
+            setState(() {
+              _currentIndex = 1;
+            });
+            _examCodeController.clear();
+          },
         ),
       ),
     );
+  }
 
-    // Alternative: Navigate using your router (uncomment if you prefer)
-    // Navigator.pushNamed(context, Routes.examCodeEntry);
+  @override
+  void dispose() {
+    _examCodeController.dispose();
+    super.dispose();
   }
 
   @override

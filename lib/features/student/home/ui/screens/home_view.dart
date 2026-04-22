@@ -9,7 +9,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,7 +25,7 @@ class HomeView extends StatelessWidget {
             SizedBox(height: 16.h),
             Expanded(
               child: SingleChildScrollView(
-                // physics: BouncingScrollPhysics(),
+                physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [

@@ -44,9 +44,12 @@ class ApiConstants {
 
   static const String login = "api/auth/login";
   static const String signup = "api/auth/register";
+  static const String refreshToken = "api/auth/refresh";
   static const String forgotPassword = "api/auth/forgot-password";
 
   // Student endpoints placeholders
+
+  static const String studentExamJoin = "api/exams/join";
   static const String studentUpcomingExams = "api/student/exams/upcoming";
   static const String studentExamHistory = "api/student/exams/history";
   static const String studentProfile = "api/student/profile";
