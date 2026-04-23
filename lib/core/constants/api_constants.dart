@@ -55,9 +55,7 @@ class ApiConstants {
   static const String studentProfile = "api/student/profile";
 
   // Instructor endpoints placeholders
-  static const String instructorDashboard = "api/instructor/dashboard";
-  static const String instructorExams = "api/instructor/exams";
-  static const String instructorReports = "api/instructor/reports";
+  static const String getInstructorExams = "api/exams";
 
   // Shared placeholders
   static const String notifications = "api/notifications";

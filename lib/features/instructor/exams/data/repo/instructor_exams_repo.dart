@@ -1,29 +1,22 @@
-import 'package:examify/core/config/app_environment.dart';
+import 'package:dio/dio.dart';
+import 'package:examify/core/networking/api_error_handler.dart';
 import 'package:examify/core/networking/api_result.dart';
+import 'package:examify/core/networking/api_service.dart';
+import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 
-class InstructorExamDto {
-  final int id;
-  final String title;
-  final String status;
+class InstructorExamsRepo {
+  final ApiService _apiService;
 
-  const InstructorExamDto({
-    required this.id,
-    required this.title,
-    required this.status,
-  });
+  InstructorExamsRepo(this._apiService);
+
+  Future<ApiResult<List<ExamModel>>> getInstructorExams() async {
+    try {
+      final response = await _apiService.getExams();
+      return ApiResult.success(response.exams);
+    } on DioException catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
 }
-
-// class InstructorExamsRepo {
-//   Future<ApiResult<List<InstructorExamDto>>> getInstructorExams() async {
-//     if (AppEnvironmentConfig.useMockApi) {
-//       return const ApiResult.success(<InstructorExamDto>[
-//         InstructorExamDto(id: 1, title: 'CS-101 Midterm', status: 'Live'),
-//         InstructorExamDto(id: 2, title: 'Math Advanced', status: 'Upcoming'),
-//       ]);
-//     }
-
-//     return const ApiResult.failure(
-//       'Instructor exams endpoint is not ready yet.',
-//     );
-//   }
-// }

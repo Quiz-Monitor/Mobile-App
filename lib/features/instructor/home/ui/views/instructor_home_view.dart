@@ -3,6 +3,7 @@ import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/di/service_locator.dart';
 import 'package:examify/core/helpers/spacing.dart';
 import 'package:examify/core/storage/session_storage.dart';
+import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 import 'package:examify/features/instructor/home/ui/widgets/live_exams.dart';
 import 'package:examify/features/instructor/home/ui/widgets/state_card.dart';
 import 'package:flutter/material.dart';
@@ -140,9 +141,29 @@ class InstructorHomeView extends StatelessWidget {
                   ],
                 ),
                 verticalSpace(13),
-                LiveExamCard(title: 'CS-101 Midterm', studentsCount: 45),
+                LiveExamCard(
+                  exam: ExamModel(
+                    examId: 1,
+                    title: 'CS-101 Midterm',
+                    description: 'Legacy placeholder exam',
+                    startTime: DateTime.now(),
+                    endTime: DateTime.now().add(const Duration(hours: 2)),
+                    durationMinutes: '120',
+                    examCode: 'CS101',
+                  ),
+                ),
                 verticalSpace(12),
-                LiveExamCard(title: 'Math Advanced', studentsCount: 32),
+                LiveExamCard(
+                  exam: ExamModel(
+                    examId: 2,
+                    title: 'Math Advanced',
+                    description: 'Legacy placeholder exam',
+                    startTime: DateTime.now(),
+                    endTime: DateTime.now().add(const Duration(hours: 1)),
+                    durationMinutes: '60',
+                    examCode: 'MATH',
+                  ),
+                ),
 
                 verticalSpace(24),
 

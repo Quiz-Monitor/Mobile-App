@@ -1,5 +1,5 @@
 import 'package:examify/features/instructor/exams/ui/views/instructor_exams_view.dart';
-import 'package:examify/features/instructor/home/ui/views/instructor_home_view.dart';
+import 'package:examify/features/instructor/home/ui/views/instructor_home_dashboard_view.dart';
 import 'package:examify/features/instructor/navigation/ui/widgets/instructor_bottom_nav_bar.dart';
 import 'package:examify/features/instructor/profile/ui/views/instructor_profile_view.dart';
 import 'package:examify/features/instructor/reports/ui/views/instructor_reports_view.dart';

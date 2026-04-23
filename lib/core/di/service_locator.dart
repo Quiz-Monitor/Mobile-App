@@ -7,6 +7,9 @@ import 'package:examify/core/storage/session_manager.dart';
 import 'package:examify/core/storage/session_storage.dart';
 import 'package:examify/features/auth/login/data/repo/login_repo.dart';
 import 'package:examify/features/auth/login/logic/login_cubit.dart';
+import 'package:examify/features/instructor/exams/data/repo/instructor_exams_repo.dart';
+import 'package:examify/features/instructor/exams/logic/cubit/exams_cubit.dart';
+import 'package:examify/features/instructor/home/data/repo/instructor_home_repo.dart';
 import 'package:examify/features/auth/signup/data/repo/signup_repo.dart';
 import 'package:examify/features/auth/signup/logic/cubit/signup_cubit.dart';
 import 'package:examify/features/student/join_exam/data/repo/join_exam_repo.dart';
@@ -69,6 +72,22 @@ Future<void> init() async {
     );
   }
 
+  if (!getit.isRegistered<InstructorExamsRepo>()) {
+    getit.registerLazySingleton<InstructorExamsRepo>(
+      () => InstructorExamsRepo(getit.get<ApiService>()),
+    );
+  }
+  if (!getit.isRegistered<ExamsCubit>()) {
+    getit.registerFactory<ExamsCubit>(
+      () => ExamsCubit(getit.get<InstructorExamsRepo>()),
+    );
+  }
+  if (!getit.isRegistered<InstructorHomeRepo>()) {
+    getit.registerLazySingleton<InstructorHomeRepo>(
+      () => InstructorHomeRepo(getit.get<InstructorExamsRepo>()),
+    );
+  }
+
   // if (!getit.isRegistered<StudentHomeRepo>()) {
   //   getit.registerLazySingleton<StudentHomeRepo>(() => StudentHomeRepo());
   // }
@@ -79,14 +98,6 @@ Future<void> init() async {
   //   getit.registerLazySingleton<StudentProfileRepo>(() => StudentProfileRepo());
   // }
 
-  // if (!getit.isRegistered<InstructorHomeRepo>()) {
-  //   getit.registerLazySingleton<InstructorHomeRepo>(() => InstructorHomeRepo());
-  // }
-  // if (!getit.isRegistered<InstructorExamsRepo>()) {
-  //   getit.registerLazySingleton<InstructorExamsRepo>(
-  //     () => InstructorExamsRepo(),
-  //   );
-  // }
   // if (!getit.isRegistered<InstructorReportsRepo>()) {
   //   getit.registerLazySingleton<InstructorReportsRepo>(
   //     () => InstructorReportsRepo(),

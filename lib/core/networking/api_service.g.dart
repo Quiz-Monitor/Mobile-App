@@ -12,7 +12,7 @@ part of 'api_service.dart';
 
 class _ApiService implements ApiService {
   _ApiService(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'http://10.0.2.2:7158/';
+    baseUrl ??= 'https://10.0.2.2:7158/';
   }
 
   final Dio _dio;
@@ -78,7 +78,9 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<RefreshTokenResponse> refreshToken(RefreshTokenRequestBody body) async {
+  Future<RefreshTokenResponse> refreshToken(
+    RefreshTokenRequestBody body,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -126,6 +128,42 @@ class _ApiService implements ApiService {
     late JoinExamResponse _value;
     try {
       _value = JoinExamResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<GetExamsResponse> getExams() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<dynamic>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'api/exams',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<dynamic>(_options);
+    late GetExamsResponse _value;
+    try {
+      final data = _result.data;
+      if (data is Map<String, dynamic>) {
+        _value = GetExamsResponse.fromJson(data);
+      } else if (data is Map) {
+        _value = GetExamsResponse.fromJson(data.cast<String, dynamic>());
+      } else if (data is List) {
+        _value = GetExamsResponse.fromJson(<String, dynamic>{'data': data});
+      } else {
+        _value = GetExamsResponse.fromJson(<String, dynamic>{});
+      }
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, _result);
       rethrow;
