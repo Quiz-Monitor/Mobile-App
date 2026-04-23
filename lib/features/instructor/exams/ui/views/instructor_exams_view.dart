@@ -328,7 +328,12 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 12.h),
+                  Divider(
+                    color: AppColors.white10,
+                    thickness: 1.74.w,
+                  ),
+                  verticalSpace(12.h),
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: () => _refreshExams(context),
