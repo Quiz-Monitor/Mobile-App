@@ -33,9 +33,8 @@ class LoginCubit extends Cubit<LoginState> {
           role: loginResponse.user?.role,
           userId: loginResponse.user?.userId,
           fullName: loginResponse.user?.fullName,
-          email: loginResponse.user?.email,
+          email: loginResponse.user?.email,       
         );
-
         emit(LoginState.success(loginResponse));
       },
       failure: (error) {

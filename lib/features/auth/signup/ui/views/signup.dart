@@ -116,6 +116,27 @@ class Signup extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
+                      'Phone number (optional)',
+                      style: AppTextStyles.whit14w400alpha60,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  CustomTextfield(
+                    controller: context.read<SignupCubit>().phoneController,
+                    hintText: '+20',
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value.toString().length < 11) {
+                        return 'Please enter a valid phone number';
+                      }
+
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16.h),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
                       'Password',
                       style: AppTextStyles.whit14w400alpha60,
                     ),

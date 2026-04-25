@@ -11,6 +11,7 @@ import 'package:examify/features/auth/signup/data/models/signup_request_body.dar
     as signup_models;
 import 'package:examify/features/auth/signup/data/models/signup_response.dart'
     as signup_models;
+import 'package:examify/features/instructor/home/data/models/get_exams_response.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_request_body.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_response.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -45,6 +46,12 @@ class _FakeApiService implements ApiService {
 
   @override
   Future<JoinExamResponse> joinExam(JoinExamRequestBody body) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GetExamsResponse> getExams() {
+    // TODO: implement getExams
     throw UnimplementedError();
   }
 }

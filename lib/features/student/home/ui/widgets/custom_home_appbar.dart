@@ -33,7 +33,6 @@ class CustomHomeAppbar extends StatelessWidget {
         final initial = trimmed.isNotEmpty
             ? trimmed.substring(0, 1).toUpperCase()
             : 'U';
-
         return Row(
           children: [
             InkWell(

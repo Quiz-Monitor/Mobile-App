@@ -10,16 +10,6 @@ import 'package:flutter_svg/svg.dart';
 class UpcomingExamsCard extends StatelessWidget {
   const UpcomingExamsCard({super.key, required this.examModel});
   final ExamModel examModel;
-
-  Duration _remainingDuration() {
-    if (examModel.isLive) {
-      return Duration.zero;
-    }
-
-    final diff = examModel.dateTime.difference(DateTime.now());
-    return diff.isNegative ? Duration.zero : diff;
-  }
-
   String _examCode() {
     final words = examModel.title
         .split(' ')
@@ -38,9 +28,8 @@ class UpcomingExamsCard extends StatelessWidget {
     // final hours = duration.inHours.remainder(24);
     // final minutes = duration.inMinutes.remainder(60);
     // final seconds = duration.inSeconds.remainder(60);
-
     return AspectRatio(
-      aspectRatio: 341/ 262,
+      aspectRatio: 341 / 262,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 22.w),
         decoration: BoxDecoration(
@@ -60,10 +49,9 @@ class UpcomingExamsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
-          
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            verticalSpace(22) ,
+            verticalSpace(22),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,9 +77,7 @@ class UpcomingExamsCard extends StatelessWidget {
                   child: SvgPicture.asset('assets/icons/pc.svg'),
                 ),
                 Text(examModel.title, style: AppTextStyles.whit18w400alpha90),
-
                 SizedBox(width: 8.w),
-               
                 if (examModel.isLive)
                   Container(
                     padding: EdgeInsets.symmetric(
@@ -146,7 +132,10 @@ class UpcomingExamsCard extends StatelessWidget {
                   ],
                 ),
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: AppColors.blueBorder.withAlpha(75) , width: 1.74.w),
+                border: Border.all(
+                  color: AppColors.blueBorder.withAlpha(75),
+                  width: 1.74.w,
+                ),
               ),
               child: Text(
                 '# ${_examCode()}',
@@ -208,10 +197,8 @@ class UpcomingExamsCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    
-                    
                   ),
-                  SizedBox(height: 27.h,)
+                SizedBox(height: 27.h),
               ],
             ),
           ],
@@ -220,4 +207,3 @@ class UpcomingExamsCard extends StatelessWidget {
     );
   }
 }
-
