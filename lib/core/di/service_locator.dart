@@ -10,6 +10,8 @@ import 'package:examify/features/auth/login/logic/login_cubit.dart';
 import 'package:examify/features/instructor/exams/data/repo/instructor_exams_repo.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_cubit.dart';
 import 'package:examify/features/instructor/home/data/repo/instructor_home_repo.dart';
+import 'package:examify/features/shared/profile/data/repo/profile_repo.dart';
+import 'package:examify/features/shared/profile/logic/cubit/profile_cubit.dart';
 import 'package:examify/features/auth/signup/data/repo/signup_repo.dart';
 import 'package:examify/features/auth/signup/logic/cubit/signup_cubit.dart';
 import 'package:examify/features/student/join_exam/data/repo/join_exam_repo.dart';
@@ -85,6 +87,17 @@ Future<void> init() async {
   if (!getit.isRegistered<InstructorHomeRepo>()) {
     getit.registerLazySingleton<InstructorHomeRepo>(
       () => InstructorHomeRepo(getit.get<InstructorExamsRepo>()),
+    );
+  }
+
+  if (!getit.isRegistered<ProfileRepo>()) {
+    getit.registerLazySingleton<ProfileRepo>(
+      () => ProfileRepo(getit.get<ApiService>(), getit.get<SessionStorage>()),
+    );
+  }
+  if (!getit.isRegistered<ProfileCubit>()) {
+    getit.registerFactory<ProfileCubit>(
+      () => ProfileCubit(getit.get<ProfileRepo>()),
     );
   }
 

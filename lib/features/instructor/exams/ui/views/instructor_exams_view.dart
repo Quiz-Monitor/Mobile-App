@@ -236,6 +236,7 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
 
               if (state is ExamsFailure) {
                 return RefreshIndicator(
+                  color: AppColors.mainBlue,
                   onRefresh: () => _refreshExams(context),
                   child: ListView(
                     physics: const AlwaysScrollableScrollPhysics(
@@ -329,13 +330,11 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
                     ),
                   ),
                   SizedBox(height: 12.h),
-                  Divider(
-                    color: AppColors.white10,
-                    thickness: 1.74.w,
-                  ),
+                  Divider(color: AppColors.white10, thickness: 1.74.w),
                   verticalSpace(12.h),
                   Expanded(
                     child: RefreshIndicator(
+                      color: AppColors.primaryBlack,
                       onRefresh: () => _refreshExams(context),
                       child: ListView.separated(
                         physics: const AlwaysScrollableScrollPhysics(
@@ -351,11 +350,11 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
                           return Container(
                             padding: EdgeInsets.all(18.w),
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [AppColors.white5, AppColors.white2],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
+                              color: isCompleted
+                                  ? const Color(0xffAD46FF).withAlpha(8)
+                                  : isLive
+                                  ? const Color(0xff00C950).withAlpha(8)
+                                  : const Color(0xff2B7FFF).withAlpha(8),
                               borderRadius: BorderRadius.circular(14.r),
                               border: Border.all(
                                 color: AppColors.white10,

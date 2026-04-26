@@ -298,7 +298,7 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                         builder: (context, nameSnapshot) {
                           final name = nameSnapshot.data ?? 'Instructor';
                           return Text(
-                            'Welcome back, $name',
+                            'Welcome back,\t Dr.$name',
                             style: AppTextStyles.white14w400alpha70,
                           );
                         },

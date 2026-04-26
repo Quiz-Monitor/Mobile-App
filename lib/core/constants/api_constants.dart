@@ -42,21 +42,23 @@ class ApiConstants {
     }
   }
 
-  static const String login = "api/auth/login";
-  static const String signup = "api/auth/register";
-  static const String refreshToken = "api/auth/refresh";
-  static const String forgotPassword = "api/auth/forgot-password";
+  static const String login = "api/auth/login"; // ✅ done
+  static const String signup = "api/auth/register"; // ✅ done
+  static const String refreshToken = "api/auth/refresh"; // ✅ done
+  //static const String forgotPassword = "api/auth/forgot-password"; 
 
   // Student endpoints placeholders
+  static const String studentResult = "api/students/me/results";
+  static const String studentExamJoin = "api/exams/join"; // ✅ done
+  static const String studentUpcomingExams = "api/student/exams/upcoming"; 
+  static const String studentExamHistory = "api/student/exams/history"; 
 
-  static const String studentExamJoin = "api/exams/join";
-  static const String studentUpcomingExams = "api/student/exams/upcoming";
-  static const String studentExamHistory = "api/student/exams/history";
-  static const String studentProfile = "api/student/profile";
+  // User profile endpoint
+  static const String userProfile = "api/users/me"; // ✅ done
 
   // Instructor endpoints placeholders
-  static const String getInstructorExams = "api/exams";
+  static const String getInstructorExams = "api/exams"; // ✅ done
 
   // Shared placeholders
-  static const String notifications = "api/notifications";
+  // static const String notifications = "api/notifications";
 }
