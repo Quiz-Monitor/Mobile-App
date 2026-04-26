@@ -64,7 +64,7 @@ class LoginView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 163.h),
+                SizedBox(height: 168.h),
                 Image.asset('assets/images/app_logo.png', height: 80.h),
                 SizedBox(height: 25.h, width: double.infinity),
 
@@ -74,7 +74,7 @@ class LoginView extends StatelessWidget {
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  'Sign in to continue  ',
+                  'Sign in to continue ',
                   style: AppTextStyles.whit14w400alpha60.copyWith(
                     fontSize: 16.sp,
                   ),

@@ -55,7 +55,7 @@ class Signup extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 70.h),
+                  SizedBox(height: 52.h),
                   Image.asset('assets/images/app_logo.png', height: 80.h),
                   SizedBox(height: 25.h, width: double.infinity),
                   Text(
@@ -69,7 +69,7 @@ class Signup extends StatelessWidget {
                       fontSize: 16.sp,
                     ),
                   ),
-                  SizedBox(height: 27.h),
+                  SizedBox(height: 16.h),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
@@ -89,7 +89,7 @@ class Signup extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 12.h),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
@@ -112,7 +112,7 @@ class Signup extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 12.h),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
@@ -133,7 +133,7 @@ class Signup extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 12.h),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
@@ -156,7 +156,7 @@ class Signup extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 12.h),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
@@ -182,7 +182,7 @@ class Signup extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 16.h),
                   // BlocBuilder<SignupCubit, SignupState>(
                   //   builder: (context, state) {
                   //     return CustomButton(
@@ -230,7 +230,7 @@ class Signup extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 16.h),
                   const AlreadyHaveAccount(),
                   const SizedBox(height: 10),
                 ],

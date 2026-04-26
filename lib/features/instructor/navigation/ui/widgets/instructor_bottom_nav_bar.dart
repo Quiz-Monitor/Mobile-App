@@ -78,11 +78,10 @@ class _NavBarItem extends StatelessWidget {
       onTap: () => onTap(index),
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            SizedBox(height: 12.h),
             SvgPicture.asset(
               iconUrl,
               colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
