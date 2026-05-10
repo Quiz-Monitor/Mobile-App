@@ -5,6 +5,7 @@ import 'package:examify/features/student/join_exam/logic/join_exam_cubit.dart';
 import 'package:examify/features/student/join_exam/ui/widgets/join_exam_bottom_sheet.dart';
 import 'package:examify/features/student/history/ui/views/exams_history.dart';
 import 'package:examify/features/student/home/ui/screens/home_view.dart';
+import 'package:examify/features/student/home/logic/cubit/cubit/student_exam_cubit.dart';
 import 'package:examify/features/student/notifications/ui/screens/notifications_view.dart';
 import 'package:examify/features/student/profile/ui/views/profile_view.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,10 @@ class _MainNavigationState extends State<MainNavigation> {
   // TODO: Replace these placeholders with your actual screen widgets
   final List<Widget> _screens = [
     // Index 0: Home
-    const HomeView(),
+    BlocProvider(
+      create: (_) => getit<StudentExamCubit>()..getUpcomingExams(),
+      child: const HomeView(),
+    ),
     // Index 1: History
     ExamsHistory(),
     // Index 2: Not used (center button)

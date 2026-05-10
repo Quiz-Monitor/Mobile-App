@@ -9,8 +9,10 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
+      
       style: FilledButton.styleFrom(
-        minimumSize: Size(double.infinity, 50.h),
+        
+        minimumSize: Size(double.infinity, 48.h),
         backgroundColor: AppColors.blueBorder,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14.r),

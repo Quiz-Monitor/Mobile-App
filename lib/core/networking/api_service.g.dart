@@ -136,7 +136,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<GetExamsResponse> getExams() async {
+  Future<dynamic> getExams() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -151,23 +151,29 @@ class _ApiService implements ApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<dynamic>(_options);
-    late GetExamsResponse _value;
-    try {
-      final data = _result.data;
-      if (data is Map<String, dynamic>) {
-        _value = GetExamsResponse.fromJson(data);
-      } else if (data is Map) {
-        _value = GetExamsResponse.fromJson(data.cast<String, dynamic>());
-      } else if (data is List) {
-        _value = GetExamsResponse.fromJson(<String, dynamic>{'data': data});
-      } else {
-        _value = GetExamsResponse.fromJson(<String, dynamic>{});
-      }
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, _result);
-      rethrow;
-    }
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> getStudentUpcomingExams() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<dynamic>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/students/me/exams',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
     return _value;
   }
 
@@ -188,7 +194,13 @@ class _ApiService implements ApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    final _value = _result.data ?? <String, dynamic>{};
+    late Map<String, dynamic> _value;
+    try {
+      _value = _result.data!;
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, _result);
+      rethrow;
+    }
     return _value;
   }
 

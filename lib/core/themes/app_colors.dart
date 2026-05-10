@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static Color primaryBlack = const Color(0xff0F111A);
+  static Color primaryBlack = const Color(0xff0A0E1A);
   static Color white10 = Colors.white.withAlpha((255 * .1).toInt());
   static Color white20 = Colors.white.withAlpha((255 * .2).toInt());
   static Color white5 = Colors.white.withAlpha((255 * .05).toInt());

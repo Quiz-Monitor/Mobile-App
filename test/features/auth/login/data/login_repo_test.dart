@@ -52,6 +52,18 @@ class _FakeApiService implements ApiService {
     // TODO: implement getExams
     throw UnimplementedError();
   }
+  
+  @override
+  Future<Map<String, dynamic>> getUserProfile() {
+    // TODO: implement getUserProfile
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<GetExamsResponse> getStudentUpcomingExams() {
+    // TODO: implement getStudentUpcomingExams
+    throw UnimplementedError();
+  }
 }
 
 void main() {

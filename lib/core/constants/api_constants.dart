@@ -50,8 +50,8 @@ class ApiConstants {
   // Student endpoints placeholders
   static const String studentResult = "api/students/me/results";
   static const String studentExamJoin = "api/exams/join"; // ✅ done
-  static const String studentUpcomingExams = "api/student/exams/upcoming"; 
-  static const String studentExamHistory = "api/student/exams/history"; 
+  static const String studentUpcomingExams = "/api/students/me/exams"; // ✅ done
+  static const String studentExamHistory = "/api/students/me/results"; // ✅ done
 
   // User profile endpoint
   static const String userProfile = "api/users/me"; // ✅ done

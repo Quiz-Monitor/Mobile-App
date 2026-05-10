@@ -18,7 +18,7 @@ class PageIndecator extends StatelessWidget {
         spacing: 8,
         dotHeight: 8.h,
         dotWidth: 8.w,
-        activeDotColor: const Color(0xff8F3DFF),
+        activeDotColor: const Color(0XFFFFFFFF),
         dotColor: AppColors.white20,
       ),
     );

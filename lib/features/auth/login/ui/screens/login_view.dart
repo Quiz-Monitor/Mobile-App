@@ -1,5 +1,6 @@
 import 'package:examify/core/helpers/spacing.dart';
 import 'package:examify/core/routing/routes.dart';
+import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/core/widgets/custom_button.dart';
 import 'package:examify/core/widgets/custom_textfield.dart';
@@ -9,6 +10,7 @@ import 'package:examify/features/auth/login/ui/widgets/donthaveaccount.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:toastification/toastification.dart';
 
 class LoginView extends StatelessWidget {
@@ -26,14 +28,12 @@ class LoginView extends StatelessWidget {
               final role = loginResponse.user?.role?.trim().toLowerCase();
               if (role == 'student') {
                 Navigator.pushReplacementNamed(context, Routes.homeScreen);
-              } else if (role == 'instructor' || role == 'teacher') {
+              } else if (role == 'instructor' ) {
                 Navigator.pushReplacementNamed(
                   context,
                   Routes.instructorHomeScreen,
                 );
-              } else {
-                Navigator.pushReplacementNamed(context, Routes.homeScreen);
-              }
+              } 
               toastification.show(
                 autoCloseDuration: const Duration(seconds: 5),
                 style: ToastificationStyle.fillColored,
@@ -64,9 +64,14 @@ class LoginView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 168.h),
-                Image.asset('assets/images/app_logo.png', height: 80.h),
-                SizedBox(height: 25.h, width: double.infinity),
+                SizedBox(height: 120.h),
+                Image.asset(
+                  
+                  'assets/icons/app_logo.png',
+                  // colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                   height: 150.h,
+                ),
+              // SizedBox(height: 25.h, width: double.infinity),
 
                 Text(
                   'Welcome Back',

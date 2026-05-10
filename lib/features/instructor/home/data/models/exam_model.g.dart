@@ -14,6 +14,7 @@ ExamModel _$ExamModelFromJson(Map<String, dynamic> json) => ExamModel(
   endTime: DateTime.parse(json['endTime'] as String),
   durationMinutes: json['durationMinutes'] as String,
   examCode: json['examCode'] as String,
+  instructorName: json['instructorName'] as String? ?? '',
 );
 
 Map<String, dynamic> _$ExamModelToJson(ExamModel instance) => <String, dynamic>{
@@ -24,4 +25,5 @@ Map<String, dynamic> _$ExamModelToJson(ExamModel instance) => <String, dynamic>{
   'endTime': instance.endTime.toIso8601String(),
   'durationMinutes': instance.durationMinutes,
   'examCode': instance.examCode,
+  'instructorName': instance.instructorName,
 };

@@ -37,7 +37,11 @@ abstract class ApiService {
 
   // Get exams service
   @GET(ApiConstants.getInstructorExams)
-  Future<GetExamsResponse> getExams();
+  Future<dynamic> getExams();
+
+  // Student upcoming exams service
+  @GET(ApiConstants.studentUpcomingExams)
+  Future<dynamic> getStudentUpcomingExams();
 
   // User profile service
   @GET(ApiConstants.userProfile)

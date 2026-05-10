@@ -26,14 +26,8 @@ class ActionButton extends StatelessWidget {
             colors: [Color(0xff2b7FFF), Color(0xff9810FA)],
           ),
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.mainIndego.withOpacity(0.22),
-              blurRadius: 28,
-              offset: const Offset(0, 10),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(16.r),
+         
         ),
         child: Center(
           child: Text(
@@ -42,7 +36,7 @@ class ActionButton extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ),

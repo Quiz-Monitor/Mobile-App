@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 part 'exam_model.g.dart';
+
 @JsonSerializable()
 class ExamModel {
   int examId;
@@ -10,6 +11,7 @@ class ExamModel {
   DateTime endTime;
   String durationMinutes;
   String examCode;
+  String instructorName;
   ExamModel({
     required this.examId,
     required this.title,
@@ -18,11 +20,12 @@ class ExamModel {
     required this.endTime,
     required this.durationMinutes,
     required this.examCode,
+    this.instructorName = '',
   });
-  
+
   factory ExamModel.fromJson(Map<String, dynamic> json) {
-    final startTime = _readDateTime(json, const ['startTime', 'startAt']) ??
-        DateTime.now();
+    final startTime =
+        _readDateTime(json, const ['startTime', 'startAt']) ?? DateTime.now();
     final durationMinutes =
         _readString(json, const ['durationMinutes', 'duration']) ?? '60';
     final parsedDuration = int.tryParse(durationMinutes) ?? 60;
@@ -35,15 +38,23 @@ class ExamModel {
     return ExamModel(
       examId: _readInt(json, const ['examId', 'id']) ?? 0,
       title: title,
-      description:
-          _readString(json, const ['description', 'details']) ??
-          '',
+      description: _readString(json, const ['description', 'details']) ?? '',
       startTime: startTime,
       endTime: endTime,
       durationMinutes: durationMinutes,
       examCode:
           _readString(json, const ['examCode', 'code']) ??
           _buildFallbackExamCode(title, startTime),
+      instructorName:
+          _readString(json, const [
+            'instructorName',
+            'professorName',
+            'professor',
+            'teacherName',
+            'ownerName',
+            'createdByName',
+          ]) ??
+          '',
     );
   }
 
@@ -94,10 +105,7 @@ class ExamModel {
     return null;
   }
 
-  static DateTime? _readDateTime(
-    Map<String, dynamic> json,
-    List<String> keys,
-  ) {
+  static DateTime? _readDateTime(Map<String, dynamic> json, List<String> keys) {
     for (final key in keys) {
       final value = json[key];
       if (value is DateTime) {

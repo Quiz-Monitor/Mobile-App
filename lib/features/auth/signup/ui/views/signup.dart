@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:toastification/toastification.dart';
-
 class Signup extends StatelessWidget {
   const Signup({super.key});
 
@@ -55,9 +54,7 @@ class Signup extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 52.h),
-                  Image.asset('assets/images/app_logo.png', height: 80.h),
-                  SizedBox(height: 25.h, width: double.infinity),
+                  Image.asset('assets/icons/app_logo.png', height: 150.h),
                   Text(
                     'Create Account',
                     style: AppTextStyles.white16w400.copyWith(fontSize: 24.sp),
@@ -80,7 +77,7 @@ class Signup extends StatelessWidget {
                   SizedBox(height: 8.h),
                   CustomTextfield(
                     controller: context.read<SignupCubit>().nameController,
-                    hintText: 'Ali Ahmad Taha Saed',
+                    hintText: 'Ali Ahmad',
                     keyboardType: TextInputType.name,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -89,7 +86,7 @@ class Signup extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 11.h),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
@@ -112,7 +109,7 @@ class Signup extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 11.h),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
@@ -133,7 +130,7 @@ class Signup extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 11.h),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
@@ -156,7 +153,7 @@ class Signup extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 11.h),
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Text(
@@ -183,25 +180,6 @@ class Signup extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: 16.h),
-                  // BlocBuilder<SignupCubit, SignupState>(
-                  //   builder: (context, state) {
-                  //     return CustomButton(
-                  //       buttonContent: state is Loading
-                  //           ? const CircularProgressIndicator(
-                  //               color: Colors.white,
-                  //             )
-                  //           : Text('Sign Up', style: AppTextStyles.white16w400),
-                  //       onPressed: () {
-                  //         if (context.read<SignupCubit>().formkey.currentState!.validate()) {
-                  //           final selectedRole = context.read<RoleCubit>().state;
-                  //           context.read<SignupCubit>().emitSignupState(
-                  //             role: selectedRole,
-                  //           );
-                  //         }
-                  //       },
-                  //     );
-                  //   },
-                  // ),
                   CustomButton(
                     onPressed: () {
                       if (context

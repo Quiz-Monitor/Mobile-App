@@ -1,7 +1,7 @@
 import 'package:examify/core/helpers/spacing.dart';
 import 'package:examify/core/themes/colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
-import 'package:examify/features/student/home/data/model/exam_model.dart';
+import 'package:examify/features/student/home/data/model/student_exam_model.dart';
 import 'package:examify/features/student/home/ui/widgets/time_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,25 +9,34 @@ import 'package:flutter_svg/svg.dart';
 
 class UpcomingExamsCard extends StatelessWidget {
   const UpcomingExamsCard({super.key, required this.examModel});
-  final ExamModel examModel;
+  final StudentExamModel examModel;
+
   String _examCode() {
-    final words = examModel.title
+    final words = examModel.examTitle
         .split(' ')
         .where((w) => w.trim().isNotEmpty)
         .toList();
     final prefix = words.isEmpty
         ? 'EX'
         : words.take(2).map((w) => w.substring(0, 1).toUpperCase()).join();
-    return '$prefix${examModel.dateTime.year}';
+    return '$prefix${examModel.startTime.year}';
+  }
+
+  Duration _remainingDuration() {
+    final remaining = examModel.startTime.difference(DateTime.now());
+    if (remaining.isNegative) {
+      return Duration.zero;
+    }
+    return remaining;
   }
 
   @override
   Widget build(BuildContext context) {
-    // final duration = _remainingDuration();
-    // final days = duration.inDays;
-    // final hours = duration.inHours.remainder(24);
-    // final minutes = duration.inMinutes.remainder(60);
-    // final seconds = duration.inSeconds.remainder(60);
+    final duration = _remainingDuration();
+    final days = duration.inDays;
+    final hours = duration.inHours.remainder(24);
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
     return AspectRatio(
       aspectRatio: 341 / 262,
       child: Container(
@@ -76,7 +85,10 @@ class UpcomingExamsCard extends StatelessWidget {
                   ),
                   child: SvgPicture.asset('assets/icons/pc.svg'),
                 ),
-                Text(examModel.title, style: AppTextStyles.whit18w400alpha90),
+                Text(
+                  examModel.examTitle,
+                  style: AppTextStyles.whit18w400alpha90,
+                ),
                 SizedBox(width: 8.w),
                 if (examModel.isLive)
                   Container(
@@ -150,10 +162,10 @@ class UpcomingExamsCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TimeBox(value: examModel.dateTime.day, unit: 'DAYS'),
-                TimeBox(value: examModel.dateTime.hour, unit: 'HOURS'),
-                TimeBox(value: examModel.dateTime.minute, unit: 'MINS'),
-                TimeBox(value: examModel.dateTime.second, unit: 'SECS'),
+                TimeBox(value: days, unit: 'DAYS'),
+                TimeBox(value: hours, unit: 'HOURS'),
+                TimeBox(value: minutes, unit: 'MINS'),
+                TimeBox(value: seconds, unit: 'SECS'),
               ],
             ),
             SizedBox(height: 16.h),
@@ -168,7 +180,7 @@ class UpcomingExamsCard extends StatelessWidget {
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
-                    examModel.prof,
+                    examModel.instructorName,
                     style: AppTextStyles.whit14w400alpha60,
                     overflow: TextOverflow.ellipsis,
                   ),
