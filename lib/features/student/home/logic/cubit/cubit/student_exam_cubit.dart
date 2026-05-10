@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:examify/core/networking/api_result.dart';
+import 'package:examify/features/student/home/data/model/student_exam_model.dart';
 import 'package:examify/features/student/home/data/repo/student_upcoming_exams_repo.dart';
 
 import 'student_exam_state.dart';
@@ -17,15 +18,25 @@ class StudentExamCubit extends Cubit<StudentExamState> {
     final result = await _repo.getUpcomingExams();
     result.when(
       success: (exams) {
-        if (exams.isEmpty) {
+        final visibleExams = _filterVisibleExams(exams);
+
+        if (visibleExams.isEmpty) {
           emit(const StudentExamEmpty());
         } else {
-          emit(StudentExamSuccess(exams));
+          emit(StudentExamSuccess(visibleExams));
         }
       },
       failure: (error) {
         emit(StudentExamFailure(error.apiErrorModel.getAllErrorMessages()));
       },
     );
+  }
+
+  List<StudentExamModel> _filterVisibleExams(List<StudentExamModel> exams) {
+    final now = DateTime.now();
+
+    return exams.where((exam) {
+      return exam.isLive || exam.startTime.isAfter(now);
+    }).toList();
   }
 }
