@@ -164,27 +164,35 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
   Widget _buildSearchBar() {
     return Padding(
       padding: EdgeInsets.only(top: 12.h),
-      child: SearchBar(
-        padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16.w)),
-        controller: _searchController,
-        hintText: 'Search exams...',
-        onChanged: (value) => setState(() {
-          _searchQuery = value;
-        }),
-        leading: Icon(Icons.search_rounded, color: AppColors.white40),
-        backgroundColor: WidgetStatePropertyAll(AppColors.white5),
-        surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
-        shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-        elevation: const WidgetStatePropertyAll(0),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          
+          textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.white),
         ),
-        side: WidgetStatePropertyAll(
-          BorderSide(color: AppColors.white10, width: 1.74.w),
-        ),
-        textStyle: WidgetStatePropertyAll(AppTextStyles.white16w400),
-        hintStyle: WidgetStatePropertyAll(
-          AppTextStyles.white16w400.copyWith(color: AppColors.white40),
+        child: SearchBar(
+          padding: WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 16.w),
+          ),
+          controller: _searchController,
+          hintText: 'Search exams...',
+          onChanged: (value) => setState(() {
+            _searchQuery = value;
+          }),
+          leading: Icon(Icons.search_rounded, color: AppColors.white40),
+          backgroundColor: WidgetStatePropertyAll(AppColors.white5),
+          surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+          shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+          elevation: const WidgetStatePropertyAll(0),
+          shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+          ),
+          side: WidgetStatePropertyAll(
+            BorderSide(color: AppColors.white10, width: 1.74.w),
+          ),
+          textStyle: WidgetStatePropertyAll(AppTextStyles.white16w400),
+          hintStyle: WidgetStatePropertyAll(
+            AppTextStyles.white16w400.copyWith(color: AppColors.white40),
+          ),
         ),
       ),
     );

@@ -260,7 +260,7 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
   }
 
   Widget _buildLoadingState() {
-    return const Center(child: CircularProgressIndicator());
+    return const Center(child: CircularProgressIndicator(color: Colors.white,));
   }
 
   @override
@@ -413,16 +413,7 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                               verticalSpace(24),
                               _buildSectionHeader(
                                 'Upcoming Exams',
-                                trailing: TextButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    'View All',
-                                    style: TextStyle(
-                                      color: const Color(0xff00D3F3),
-                                      fontSize: 14.sp,
-                                    ),
-                                  ),
-                                ),
+                                
                               ),
                               verticalSpace(12),
                               if (upcomingExams.isEmpty)
