@@ -42,17 +42,17 @@ class CustomExamCard extends StatelessWidget {
             child: Center(child: SvgPicture.asset('assets/icons/docs.svg')),
           ),
           title: Text(
-            exHistoryModel.title,
+            exHistoryModel.examTitle,
             style: TextStyle(fontSize: 12.sp, color: Colors.white),
           ),
           subtitle: Text(
-            exHistoryModel.date,
+            exHistoryModel.status,
             style: AppTextStyles.whit14w400alpha60.copyWith(fontSize: 12.sp),
           ),
           trailing: exHistoryModel.isPending
               ? PendingState()
               : Customhistoryitemtrailing(
-                  grades: exHistoryModel.garade.toString(),
+                  grades: exHistoryModel.finalScore?.toString() ?? '--',
                 ),
         ),
       ),

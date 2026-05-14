@@ -1,10 +1,9 @@
-/*
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'student_exam_cubit.dart';
+part of 'student_results_cubit.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,7 +12,7 @@ part of 'student_exam_cubit.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$StudentExamState {
+mixin _$StudentResultsState {
 
 
 
@@ -21,7 +20,7 @@ mixin _$StudentExamState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentExamState);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentResultsState);
 }
 
 
@@ -30,20 +29,20 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'StudentExamState()';
+  return 'StudentResultsState()';
 }
 
 
 }
 
 /// @nodoc
-class $StudentExamStateCopyWith<$Res>  {
-$StudentExamStateCopyWith(StudentExamState _, $Res Function(StudentExamState) __);
+class $StudentResultsStateCopyWith<$Res>  {
+$StudentResultsStateCopyWith(StudentResultsState _, $Res Function(StudentResultsState) __);
 }
 
 
-/// Adds pattern-matching-related methods to [StudentExamState].
-extension StudentExamStatePatterns on StudentExamState {
+/// Adds pattern-matching-related methods to [StudentResultsState].
+extension StudentResultsStatePatterns on StudentResultsState {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -175,7 +174,7 @@ return initial();case _:
 /// @nodoc
 
 
-class _Initial implements StudentExamState {
+class _Initial implements StudentResultsState {
   const _Initial();
   
 
@@ -195,7 +194,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'StudentExamState.initial()';
+  return 'StudentResultsState.initial()';
 }
 
 
@@ -205,4 +204,3 @@ String toString() {
 
 
 // dart format on
-*/

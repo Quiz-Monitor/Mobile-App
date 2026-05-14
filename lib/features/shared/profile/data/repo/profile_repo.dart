@@ -61,7 +61,7 @@ class ProfileRepo {
     }
   }
 
-  Map<String, dynamic> _extractUserMap(Map<String, dynamic> response) {
+  Map<String, dynamic> _extractUserMap(dynamic response) {
     final dynamic nested = response['user'] ?? response['data'] ?? response;
 
     if (nested is Map<String, dynamic>) {

@@ -1,13 +1,22 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+
+part 'exams_history_model.g.dart';
+@JsonSerializable()
 class ExamsHistoryModel {
-  final String title;
-  final String date;
+  final String examTitle;
+  final String status;
   final bool isPending;
-  final int? garade;
+  final int? finalScore;
 
   ExamsHistoryModel({
-     this.garade,
-    required this.title,
-    required this.date,
+    required this.finalScore,
+    required this.examTitle,
+    required this.status,
     required this.isPending,
   });
+  factory ExamsHistoryModel.fromJson(Map<String, dynamic> json) =>
+      _$ExamsHistoryModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExamsHistoryModelToJson(this);
 }

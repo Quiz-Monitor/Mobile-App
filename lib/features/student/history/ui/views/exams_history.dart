@@ -10,40 +10,42 @@ class ExamsHistory extends StatelessWidget {
   final List<CustomExamCard> exItems = [
     CustomExamCard(
       exHistoryModel: ExamsHistoryModel(
-        title: 'Computer Science',
-        date: 'Nov 28, 2024',
+        examTitle: 'Computer Science',
+        status: 'Pending',
         isPending: true,
+        finalScore: null,
       ),
     ),
     CustomExamCard(
       exHistoryModel: ExamsHistoryModel(
-        title: 'Advanced Physics',
-        date: 'Nov 25, 2024',
+        examTitle: 'Advanced Physics',
+        status: 'Pending',
         isPending: true,
+        finalScore: null,
       ),
     ),
     CustomExamCard(
       exHistoryModel: ExamsHistoryModel(
-        title: 'Machine Learning',
-        date: 'Nov 20, 2024',
+        examTitle: 'Machine Learning',
+        status: 'Completed',
         isPending: false,
-        garade: 18,
+        finalScore: 18,
       ),
     ),
     CustomExamCard(
       exHistoryModel: ExamsHistoryModel(
-        title: 'Cuantum Computing',
-        date: 'Nov 20, 2024',
+        examTitle: 'Cuantum Computing',
+        status: 'Completed',
         isPending: false,
-        garade: 15,
+        finalScore: 15,
       ),
     ),
     CustomExamCard(
       exHistoryModel: ExamsHistoryModel(
-        title: 'Data Structures',
-        date: 'Nov 20, 2024',
+        examTitle: 'Data Structures',
+        status: 'Completed',
         isPending: false,
-        garade: 20,
+        finalScore: 20,
       ),
     ),
   ];

@@ -10,6 +10,7 @@ import 'package:examify/features/auth/login/logic/login_cubit.dart';
 import 'package:examify/features/instructor/exams/data/repo/instructor_exams_repo.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_cubit.dart';
 import 'package:examify/features/instructor/home/data/repo/instructor_home_repo.dart';
+import 'package:examify/features/instructor/home/logic/cubit/instructor_home_cubit.dart';
 import 'package:examify/features/shared/profile/data/repo/profile_repo.dart';
 import 'package:examify/features/shared/profile/logic/cubit/profile_cubit.dart';
 import 'package:examify/features/auth/signup/data/repo/signup_repo.dart';
@@ -100,6 +101,11 @@ Future<void> init() async {
   if (!getit.isRegistered<InstructorHomeRepo>()) {
     getit.registerLazySingleton<InstructorHomeRepo>(
       () => InstructorHomeRepo(getit.get<InstructorExamsRepo>()),
+    );
+  }
+  if (!getit.isRegistered<InstructorHomeCubit>()) {
+    getit.registerFactory<InstructorHomeCubit>(
+      () => InstructorHomeCubit(getit.get<InstructorHomeRepo>()),
     );
   }
 

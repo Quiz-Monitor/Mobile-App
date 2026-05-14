@@ -90,9 +90,7 @@ class HomeView extends StatelessWidget {
                         ),
                         children: const [
                           SizedBox(height: 120),
-                          _StateMessage(
-                            message: 'No upcoming exams yet.',
-                          ),
+                          _StateMessage(message: 'No upcoming exams yet.'),
                         ],
                       );
                     }

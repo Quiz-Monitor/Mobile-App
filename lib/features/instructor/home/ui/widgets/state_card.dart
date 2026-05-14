@@ -26,7 +26,7 @@ class StatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white2,
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.white10 , width: 1.74.w),
+        border: Border.all(color: AppColors.white10, width: 1.74.w),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,7 +46,10 @@ class StatCard extends StatelessWidget {
             child: SvgPicture.asset(iconUrl),
           ),
           const Spacer(),
-          Text(value, style: AppTextStyles.white16w400.copyWith(fontSize: 24.sp)),
+          Text(
+            value,
+            style: AppTextStyles.white16w400.copyWith(fontSize: 24.sp),
+          ),
           Text(label, style: AppTextStyles.white12w400alpha40),
         ],
       ),

@@ -23,7 +23,6 @@ class LiveExamCard extends StatelessWidget {
   Future<void> _copyExamCode(BuildContext context) async {
     await Clipboard.setData(ClipboardData(text: exam.examCode));
 
-   
     if (!context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(

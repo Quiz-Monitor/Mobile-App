@@ -6,6 +6,7 @@ import 'package:examify/features/auth/login/data/model/login_request_body.dart';
 import 'package:examify/features/auth/login/data/model/login_response.dart';
 import 'package:examify/features/auth/signup/data/models/signup_request_body.dart';
 import 'package:examify/features/auth/signup/data/models/signup_response.dart';
+import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 import 'package:examify/features/instructor/home/data/models/get_exams_response.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_request_body.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_response.dart';
@@ -37,7 +38,7 @@ abstract class ApiService {
 
   // Get exams service
   @GET(ApiConstants.getInstructorExams)
-  Future<dynamic> getExams();
+  Future<List<ExamModel>> getExams();
 
   // Student upcoming exams service
   @GET(ApiConstants.studentUpcomingExams)
@@ -45,5 +46,5 @@ abstract class ApiService {
 
   // User profile service
   @GET(ApiConstants.userProfile)
-  Future<Map<String, dynamic>> getUserProfile();
+  Future<dynamic> getUserProfile();
 }

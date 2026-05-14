@@ -12,7 +12,7 @@ class InstructorExamsRepo {
   Future<ApiResult<List<ExamModel>>> getInstructorExams() async {
     try {
       final response = await _apiService.getExams();
-      return ApiResult.success(response.exams);
+      return ApiResult.success(response);
     } on DioException catch (e) {
       return ApiResult.failure(ErrorHandler.handle(e));
     } catch (e) {
