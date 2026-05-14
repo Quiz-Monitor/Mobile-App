@@ -4,6 +4,8 @@ import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_cubit.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_state.dart';
+import 'package:examify/features/instructor/exams/ui/widgets/instructor_exam_card.dart';
+import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,9 +36,7 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
 
   List<dynamic> _filterExams(List<dynamic> exams) {
     final query = _searchQuery.trim().toLowerCase();
-    if (query.isEmpty) {
-      return exams;
-    }
+    if (query.isEmpty) return exams;
 
     return exams.where((exam) {
       final title = exam.title.toString().toLowerCase();
@@ -63,26 +63,7 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
     }).toList();
   }
 
-  String _formatDate(DateTime time) {
-    const months = <String>[
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    final hour = time.hour % 12 == 0 ? 12 : time.hour % 12;
-    final minute = time.minute.toString().padLeft(2, '0');
-    final suffix = time.hour >= 12 ? 'PM' : 'AM';
-    return '${months[time.month - 1]} ${time.day}, $hour:$minute $suffix';
-  }
+  // date formatting moved to top-level function `formatDate` below
 
   Widget _buildSkeletonList() {
     return Column(
@@ -166,8 +147,9 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
       padding: EdgeInsets.only(top: 12.h),
       child: Theme(
         data: Theme.of(context).copyWith(
-          
-          textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.white),
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Colors.white,
+          ),
         ),
         child: SearchBar(
           padding: WidgetStatePropertyAll(
@@ -175,9 +157,7 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
           ),
           controller: _searchController,
           hintText: 'Search exams...',
-          onChanged: (value) => setState(() {
-            _searchQuery = value;
-          }),
+          onChanged: (value) => setState(() => _searchQuery = value),
           leading: Icon(Icons.search_rounded, color: AppColors.white40),
           backgroundColor: WidgetStatePropertyAll(AppColors.white5),
           surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
@@ -238,9 +218,8 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           child: BlocBuilder<ExamsCubit, ExamsState>(
             builder: (context, state) {
-              if (state is ExamsInitial || state is ExamsLoading) {
+              if (state is ExamsInitial || state is ExamsLoading)
                 return _buildSkeletonList();
-              }
 
               if (state is ExamsFailure) {
                 return RefreshIndicator(
@@ -355,91 +334,10 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
                           final exam = filteredExams[index];
                           final isLive = exam.isLive;
                           final isCompleted = exam.isCompleted;
-                          return Container(
-                            padding: EdgeInsets.all(18.w),
-                            decoration: BoxDecoration(
-                              color: isCompleted
-                                  ? const Color(0xffAD46FF).withAlpha(8)
-                                  : isLive
-                                  ? const Color(0xff00C950).withAlpha(8)
-                                  : const Color(0xff2B7FFF).withAlpha(8),
-                              borderRadius: BorderRadius.circular(14.r),
-                              border: Border.all(
-                                color: AppColors.white10,
-                                width: 1.74.w,
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        exam.title,
-                                        style: AppTextStyles.white16w400,
-                                      ),
-                                    ),
-                                    horizontalSpace(8.w),
-                                    ExamCardState(
-                                      isLive: isLive,
-                                      isCompleted: isCompleted,
-                                    ),
-                                  ],
-                                ),
-                                verticalSpace(8.h),
-
-                                Text(
-                                  exam.description,
-                                  style: AppTextStyles.whit14w400alpha60,
-                                ),
-                                SizedBox(height: 10.h),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.calendar_today_outlined,
-                                      size: 14.sp,
-                                      color: AppColors.white60,
-                                    ),
-                                    horizontalSpace(6.w),
-                                    Text(
-                                      _formatDate(exam.startTime),
-                                      style: AppTextStyles.white12w400alpha40
-                                          .copyWith(color: AppColors.white60),
-                                    ),
-                                    horizontalSpace(16.w),
-                                    Icon(
-                                      Icons.access_time_outlined,
-                                      color: AppColors.white60,
-                                      size: 14.sp,
-                                    ),
-                                    horizontalSpace(6.w),
-                                    Text(
-                                      '${exam.durationMinutes}m',
-                                      style: AppTextStyles.white12w400alpha40
-                                          .copyWith(color: AppColors.white60),
-                                    ),
-                                    horizontalSpace(16.w),
-                                    SvgPicture.asset(
-                                      'assets/icons/students.svg',
-                                      colorFilter: ColorFilter.mode(
-                                        AppColors.white60,
-                                        BlendMode.srcIn,
-                                      ),
-                                      width: 14.w,
-                                    ),
-                                    horizontalSpace(6.w),
-                                    Text(
-                                      '45',
-                                      style: AppTextStyles.white12w400alpha40
-                                          .copyWith(color: AppColors.white60),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                          return InstructorExamCard(
+                            exam: exam,
+                            isLive: isLive,
+                            isCompleted: isCompleted,
                           );
                         },
                       ),
@@ -521,4 +419,25 @@ class ExamCardState extends StatelessWidget {
             ),
     );
   }
+}
+
+String formatDate(DateTime time) {
+  const months = <String>[
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  final hour = time.hour % 12 == 0 ? 12 : time.hour % 12;
+  final minute = time.minute.toString().padLeft(2, '0');
+  final suffix = time.hour >= 12 ? 'PM' : 'AM';
+  return '${months[time.month - 1]} ${time.day}, $hour:$minute $suffix';
 }
