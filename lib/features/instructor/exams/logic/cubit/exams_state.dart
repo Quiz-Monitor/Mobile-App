@@ -14,8 +14,9 @@ class ExamsLoading extends ExamsState {
 
 class ExamsSuccess extends ExamsState {
   final List<ExamModel> exams;
+  final Map<int, int> enrolledCounts;
 
-  const ExamsSuccess(this.exams);
+  const ExamsSuccess(this.exams, {this.enrolledCounts = const {}});
 }
 
 class ExamsFailure extends ExamsState {

@@ -17,13 +17,44 @@ class ExamsCubit extends Cubit<ExamsState> {
 
     final ApiResult<List<ExamModel>> result = await _instructorExamsRepo
         .getInstructorExams();
+
+    List<ExamModel>? exams;
+    String? errorMessage;
+
     result.when(
-      success: (exams) {
-        emit(ExamsSuccess(exams));
+      success: (value) {
+        exams = value;
       },
       failure: (error) {
-        emit(ExamsFailure(error.apiErrorModel.getAllErrorMessages()));
+        errorMessage = error.apiErrorModel.getAllErrorMessages();
       },
     );
+
+    if (errorMessage != null) {
+      emit(ExamsFailure(errorMessage!));
+      return;
+    }
+
+    final loadedExams = exams ?? const <ExamModel>[];
+    final enrolledCounts = <int, int>{};
+
+    await Future.wait(
+      loadedExams.map((exam) async {
+        final countResult = await _instructorExamsRepo.getEnrolledStudentsCount(
+          exam.examId,
+        );
+
+        countResult.when(
+          success: (count) {
+            enrolledCounts[exam.examId] = count;
+          },
+          failure: (_) {
+            enrolledCounts[exam.examId] = 0;
+          },
+        );
+      }),
+    );
+
+    emit(ExamsSuccess(loadedExams, enrolledCounts: enrolledCounts));
   }
 }

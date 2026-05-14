@@ -4,12 +4,11 @@ import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_cubit.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_state.dart';
+import 'package:examify/features/instructor/exams/ui/views/instructor_exam_details_view.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/instructor_exam_card.dart';
-import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class InstructorExamsView extends StatefulWidget {
@@ -246,7 +245,9 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
                 );
               }
 
-              final exams = (state as ExamsSuccess).exams;
+              final successState = state as ExamsSuccess;
+              final exams = successState.exams;
+              final enrolledCounts = successState.enrolledCounts;
               final searchedExams = _filterExams(exams);
               final filteredExams = _applyExamFilter(searchedExams);
               final liveCount = exams
@@ -334,10 +335,23 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
                           final exam = filteredExams[index];
                           final isLive = exam.isLive;
                           final isCompleted = exam.isCompleted;
+                          final enrolledCount =
+                              enrolledCounts[exam.examId] ?? 0;
+
                           return InstructorExamCard(
                             exam: exam,
                             isLive: isLive,
                             isCompleted: isCompleted,
+                            enrolledCount: enrolledCount,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      InstructorExamDetailsView(exam: exam),
+                                ),
+                              );
+                            },
                           );
                         },
                       ),
