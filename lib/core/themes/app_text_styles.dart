@@ -18,6 +18,11 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     color: Colors.white.withAlpha((255 * .4).toInt()),
   );
+  static TextStyle white12w400alpha60 = TextStyle(
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w400,
+    color: Colors.white.withAlpha((255 * .6).toInt()),
+  );
   static TextStyle brown16w600 = TextStyle(
     fontSize: 16.sp,
     fontWeight: FontWeight.w600,

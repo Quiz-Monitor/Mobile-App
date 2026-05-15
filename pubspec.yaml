@@ -31,6 +31,7 @@ dependencies:
   bloc: ^9.1.0
   cupertino_icons: ^1.0.8
   dio: ^5.9.0
+  fl_chart: ^1.2.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
@@ -80,7 +81,6 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-
   # example:
   # fonts:
   #   - family: Schyler
