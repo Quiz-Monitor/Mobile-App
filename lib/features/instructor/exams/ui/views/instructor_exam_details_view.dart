@@ -14,6 +14,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:typed_data';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class InstructorExamDetailsView extends StatefulWidget {
   const InstructorExamDetailsView({super.key, required this.exam});
@@ -103,13 +107,54 @@ class _InstructorExamDetailsViewState extends State<InstructorExamDetailsView> {
         .toUpperCase();
   }
 
-  void _exportResults(List<InstructorExamResultModel> results) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: AppColors.primaryBlack,
-        content: Text('Exporting ${results.length} results...'),
+  Future<void> _exportResults(List<InstructorExamResultModel> results) async {
+    final doc = pw.Document();
+
+    final tableHeaders = ['ID', 'Name', 'Score', 'Status', 'Violations'];
+    final tableData = results
+        .map(
+          (r) => [
+            r.studentId.toString(),
+            r.studentName,
+            r.finalScore.toStringAsFixed(0) + '%',
+            r.cheatingStatus,
+            r.totalViolations.toString(),
+          ],
+        )
+        .toList();
+
+    doc.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) => [
+          pw.Header(level: 0, child: pw.Text(widget.exam.title)),
+          pw.Text('Exam results (${results.length})'),
+          pw.SizedBox(height: 12),
+          pw.Table.fromTextArray(
+            headers: tableHeaders,
+            data: tableData,
+            headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            cellAlignment: pw.Alignment.centerLeft,
+          ),
+        ],
       ),
     );
+
+    final pdfBytes = await doc.save();
+
+    try {
+      await Printing.sharePdf(
+        bytes: pdfBytes,
+        filename: '${widget.exam.title}_results.pdf',
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.primaryBlack,
+          content: Text('Failed to export PDF: ${e.toString()}'),
+        ),
+      );
+    }
   }
 
   @override
