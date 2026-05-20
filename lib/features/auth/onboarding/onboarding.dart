@@ -45,40 +45,41 @@ class _OnboardingState extends State<Onboarding> {
       backgroundColor: const Color(0xff070B1D),
       body: Stack(
         children: [
-          // Positioned.fill(
-          //   child: Container(
-          //     decoration: const BoxDecoration(
-          //       gradient: LinearGradient(
-          //         begin: Alignment.topCenter,
-          //         end: Alignment.bottomCenter,
-          //         colors: [
-          //           Color(0xff18123D),
-          //           Color(0xff10183A),
-          //           Color(0xff070B1D),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // Positioned.fill(
-          //   child: ImageFiltered(
-          //     imageFilter: ImageFilter.blur(sigmaX: 160, sigmaY: 160),
-          //     child: DecoratedBox(
-          //       decoration: BoxDecoration(
-          //         gradient: RadialGradient(
-          //           center: const Alignment(0, -0.45),
-          //           radius: 0.9,
-          //           colors: [
-          //             AppColors.mainBlue.withOpacity(0.35),
-          //             AppColors.mainIndego.withOpacity(0.24),
-          //             Colors.transparent,
-          //           ],
-          //           stops: const [0.0, 0.45, 1.0],
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xff1A1443),
+                    Color(0xff12193D),
+                    Color(0xff090D24),
+                  ],
+                  stops: [0.0, 0.5, 1.0],
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 180, sigmaY: 180),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    center: const Alignment(0, -0.45),
+                    radius: 1.5,
+                    colors: [
+                      AppColors.mainBlue.withAlpha(51), // 0.20 opacity
+                      AppColors.mainIndego.withAlpha(38), // 0.15 opacity
+                      Colors.transparent,
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
+                ),
+              ),
+            ),
+          ),
 
           SafeArea(
             child: Column(

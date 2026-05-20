@@ -23,11 +23,11 @@ class ActionButton extends StatelessWidget {
           gradient: const LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Color(0xff2b7FFF), Color(0xff9810FA)],
+            colors: [Color(0xff3B82F6), Color(0xff7C3AED), Color(0xff8B5CF6)],
+            stops: [0.0, 0.6, 1.0],
           ),
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(16.r),
-         
         ),
         child: Center(
           child: Text(

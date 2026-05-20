@@ -5,7 +5,7 @@ final List<Package> screens = const [
     imagePath: 'assets/images/WelcomeIllustration.svg',
     subTitle:
         'Your smart companion for AI-powered exams. Experience seamless testing with advanced features',
-    heading: 'Welcome to Raqeeb',
+    heading: 'Welcome to RAQEEB',
   ),
   Package(
     heading: 'Smart Notifications',
