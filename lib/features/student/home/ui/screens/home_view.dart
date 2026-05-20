@@ -1,6 +1,5 @@
 import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
-import 'package:examify/core/widgets/custom_textfield.dart';
 import 'package:examify/features/student/home/data/model/student_exam_model.dart';
 import 'package:examify/features/student/home/logic/cubit/cubit/student_exam_cubit.dart';
 import 'package:examify/features/student/home/logic/cubit/cubit/student_exam_state.dart';
@@ -11,8 +10,54 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildSearchBar() {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Colors.white,
+        ),
+      ),
+      child: SearchBar(
+        padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16.w)),
+        controller: _searchController,
+        hintText: 'Search for exams',
+        onChanged: (value) => setState(() => _searchQuery = value),
+        leading: Icon(Icons.search_rounded, color: AppColors.white40),
+        backgroundColor: WidgetStatePropertyAll(AppColors.white5),
+        surfaceTintColor: WidgetStatePropertyAll(Colors.transparent),
+        shadowColor: WidgetStatePropertyAll(Colors.transparent),
+        elevation: WidgetStatePropertyAll(0),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+        ),
+        side: WidgetStatePropertyAll(
+          BorderSide(color: AppColors.white10, width: 1.74.w),
+        ),
+        textStyle: WidgetStatePropertyAll(AppTextStyles.white16w400),
+        hintStyle: WidgetStatePropertyAll(
+          AppTextStyles.white16w400.copyWith(color: AppColors.white40),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,14 +68,7 @@ class HomeView extends StatelessWidget {
           children: [
             CustomHomeAppbar(),
             SizedBox(height: 20.h),
-            CustomTextfield(
-              hintText: 'Search for exams',
-              prefixIcon: Icon(
-                Icons.search_rounded,
-                color: AppColors.white40,
-                size: 28,
-              ),
-            ),
+            _buildSearchBar(),
             SizedBox(height: 20.h),
             Text('Upcoming Exams', style: AppTextStyles.white16w400),
             SizedBox(height: 16.h),
@@ -58,12 +96,11 @@ class HomeView extends StatelessWidget {
                                 examTitle: 'examTitle',
                                 instructorName: 'instructorName',
                                 examCode: 'examCode',
-                                isLive: true,
+                                examStatus: 'Live',
                                 startTime: DateTime.now(),
                                 endTime: DateTime.now(),
                                 durationMinutes: 2,
                                 questionCount: 2,
-                                examStatus: '',
                               ),
                             );
                           },
@@ -96,16 +133,42 @@ class HomeView extends StatelessWidget {
                     }
 
                     final exams = (state as StudentExamSuccess).exams;
+                    final query = _searchQuery.trim().toLowerCase();
+                    final filteredExams = query.isEmpty
+                        ? exams
+                        : exams.where((exam) {
+                            final title = exam.examTitle.toLowerCase();
+                            final code = exam.examCode.toLowerCase();
+                            final instructor = exam.instructorName
+                                .toLowerCase();
+                            return title.contains(query) ||
+                                code.contains(query) ||
+                                instructor.contains(query);
+                          }).toList();
+
+                    if (filteredExams.isEmpty && query.isNotEmpty) {
+                      return ListView(
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        children: const [
+                          SizedBox(height: 120),
+                          _StateMessage(message: 'No matching exams found.'),
+                        ],
+                      );
+                    }
 
                     return ListView.separated(
                       physics: const AlwaysScrollableScrollPhysics(
                         parent: BouncingScrollPhysics(),
                       ),
-                      itemCount: exams.length,
+                      itemCount: filteredExams.length,
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 10.h),
                       itemBuilder: (context, index) {
-                        return UpcomingExamsCard(examModel: exams[index]);
+                        return UpcomingExamsCard(
+                          examModel: filteredExams[index],
+                        );
                       },
                     );
                   },

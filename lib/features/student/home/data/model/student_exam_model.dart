@@ -3,24 +3,26 @@ part 'student_exam_model.g.dart';
 
 @JsonSerializable()
 class StudentExamModel {
-  final String examTitle, instructorName, examCode;
-  final bool isLive;
+  final String examTitle, instructorName, examCode, examStatus;
   final DateTime startTime, endTime;
   final int durationMinutes;
   final int questionCount;
-  final String examStatus;
 
-  StudentExamModel({
+  const StudentExamModel({
     required this.examTitle,
     required this.instructorName,
     required this.examCode,
-    required this.isLive,
+    required this.examStatus,
     required this.startTime,
     required this.endTime,
     required this.durationMinutes,
     required this.questionCount,
-    required this.examStatus,
   });
+
+  /// Derived from [examStatus]. The API returns "Live" when the exam is active.
+  bool get isLive =>
+      examStatus.toLowerCase() == 'live' ||
+      examStatus.toLowerCase() == 'inprogress';
 
   factory StudentExamModel.fromJson(Map<String, dynamic> json) =>
       _$StudentExamModelFromJson(json);
