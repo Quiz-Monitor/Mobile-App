@@ -37,7 +37,7 @@ class _HomeViewState extends State<HomeView> {
       child: SearchBar(
         padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16.w)),
         controller: _searchController,
-        hintText: 'Search for exams',
+        hintText: 'Search exams...',
         onChanged: (value) => setState(() => _searchQuery = value),
         leading: Icon(Icons.search_rounded, color: AppColors.white40),
         backgroundColor: WidgetStatePropertyAll(AppColors.white5),

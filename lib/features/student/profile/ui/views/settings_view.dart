@@ -4,6 +4,9 @@ import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/features/student/profile/ui/widgets/settings_type_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
+
+import 'package:flutter_svg/svg.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -63,6 +66,107 @@ class SettingsView extends StatelessWidget {
             ),
             SizedBox(height: 12),
             SettingsTypeCard(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: AlertDialog(
+                        alignment: Alignment.center,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: AppColors.red30alpha,
+                            width: 1.71,
+                          ),
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        backgroundColor: AppColors.primaryBlack,
+                        iconPadding: EdgeInsets.only(top: 32.h, bottom: 16.h),
+                        icon: SvgPicture.asset(
+                          'assets/icons/trash.svg',
+                          width: 64.w,
+                          height: 64.h,
+                        ),
+                        title: const Text(
+                          'Delete Account?',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Text(
+                          'This action cannot be undone. All your data will be permanently deleted.',
+                          style: AppTextStyles.whit14w400alpha60.copyWith(
+                            height: 1.5,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
+                          vertical: 8.h,
+                        ),
+                        actionsPadding: EdgeInsets.all(24.w),
+                        actions: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 14.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white5,
+                                      border: Border.all(
+                                        color: AppColors.white10,
+                                        width: 1.71,
+                                      ),
+                                      borderRadius: BorderRadius.circular(14.r),
+                                    ),
+                                    child: Text(
+                                      'Cancel',
+                                      style: AppTextStyles.white16w400,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 14.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffFB2C36),
+                                      borderRadius: BorderRadius.circular(14.r),
+                                    ),
+                                    child: Text(
+                                      'Delete',
+                                      style: AppTextStyles.white16w400,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
               backColor: AppColors.red5alpha,
               borderColor: AppColors.red30alpha,
               titleColor: Color(0xffFF6467),
