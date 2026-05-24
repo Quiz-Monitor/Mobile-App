@@ -64,6 +64,11 @@ class _FakeApiService implements ApiService {
   }
 
   @override
+  Future<dynamic> getStudentExamHistory() {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<List<InstructorExamResultModel>> getExamResults(int examId) {
     // TODO: implement getExamResults
     throw UnimplementedError();

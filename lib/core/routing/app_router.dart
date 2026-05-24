@@ -18,54 +18,76 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRouter {
-  MaterialPageRoute<dynamic> getapprouter(RouteSettings settings) {
+  Route<dynamic> getapprouter(RouteSettings settings) {
     switch (settings.name) {
       case Routes.onboarding:
-        return MaterialPageRoute(builder: (context) => const Onboarding());
+        return CustomPageRoute(child: const Onboarding());
       case Routes.loginScreen:
-        return MaterialPageRoute(
-          builder: (context) => BlocProvider(
+        return CustomPageRoute(
+          child: BlocProvider(
             create: (context) => getit<LoginCubit>(),
             child: const LoginView(),
           ),
         );
       case Routes.signupScreen:
-        return MaterialPageRoute(
-          builder: (context) => BlocProvider(
+        return CustomPageRoute(
+          child: BlocProvider(
             create: (context) => getit<SignupCubit>(),
             child: const Signup(),
           ),
         );
       case Routes.roleSelectionScreen:
-        return MaterialPageRoute(
-          builder: (context) => const RoleSelectionView(),
-        );
+        return CustomPageRoute(child: const RoleSelectionView());
       case Routes.forgotPasswordScreen:
-        return MaterialPageRoute(builder: (context) => const ForgotPassword());
+        return CustomPageRoute(child: const ForgotPassword());
       case Routes.checkEmailScreen:
-        return MaterialPageRoute(builder: (context) => CheckEmailView());
+        return CustomPageRoute(child: CheckEmailView());
       case Routes.changePasswordScreen:
-        return MaterialPageRoute(
-          builder: (context) => const ChangePasswordView(),
-        );
+        return CustomPageRoute(child: const ChangePasswordView());
       case Routes.studentHomeScreen:
-        return MaterialPageRoute(builder: (context) => const HomeView());
+        return CustomPageRoute(child: const HomeView());
       case Routes.homeScreen:
-        return MaterialPageRoute(builder: (context) => const MainNavigation());
+        return CustomPageRoute(child: const MainNavigation());
       case Routes.instructorHomeScreen:
-        return MaterialPageRoute(
-          builder: (context) => const InstructorNavigation()
-        );
+        return CustomPageRoute(child: const InstructorNavigation());
       case Routes.settingsScreen:
-        return MaterialPageRoute(builder: (context) => const SettingsView());
+        return CustomPageRoute(child: const SettingsView());
       case Routes.notificationsSettingsScreen:
-        return MaterialPageRoute(
-          builder: (context) => const NotificationsSettings(),
-        );
+        return CustomPageRoute(child: const NotificationsSettings());
       default:
-        return MaterialPageRoute(
-          builder: (context) => const Text('No route found'),
+        return CustomPageRoute(
+          child: const Scaffold(body: Center(child: Text('No route found'))),
         );
     }
   }
+}
+
+class CustomPageRoute extends PageRouteBuilder {
+  final Widget child;
+
+  CustomPageRoute({required this.child})
+    : super(
+        pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionDuration: const Duration(milliseconds: 300),
+        reverseTransitionDuration: const Duration(milliseconds: 300),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(0.05, 0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                      reverseCurve: Curves.easeInCubic,
+                    ),
+                  ),
+              child: child,
+            ),
+          );
+        },
+      );
 }

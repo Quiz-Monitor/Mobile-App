@@ -5,8 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Customhistoryitemtrailing extends StatelessWidget {
-  const Customhistoryitemtrailing({super.key,  this.grades});
+  const Customhistoryitemtrailing({super.key, this.grades, this.totalPoints});
   final String? grades;
+  final String? totalPoints;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +24,7 @@ class Customhistoryitemtrailing extends StatelessWidget {
         children: [
           SvgPicture.asset('assets/icons/radio.svg', height: 16.h, width: 16.h),
           Text(
-            '${grades ?? 0}/20',
+            '${grades ?? 0}/${totalPoints ?? 20}',
             style: AppTextStyles.white16w400.copyWith(
               fontWeight: FontWeight.w600,
             ),

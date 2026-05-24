@@ -4,6 +4,7 @@ import 'package:examify/core/widgets/bottom_nav_bar.dart';
 import 'package:examify/features/student/join_exam/logic/join_exam_cubit.dart';
 import 'package:examify/features/student/join_exam/ui/widgets/join_exam_bottom_sheet.dart';
 import 'package:examify/features/student/history/ui/views/exams_history.dart';
+import 'package:examify/features/student/history/logic/cubit/student_results_cubit.dart';
 import 'package:examify/features/student/home/ui/screens/home_view.dart';
 import 'package:examify/features/student/home/logic/cubit/cubit/student_exam_cubit.dart';
 import 'package:examify/features/student/notifications/ui/screens/notifications_view.dart';
@@ -35,7 +36,10 @@ class _MainNavigationState extends State<MainNavigation> {
       child: const HomeView(),
     ),
     // Index 1: History
-    ExamsHistory(),
+    BlocProvider(
+      create: (_) => getit<StudentResultsCubit>()..getExamHistory(),
+      child: const ExamsHistory(),
+    ),
     // Index 2: Not used (center button)
     const SizedBox.shrink(),
     // Index 3: Notifications

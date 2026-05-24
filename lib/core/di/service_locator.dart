@@ -17,6 +17,8 @@ import 'package:examify/features/auth/signup/data/repo/signup_repo.dart';
 import 'package:examify/features/auth/signup/logic/cubit/signup_cubit.dart';
 import 'package:examify/features/student/join_exam/data/repo/join_exam_repo.dart';
 import 'package:examify/features/student/join_exam/logic/join_exam_cubit.dart';
+import 'package:examify/features/student/history/data/repo/student_history_repo.dart';
+import 'package:examify/features/student/history/logic/cubit/student_results_cubit.dart';
 import 'package:examify/features/student/home/data/repo/student_upcoming_exams_repo.dart';
 import 'package:examify/features/student/home/logic/cubit/cubit/student_exam_cubit.dart';
 import 'package:get_it/get_it.dart';
@@ -120,11 +122,19 @@ Future<void> init() async {
     );
   }
 
+  if (!getit.isRegistered<StudentHistoryRepo>()) {
+    getit.registerLazySingleton<StudentHistoryRepo>(
+      () => StudentHistoryRepo(getit.get<ApiService>()),
+    );
+  }
+  if (!getit.isRegistered<StudentResultsCubit>()) {
+    getit.registerFactory<StudentResultsCubit>(
+      () => StudentResultsCubit(getit.get<StudentHistoryRepo>()),
+    );
+  }
+
   // if (!getit.isRegistered<StudentHomeRepo>()) {
   //   getit.registerLazySingleton<StudentHomeRepo>(() => StudentHomeRepo());
-  // }
-  // if (!getit.isRegistered<StudentHistoryRepo>()) {
-  //   getit.registerLazySingleton<StudentHistoryRepo>(() => StudentHistoryRepo());
   // }
   // if (!getit.isRegistered<StudentProfileRepo>()) {
   //   getit.registerLazySingleton<StudentProfileRepo>(() => StudentProfileRepo());

@@ -53,6 +53,8 @@ class CustomExamCard extends StatelessWidget {
               ? PendingState()
               : Customhistoryitemtrailing(
                   grades: exHistoryModel.finalScore?.toString() ?? '--',
+                  totalPoints:
+                      exHistoryModel.examTotalPoints?.toString() ?? '100',
                 ),
         ),
       ),

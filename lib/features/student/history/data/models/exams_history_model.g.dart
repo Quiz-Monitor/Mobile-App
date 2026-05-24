@@ -8,16 +8,18 @@ part of 'exams_history_model.dart';
 
 ExamsHistoryModel _$ExamsHistoryModelFromJson(Map<String, dynamic> json) =>
     ExamsHistoryModel(
-      finalScore: (json['finalScore'] as num?)?.toInt(),
       examTitle: json['examTitle'] as String,
       status: json['status'] as String,
-      isPending: json['isPending'] as bool,
+      submitTime: json['submitTime'] as String?,
+      finalScore: (json['finalScore'] as num?)?.toInt(),
+      examTotalPoints: (json['examTotalPoints'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ExamsHistoryModelToJson(ExamsHistoryModel instance) =>
     <String, dynamic>{
       'examTitle': instance.examTitle,
       'status': instance.status,
-      'isPending': instance.isPending,
+      'submitTime': instance.submitTime,
       'finalScore': instance.finalScore,
+      'examTotalPoints': instance.examTotalPoints,
     };
