@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "806309215449",
+    "project_id": "raqeeb-3a13d",
+    "storage_bucket": "raqeeb-3a13d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806309215449:android:9b15ee14ceea151bb952c8",
+        "android_client_info": {
+          "package_name": "com.example.examify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTk9OlMZwM-ZmZBJ50nidEVPhAXMP4l_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -13,32 +13,46 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => getit<ProfileCubit>()..getProfile(),
-      child: BlocBuilder<ProfileCubit, ProfileState>(
-        builder: (context, state) {
-          if (state is ProfileInitial || state is ProfileLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is ProfileFailure) {
-            return _ProfileErrorView(
-              message: state.message,
-              onRetry: () {
-                context.read<ProfileCubit>().getProfile();
-              },
+      child: BlocListener<ProfileCubit, ProfileState>(
+        listener: (context, state) {
+          if (state is ProfileLoggedOut) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.loginScreen,
+              (route) => false,
             );
           }
-
-          if (state is ProfileSuccess) {
-            return ProfilePageBody(
-              profile: state.profile,
-              onSettingsTap: () {
-                Navigator.pushNamed(context, Routes.settingsScreen);
-              },
-            );
-          }
-
-          return const SizedBox.shrink();
         },
+        child: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            if (state is ProfileInitial || state is ProfileLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is ProfileFailure) {
+              return _ProfileErrorView(
+                message: state.message,
+                onRetry: () {
+                  context.read<ProfileCubit>().getProfile();
+                },
+              );
+            }
+
+            if (state is ProfileSuccess) {
+              return ProfilePageBody(
+                profile: state.profile,
+                onSettingsTap: () {
+                  Navigator.pushNamed(context, Routes.settingsScreen);
+                },
+                onLogoutTap: () {
+                  context.read<ProfileCubit>().logout();
+                },
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

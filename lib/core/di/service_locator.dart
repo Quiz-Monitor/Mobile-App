@@ -118,7 +118,7 @@ Future<void> init() async {
   }
   if (!getit.isRegistered<ProfileCubit>()) {
     getit.registerFactory<ProfileCubit>(
-      () => ProfileCubit(getit.get<ProfileRepo>()),
+      () => ProfileCubit(getit.get<ProfileRepo>(), getit.get<SessionManager>()),
     );
   }
 

@@ -23,3 +23,7 @@ class ProfileFailure extends ProfileState {
 
   const ProfileFailure(this.message);
 }
+
+class ProfileLoggedOut extends ProfileState {
+  const ProfileLoggedOut();
+}
