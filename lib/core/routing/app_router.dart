@@ -8,6 +8,7 @@ import 'package:examify/features/student/profile/ui/views/settings_view.dart';
 import 'package:examify/features/auth/signup/ui/views/role_selection_view.dart';
 import 'package:examify/features/auth/signup/ui/views/signup.dart';
 import 'package:examify/features/auth/login/ui/screens/forgot_password.dart';
+import 'package:examify/features/shared/profile/logic/cubit/profile_cubit.dart';
 import 'package:examify/features/student/profile/ui/views/notifications_settings.dart';
 import 'package:examify/features/student/home/ui/screens/home_view.dart';
 import 'package:examify/core/di/service_locator.dart';
@@ -43,7 +44,12 @@ class AppRouter {
       case Routes.checkEmailScreen:
         return CustomPageRoute(child: CheckEmailView());
       case Routes.changePasswordScreen:
-        return CustomPageRoute(child: const ChangePasswordView());
+        return CustomPageRoute(
+          child: BlocProvider(
+            create: (_) => getit<ProfileCubit>(),
+            child: const ChangePasswordView(),
+          ),
+        );
       case Routes.studentHomeScreen:
         return CustomPageRoute(child: const HomeView());
       case Routes.homeScreen:
@@ -51,7 +57,12 @@ class AppRouter {
       case Routes.instructorHomeScreen:
         return CustomPageRoute(child: const InstructorNavigation());
       case Routes.settingsScreen:
-        return CustomPageRoute(child: const SettingsView());
+        return CustomPageRoute(
+          child: BlocProvider(
+            create: (_) => getit<ProfileCubit>(),
+            child: const SettingsView(),
+          ),
+        );
       case Routes.notificationsSettingsScreen:
         return CustomPageRoute(child: const NotificationsSettings());
       default:

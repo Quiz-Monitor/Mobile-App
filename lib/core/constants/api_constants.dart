@@ -45,7 +45,9 @@ class ApiConstants {
   static const String login = "api/auth/login"; // ✅ done
   static const String signup = "api/auth/register"; // ✅ done
   static const String refreshToken = "api/auth/refresh"; // ✅ done
-  static const String logout = "/api/auth/logout"; // in progress
+  static const String logout = "/api/auth/logout"; // ✅ done
+  static const String changePassword = "/api/auth/change-password"; // in progress...
+
   //static const String forgotPassword = "api/auth/forgot-password"; 
 
   // Student endpoints placeholders
@@ -56,7 +58,7 @@ class ApiConstants {
 
   // User profile endpoint
   static const String userProfile = "api/users/me"; // ✅ done
-  static const String deleteAccout = "/api/auth/delete-account"; // in progress
+  static const String deleteAccout = "/api/auth/delete-account"; // in progress...
 
   // Instructor endpoints placeholders
   static const String getInstructorExams = "api/exams"; // ✅ done

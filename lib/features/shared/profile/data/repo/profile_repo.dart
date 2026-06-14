@@ -3,6 +3,8 @@ import 'package:examify/core/networking/api_error_handler.dart';
 import 'package:examify/core/networking/api_result.dart';
 import 'package:examify/core/networking/api_service.dart';
 import 'package:examify/core/storage/session_storage.dart';
+import 'package:examify/features/shared/profile/data/models/change_password_request_body.dart';
+import 'package:examify/features/shared/profile/data/models/delete_account_request_body.dart';
 import 'package:examify/features/shared/profile/data/models/profile_user.dart';
 
 class ProfileRepo {
@@ -54,6 +56,40 @@ class ProfileRepo {
           phoneNumber: phoneNumber,
         ),
       );
+    } on DioException catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
+
+  Future<ApiResult<void>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmNewPassword,
+  }) async {
+    try {
+      await _apiService.changePassword(
+        ChangePasswordRequestBody(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+          confirmNewPassword: confirmNewPassword,
+        ),
+      );
+      return const ApiResult.success(null);
+    } on DioException catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
+
+  Future<ApiResult<void>> deleteAccount({required String password}) async {
+    try {
+      await _apiService.deleteAccount(
+        DeleteAccountRequestBody(password: password),
+      );
+      return const ApiResult.success(null);
     } on DioException catch (e) {
       return ApiResult.failure(ErrorHandler.handle(e));
     } catch (e) {

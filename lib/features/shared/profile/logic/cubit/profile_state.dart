@@ -27,3 +27,21 @@ class ProfileFailure extends ProfileState {
 class ProfileLoggedOut extends ProfileState {
   const ProfileLoggedOut();
 }
+
+class ChangePasswordLoading extends ProfileState {
+  const ChangePasswordLoading();
+}
+
+class ChangePasswordSuccess extends ProfileState {
+  const ChangePasswordSuccess();
+}
+
+class ChangePasswordFailure extends ProfileState {
+  final String message;
+
+  const ChangePasswordFailure(this.message);
+}
+
+class AccountDeleted extends ProfileState {
+  const AccountDeleted();
+}

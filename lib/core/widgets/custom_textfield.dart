@@ -41,6 +41,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
       keyboardType: widget.keyboardType,
       style: AppTextStyles.white16w400,
       decoration: InputDecoration(
+        
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.isPassword
             ? IconButton(

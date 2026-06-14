@@ -10,6 +10,8 @@ import 'package:examify/features/instructor/exams/data/models/instructor_exam_re
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_request_body.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_response.dart';
+import 'package:examify/features/shared/profile/data/models/change_password_request_body.dart';
+import 'package:examify/features/shared/profile/data/models/delete_account_request_body.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'api_service.g.dart';
@@ -56,4 +58,12 @@ abstract class ApiService {
   // User profile service
   @GET(ApiConstants.userProfile)
   Future<dynamic> getUserProfile();
+
+  // Change password service
+  @POST(ApiConstants.changePassword)
+  Future<void> changePassword(@Body() ChangePasswordRequestBody body);
+
+  // Delete account service
+  @DELETE(ApiConstants.deleteAccout)
+  Future<void> deleteAccount(@Body() DeleteAccountRequestBody body);
 }

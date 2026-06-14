@@ -34,4 +34,41 @@ class ProfileCubit extends Cubit<ProfileState> {
     await _sessionManager.logout();
     emit(const ProfileLoggedOut());
   }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmNewPassword,
+  }) async {
+    emit(const ChangePasswordLoading());
+
+    final result = await _profileRepo.changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      confirmNewPassword: confirmNewPassword,
+    );
+
+    result.when(
+      success: (_) {
+        emit(const ChangePasswordSuccess());
+      },
+      failure: (error) {
+        emit(ChangePasswordFailure(error.apiErrorModel.getAllErrorMessages()));
+      },
+    );
+  }
+
+  Future<void> deleteAccount({required String password}) async {
+    final result = await _profileRepo.deleteAccount(password: password);
+
+    result.when(
+      success: (_) async {
+        await _sessionManager.logout();
+        emit(const AccountDeleted());
+      },
+      failure: (error) {
+        emit(ProfileFailure(error.apiErrorModel.getAllErrorMessages()));
+      },
+    );
+  }
 }

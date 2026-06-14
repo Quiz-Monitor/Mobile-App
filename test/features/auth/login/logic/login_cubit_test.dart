@@ -78,6 +78,16 @@ class _FakeApiService implements ApiService {
     // TODO: implement getExamResults
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> changePassword(dynamic body) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteAccount(dynamic body) {
+    throw UnimplementedError();
+  }
 }
 
 void main() {
