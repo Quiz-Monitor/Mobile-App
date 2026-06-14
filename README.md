@@ -1,7 +1,7 @@
 <h1 align="center">
   <img src="assets/icons/app_logo.png" alt="Examify Logo" width="120">
   <br>
-  Examify 📚
+  Raqeeb 📚
 </h1>
 
 <p align="center">
