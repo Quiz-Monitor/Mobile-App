@@ -44,15 +44,18 @@ Examples:
 ### Backend handoff package (single source of truth)
 
 #### Endpoint list (current + placeholders)
-- `api/auth/login`
-- `api/auth/register`
+- `api/auth/login` (Integrated)
+- `api/auth/register` (Integrated)
+- `api/auth/refresh` (Integrated)
+- `api/auth/logout` (Integrated)
+- `api/auth/change-password` (Integrated)
+- `api/auth/delete-account` (Integrated)
+- `api/users/me` (Integrated - User Profile)
+- `api/exams/join` (Integrated - Student Join)
+- `api/students/me/exams` (Integrated - Student Upcoming Exams)
+- `api/students/me/results` (Integrated - Student Exam History)
+- `api/exams` (Integrated - Instructor Exams)
 - `api/auth/forgot-password` (placeholder)
-- `api/student/exams/upcoming` (placeholder)
-- `api/student/exams/history` (placeholder)
-- `api/student/profile` (placeholder)
-- `api/instructor/dashboard` (placeholder)
-- `api/instructor/exams` (placeholder)
-- `api/instructor/reports` (placeholder)
 - `api/notifications` (placeholder)
 
 #### Request/response JSON examples
@@ -110,8 +113,9 @@ Signup request:
 
 ### Integration checklist
 
-- [ ] Replace mock branches with real API calls.
+- [x] Replace mock branches with real API calls for Auths, Profile, Exams.
+- [x] Account Deletion and Change Password implementations.
+- [x] Add refresh-token endpoint and retry flow.
+- [x] Replace in-memory session storage with secure storage.
 - [ ] Wire forgot-password call in `ApiService` and repo.
-- [ ] Replace in-memory session storage with secure storage.
-- [ ] Add refresh-token endpoint and retry flow.
 - [ ] Add/enable repository + cubit + widget tests for real API scenarios.
