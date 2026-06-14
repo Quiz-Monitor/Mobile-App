@@ -22,10 +22,12 @@ class SettingsView extends StatelessWidget {
     return BlocListener<ProfileCubit, ProfileState>(
       listener: (context, state) {
         if (state is AccountDeleted) {
-           toastification.show(
+          toastification.show(
             autoCloseDuration: const Duration(seconds: 10),
             style: ToastificationStyle.fillColored,
-            description: RichText(text: TextSpan(text: 'Account deleted successfully')),
+            description: RichText(
+              text: TextSpan(text: 'Account deleted successfully'),
+            ),
             context: context,
             type: ToastificationType.success,
           );
@@ -144,18 +146,16 @@ class SettingsView extends StatelessWidget {
                                 textAlign: TextAlign.center,
                               ),
                               SizedBox(height: 16.h),
-                              // Align(
-                              //   alignment: Alignment.centerLeft,
-                              //   child: Text(
-                              //     'Password',
-                              //     style: AppTextStyles.whit14w400alpha60,
-                              //   ),
-                              // ),
-                              SizedBox(height: 8.h),
                               CustomTextfield(
                                 controller: passwordController,
-                                
-                                hintText: 'Enter password to confirm',
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your password';
+                                  }
+                                  return null;
+                                },
+                                labelText: 'Enter password to confirm',
+                               // hintText: 'Enter password to confirm',
                                 isPassword: true,
                               ),
                             ],
