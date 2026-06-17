@@ -1,11 +1,9 @@
-import 'package:examify/core/di/service_locator.dart';
-import 'package:examify/core/networking/api_result.dart';
+
 import 'package:examify/core/themes/colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/core/widgets/custom_button.dart';
 import 'package:examify/core/widgets/custom_textfield.dart';
-import 'package:examify/features/auth/login/data/repo/login_repo.dart';
-import 'package:examify/features/auth/login/ui/screens/check_email_view.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,7 +18,7 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   void dispose() {

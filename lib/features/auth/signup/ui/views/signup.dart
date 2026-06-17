@@ -200,7 +200,7 @@ class Signup extends StatelessWidget {
                               Text('Sign up', style: AppTextStyles.white16w400),
                           loading: () =>
                               CircularProgressIndicator(color: Colors.white),
-                          success: (SignupResponse) =>
+                          success: (signupResponse) =>
                               Text('Sign up', style: AppTextStyles.white16w400),
                           failure: (error) =>
                               Text('Sign up', style: AppTextStyles.white16w400),

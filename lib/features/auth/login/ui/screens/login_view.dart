@@ -1,6 +1,5 @@
 import 'package:examify/core/helpers/spacing.dart';
 import 'package:examify/core/routing/routes.dart';
-import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/core/widgets/custom_button.dart';
 import 'package:examify/core/widgets/custom_textfield.dart';
@@ -10,7 +9,6 @@ import 'package:examify/features/auth/login/ui/widgets/donthaveaccount.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:toastification/toastification.dart';
 
 class LoginView extends StatefulWidget {
@@ -170,7 +168,7 @@ class _LoginViewState extends State<LoginView> {
                           color: Colors.white,
                           strokeWidth: 3,
                         ),
-                        success: (LoginResponse) =>
+                        success: (loginResponse) =>
                             Text('Log in', style: AppTextStyles.white16w400),
                         failure: (error) =>
                             Text('Log in', style: AppTextStyles.white16w400),

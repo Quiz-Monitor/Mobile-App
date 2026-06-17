@@ -8,8 +8,8 @@ class StudentUpcomingExamsResponse {
   factory StudentUpcomingExamsResponse.fromResponse(dynamic response) {
     final rawExams = _extractRawExams(response);
     final exams = rawExams
-        .where((exam) => exam is Map<String, dynamic>)
-        .map((exam) => StudentExamModel.fromJson(exam as Map<String, dynamic>))
+        .whereType<Map<String, dynamic>>()
+        .map((exam) => StudentExamModel.fromJson(exam))
         .toList();
     return StudentUpcomingExamsResponse(exams: exams);
   }

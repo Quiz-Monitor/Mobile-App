@@ -1,5 +1,3 @@
-import 'package:examify/core/config/app_environment.dart';
-import 'package:examify/core/networking/api_result.dart';
 
 class InstructorReportDto {
   final int examId;

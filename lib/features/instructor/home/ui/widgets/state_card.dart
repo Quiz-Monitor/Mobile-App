@@ -11,7 +11,7 @@ class StatCard extends StatelessWidget {
   final Color iconColor;
   final Color borderIconColor;
 
-  const StatCard({
+  const StatCard({super.key, 
     required this.borderIconColor,
     required this.iconUrl,
     required this.value,

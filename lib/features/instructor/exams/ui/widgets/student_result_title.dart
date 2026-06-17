@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StudentResultTile extends StatelessWidget {
-  const StudentResultTile({
+  const StudentResultTile({super.key, 
     required this.row,
     required this.backColors,
     required this.statusColor,

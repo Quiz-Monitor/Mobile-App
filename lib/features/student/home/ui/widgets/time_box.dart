@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TimeBox extends StatelessWidget {
-  const TimeBox({required this.value, required this.unit});
+  const TimeBox({super.key, required this.value, required this.unit});
 
   final int value;
   final String unit;

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/themes/colors.dart';
 import 'package:examify/features/auth/onboarding/widgets/action_button.dart';
@@ -23,7 +21,6 @@ class _OnboardingState extends State<Onboarding> {
   void initState() {
     super.initState();
     controller = PageController();
-    // TODO: implement initState
     controller.addListener(() {
       final page = controller.page ?? 0;
       setState(() {
@@ -35,7 +32,6 @@ class _OnboardingState extends State<Onboarding> {
   @override
   void dispose() {
     controller.dispose();
-    // TODO: implement dispose
     super.dispose();
   }
 

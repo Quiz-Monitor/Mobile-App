@@ -37,13 +37,3 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
   createdAt: json['createdAt'] as String?,
 );
 
-Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-  'userId': instance.userId,
-  'email': instance.email,
-  'fullName': instance.fullName,
-  'role': instance.role,
-  'phoneNumber': instance.phoneNumber,
-  'profilePicture': instance.profilePicture,
-  'lastLogin': instance.lastLogin,
-  'createdAt': instance.createdAt,
-};

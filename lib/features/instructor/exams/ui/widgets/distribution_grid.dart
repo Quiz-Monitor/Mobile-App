@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DistributionGrid extends StatelessWidget {
-  const DistributionGrid({required this.maxValue, required this.buckets});
+  const DistributionGrid({super.key, required this.maxValue, required this.buckets});
 
   final int maxValue;
   final List<_ScoreBucket> buckets;

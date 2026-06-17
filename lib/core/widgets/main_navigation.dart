@@ -12,11 +12,6 @@ import 'package:examify/features/student/profile/ui/views/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// TODO: Import your actual screen views when ready
-// import 'package:examify/features/exam/ui/views/exam_code_entry_view.dart';
-// import 'package:examify/features/notifications/ui/views/notifications_view.dart';
-// import 'package:examify/features/profile/ui/views/profile_view.dart';
-
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
 
@@ -28,7 +23,6 @@ class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
   final TextEditingController _examCodeController = TextEditingController();
 
-  // TODO: Replace these placeholders with your actual screen widgets
   final List<Widget> _screens = [
     // Index 0: Home
     BlocProvider(

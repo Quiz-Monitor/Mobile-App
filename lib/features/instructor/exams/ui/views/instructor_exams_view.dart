@@ -217,8 +217,9 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           child: BlocBuilder<ExamsCubit, ExamsState>(
             builder: (context, state) {
-              if (state is ExamsInitial || state is ExamsLoading)
+              if (state is ExamsInitial || state is ExamsLoading) {
                 return _buildSkeletonList();
+              }
 
               if (state is ExamsFailure) {
                 return RefreshIndicator(

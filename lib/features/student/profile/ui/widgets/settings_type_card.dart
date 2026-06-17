@@ -9,17 +9,20 @@ class SettingsTypeCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.subtitle,
-    required this.iconUrl,
+    this.iconUrl,
     this.backColor,
     this.borderColor,
     this.titleColor,
     this.subTitleColor,
     this.iconColor,
-    this.onTap
+    this.trailing,
+    this.onTap,
   });
-  final String title, subtitle, iconUrl;
+  final String title, subtitle;
+  final String? iconUrl;
   final Color? backColor, borderColor, titleColor, subTitleColor, iconColor;
-final void Function()? onTap;
+  final Widget? trailing;
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -29,15 +32,23 @@ final void Function()? onTap;
         width: double.infinity,
         decoration: BoxDecoration(
           color: backColor ?? AppColors.white5,
-          border: Border.all(color: borderColor ?? AppColors.white10, width: 1.7),
+          border: Border.all(
+            color: borderColor ?? AppColors.white10,
+            width: 1.7,
+          ),
           borderRadius: BorderRadius.circular(14.r),
         ),
         child: ListTile(
-         
           horizontalTitleGap: 8.w,
           minVerticalPadding: 0,
           contentPadding: EdgeInsets.all(0),
-          leading: SvgPicture.asset(iconUrl, width: 40.w),
+          leading: iconUrl != null
+              ? SvgPicture.asset(iconUrl!, width: 40.w)
+              : Icon(
+                  Icons.dark_mode_outlined,
+                  size: 40.w,
+                  color: iconColor ?? Colors.white,
+                ),
           title: Text(
             title,
             style: AppTextStyles.white14w400alpha70.copyWith(
@@ -47,7 +58,7 @@ final void Function()? onTap;
           subtitle: SizedBox(
             child: Text(
               subtitle,
-      
+
               style: AppTextStyles.white12w400alpha40.copyWith(
                 color: subTitleColor,
                 wordSpacing: 0,
@@ -55,10 +66,16 @@ final void Function()? onTap;
               ),
             ),
           ),
-          trailing: SizedBox(
-            //width: 20,
-            child: Icon(Icons.chevron_right_rounded, size: 32, color: iconColor),
-          ),
+          trailing:
+              trailing ??
+              SizedBox(
+                //width: 20,
+                child: Icon(
+                  Icons.chevron_right_rounded,
+                  size: 32,
+                  color: iconColor,
+                ),
+              ),
         ),
       ),
     );

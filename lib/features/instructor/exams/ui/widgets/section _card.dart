@@ -1,4 +1,3 @@
-
 import 'package:examify/core/helpers/spacing.dart';
 import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/app_text_styles.dart';
@@ -6,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SectionCard extends StatelessWidget {
-  const SectionCard({required this.title, required this.child, this.trailing});
+  const SectionCard({super.key, required this.title, required this.child, this.trailing});
 
   final String title;
   final Widget child;
@@ -32,7 +31,7 @@ class SectionCard extends StatelessWidget {
                 title,
                 style: AppTextStyles.white20.copyWith(fontSize: 18.sp),
               ),
-              if (trailing != null) trailing!,
+              ?trailing,
             ],
           ),
           verticalSpace(12.h),

@@ -14,7 +14,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -116,7 +115,7 @@ class _InstructorExamDetailsViewState extends State<InstructorExamDetailsView> {
           (r) => [
             r.studentId.toString(),
             r.studentName,
-            r.finalScore.toStringAsFixed(0) + '%',
+            '${r.finalScore.toStringAsFixed(0)}%',
             r.cheatingStatus,
             r.totalViolations.toString(),
           ],
