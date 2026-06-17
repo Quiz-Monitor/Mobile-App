@@ -19,7 +19,7 @@ class JoinExamRepo {
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
 
-      if (statusCode == ResponseCode.UNAUTORISED) {
+      if (statusCode == ResponseCode.UNAUTHORISED) {
         return ApiResult.failure(
           ErrorHandler.handle(Exception('Unauthorized. Please login again.')),
         );

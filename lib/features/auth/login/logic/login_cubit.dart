@@ -4,7 +4,6 @@ import 'package:examify/core/storage/session_storage.dart';
 import 'package:examify/features/auth/login/data/model/login_request_body.dart';
 import 'package:examify/features/auth/login/data/repo/login_repo.dart';
 import 'package:examify/features/auth/login/logic/login_state.dart';
-import 'package:flutter/widgets.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final LoginRepo loginRepo;
@@ -12,18 +11,10 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit(this.loginRepo, this.sessionStorage) : super(LoginState.initial());
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
-  final formkey = GlobalKey<FormState>();
-
-  void emitLoginState() async {
+  void emitLoginState({required String email, required String password}) async {
     emit(LoginState.loading());
     final response = await loginRepo.login(
-      LoginRequestBody(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      ),
+      LoginRequestBody(email: email, password: password),
     );
     response.when(
       success: (loginResponse) async {
@@ -33,7 +24,7 @@ class LoginCubit extends Cubit<LoginState> {
           role: loginResponse.user?.role,
           userId: loginResponse.user?.userId,
           fullName: loginResponse.user?.fullName,
-          email: loginResponse.user?.email,       
+          email: loginResponse.user?.email,
         );
         emit(LoginState.success(loginResponse));
       },

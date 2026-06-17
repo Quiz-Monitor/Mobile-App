@@ -13,8 +13,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:toastification/toastification.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +44,12 @@ class LoginView extends StatelessWidget {
               final role = loginResponse.user?.role?.trim().toLowerCase();
               if (role == 'student') {
                 Navigator.pushReplacementNamed(context, Routes.homeScreen);
-              } else if (role == 'instructor' ) {
+              } else if (role == 'instructor') {
                 Navigator.pushReplacementNamed(
                   context,
                   Routes.instructorHomeScreen,
                 );
-              } 
+              }
               toastification.show(
                 autoCloseDuration: const Duration(seconds: 5),
                 style: ToastificationStyle.fillColored,
@@ -60,19 +76,18 @@ class LoginView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Form(
-            key: context.read<LoginCubit>().formkey,
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 120.h),
                 Image.asset(
-                  
                   'assets/icons/app_logo.png',
                   // colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                   height: 150.h,
+                  height: 150.h,
                 ),
-              // SizedBox(height: 25.h, width: double.infinity),
 
+                // SizedBox(height: 25.h, width: double.infinity),
                 Text(
                   'Welcome Back',
                   style: AppTextStyles.white16w400.copyWith(fontSize: 24.sp),
@@ -91,7 +106,7 @@ class LoginView extends StatelessWidget {
                 ),
                 SizedBox(height: 8.h),
                 CustomTextfield(
-                  controller: context.read<LoginCubit>().emailController,
+                  controller: _emailController,
                   hintText: 'your.email@example.com',
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
@@ -114,7 +129,7 @@ class LoginView extends StatelessWidget {
                 SizedBox(height: 8.h),
 
                 CustomTextfield(
-                  controller: context.read<LoginCubit>().passwordController,
+                  controller: _passwordController,
                   hintText: 'Enter your password',
                   isPassword: true,
                   validator: (value) {
@@ -174,8 +189,11 @@ class LoginView extends StatelessWidget {
   }
 
   void validateThenDoLogin(BuildContext context) {
-    if (context.read<LoginCubit>().formkey.currentState!.validate()) {
-      context.read<LoginCubit>().emitLoginState();
+    if (_formKey.currentState!.validate()) {
+      context.read<LoginCubit>().emitLoginState(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
     }
   }
 }

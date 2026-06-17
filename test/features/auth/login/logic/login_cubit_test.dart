@@ -97,13 +97,10 @@ void main() {
       InMemorySessionStorage(),
     );
 
-    cubit.emailController.text = 'student@examify.test';
-    cubit.passwordController.text = '123456';
-
     final states = <LoginState>[];
     final sub = cubit.stream.listen(states.add);
 
-    cubit.emitLoginState();
+    cubit.emitLoginState(email: 'student@examify.test', password: '123456');
     await Future<void>.delayed(const Duration(milliseconds: 900));
 
     expect(states.first, isA<Loading>());

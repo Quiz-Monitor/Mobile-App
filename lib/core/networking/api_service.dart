@@ -64,6 +64,6 @@ abstract class ApiService {
   Future<void> changePassword(@Body() ChangePasswordRequestBody body);
 
   // Delete account service
-  @DELETE(ApiConstants.deleteAccout)
+  @DELETE(ApiConstants.deleteAccount)
   Future<void> deleteAccount(@Body() DeleteAccountRequestBody body);
 }

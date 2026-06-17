@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
+import 'package:examify/core/networking/api_error_handler.dart';
 import 'package:examify/core/networking/api_result.dart';
-import 'package:examify/features/instructor/exams/data/repo/instructor_exams_repo.dart';
+import 'package:examify/core/networking/api_service.dart';
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 
 class InstructorDashboardDto {
@@ -19,35 +21,36 @@ class InstructorDashboardDto {
 }
 
 class InstructorHomeRepo {
-  final InstructorExamsRepo _instructorExamsRepo;
+  final ApiService _apiService;
 
-  InstructorHomeRepo(this._instructorExamsRepo);
+  InstructorHomeRepo(this._apiService);
 
   Future<ApiResult<InstructorDashboardDto>> getDashboard() async {
-    final result = await _instructorExamsRepo.getInstructorExams();
+    try {
+      final exams = await _apiService.getExams();
 
-    return result.when(
-      success: (exams) {
-        final now = DateTime.now();
-        final liveNow = exams.where((exam) => exam.isLiveAt(now)).length;
-        final upcomingExams = exams
-            .where((exam) => exam.isUpcomingAt(now))
-            .length;
-        final completedExams = exams
-            .where((exam) => exam.isCompletedAt(now))
-            .length;
+      final now = DateTime.now();
+      final liveNow = exams.where((exam) => exam.isLiveAt(now)).length;
+      final upcomingExams = exams
+          .where((exam) => exam.isUpcomingAt(now))
+          .length;
+      final completedExams = exams
+          .where((exam) => exam.isCompletedAt(now))
+          .length;
 
-        return ApiResult.success(
-          InstructorDashboardDto(
-            totalExams: exams.length,
-            liveNow: liveNow,
-            upcomingExams: upcomingExams,
-            completedExams: completedExams,
-            exams: exams,
-          ),
-        );
-      },
-      failure: (error) => ApiResult.failure(error),
-    );
+      return ApiResult.success(
+        InstructorDashboardDto(
+          totalExams: exams.length,
+          liveNow: liveNow,
+          upcomingExams: upcomingExams,
+          completedExams: completedExams,
+          exams: exams,
+        ),
+      );
+    } on DioException catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
   }
 }

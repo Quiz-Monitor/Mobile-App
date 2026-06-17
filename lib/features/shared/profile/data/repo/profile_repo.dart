@@ -40,13 +40,6 @@ class ProfileRepo {
       final userIdInt = _intOrNull(userIdValue) ?? cachedUserId;
       final userId = userIdInt?.toString() ?? '-';
 
-      await _sessionStorage.saveSession(
-        role: roleLabel,
-        userId: userIdInt,
-        fullName: fullName,
-        email: email,
-      );
-
       return ApiResult.success(
         ProfileUser(
           fullName: fullName,

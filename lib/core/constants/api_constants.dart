@@ -11,10 +11,10 @@ class ApiConstants {
       ? 'https://api.examify.com/'
       : _appEnv == 'staging'
       ? 'https://staging-api.examify.com/'
-      : 'https://10.0.2.2:7158/';
+      : 'https://192.168.1.11:44795/';
 
   /// Runtime base URL used by the app.
-  ///
+  ///my real device IP : 192.168.1.11:44795
   /// Android emulator uses `10.0.2.2`, while desktop and web should use
   /// `localhost` to reach the API running on the development machine.
   static String get runtimeApiBaseUrl {
@@ -46,9 +46,9 @@ class ApiConstants {
   static const String signup = "api/auth/register"; // ✅ done
   static const String refreshToken = "api/auth/refresh"; // ✅ done
   static const String logout = "/api/auth/logout"; // ✅ done
-  static const String changePassword = "/api/auth/change-password"; // in progress...
+  static const String changePassword = "/api/auth/change-password"; // ✅ done
 
-  //static const String forgotPassword = "api/auth/forgot-password"; 
+  //static const String forgotPassword = "api/auth/forgot-password"; // in progress...
 
   // Student endpoints placeholders
   static const String studentResult = "api/students/me/results";
@@ -58,7 +58,7 @@ class ApiConstants {
 
   // User profile endpoint
   static const String userProfile = "api/users/me"; // ✅ done
-  static const String deleteAccout = "/api/auth/delete-account"; // in progress...
+  static const String deleteAccount = "/api/auth/delete-account"; // ✅ done
 
   // Instructor endpoints placeholders
   static const String getInstructorExams = "api/exams"; // ✅ done

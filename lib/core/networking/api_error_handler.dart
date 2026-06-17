@@ -8,12 +8,12 @@ enum DataSource {
   NO_CONTENT,
   BAD_REQUEST,
   FORBIDDEN,
-  UNAUTORISED,
+  UNAUTHORISED,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
   CONNECT_TIMEOUT,
   CANCEL,
-  RECIEVE_TIMEOUT,
+  RECEIVE_TIMEOUT,
   SEND_TIMEOUT,
   CACHE_ERROR,
   NO_INTERNET_CONNECTION,
@@ -25,7 +25,7 @@ class ResponseCode {
   static const int SUCCESS = 200; // success with data
   static const int NO_CONTENT = 201; // success with no data (no content)
   static const int BAD_REQUEST = 400; // failure, API rejected request
-  static const int UNAUTORISED = 401; // failure, user is not authorised
+  static const int UNAUTHORISED = 401; // failure, user is not authorised
   static const int FORBIDDEN = 403; //  failure, API rejected request
   static const int INTERNAL_SERVER_ERROR = 500; // failure, crash in server side
   static const int NOT_FOUND = 404; // failure, not found
@@ -34,7 +34,7 @@ class ResponseCode {
   // local status code
   static const int CONNECT_TIMEOUT = -1;
   static const int CANCEL = -2;
-  static const int RECIEVE_TIMEOUT = -3;
+  static const int RECEIVE_TIMEOUT = -3;
   static const int SEND_TIMEOUT = -4;
   static const int CACHE_ERROR = -5;
   static const int NO_INTERNET_CONNECTION = -6;
@@ -46,7 +46,7 @@ class ResponseMessage {
       ApiErrors.noContent; // success with no data (no content)
   static const String BAD_REQUEST =
       ApiErrors.badRequestError; // failure, API rejected request
-  static const String UNAUTORISED =
+  static const String UNAUTHORISED =
       ApiErrors.unauthorizedError; // failure, user is not authorised
   static const String FORBIDDEN =
       ApiErrors.forbiddenError; //  failure, API rejected request
@@ -58,7 +58,7 @@ class ResponseMessage {
   // local status code
   static String CONNECT_TIMEOUT = ApiErrors.timeoutError;
   static String CANCEL = ApiErrors.defaultError;
-  static String RECIEVE_TIMEOUT = ApiErrors.timeoutError;
+  static String RECEIVE_TIMEOUT = ApiErrors.timeoutError;
   static String SEND_TIMEOUT = ApiErrors.timeoutError;
   static String CACHE_ERROR = ApiErrors.cacheError;
   static String NO_INTERNET_CONNECTION = ApiErrors.noInternetError;
@@ -83,10 +83,10 @@ extension DataSourceExtension on DataSource {
           code: ResponseCode.FORBIDDEN,
           message: ResponseMessage.FORBIDDEN,
         );
-      case DataSource.UNAUTORISED:
+      case DataSource.UNAUTHORISED:
         return ApiErrorModel(
-          code: ResponseCode.UNAUTORISED,
-          message: ResponseMessage.UNAUTORISED,
+          code: ResponseCode.UNAUTHORISED,
+          message: ResponseMessage.UNAUTHORISED,
         );
       case DataSource.NOT_FOUND:
         return ApiErrorModel(
@@ -108,10 +108,10 @@ extension DataSourceExtension on DataSource {
           code: ResponseCode.CANCEL,
           message: ResponseMessage.CANCEL,
         );
-      case DataSource.RECIEVE_TIMEOUT:
+      case DataSource.RECEIVE_TIMEOUT:
         return ApiErrorModel(
-          code: ResponseCode.RECIEVE_TIMEOUT,
-          message: ResponseMessage.RECIEVE_TIMEOUT,
+          code: ResponseCode.RECEIVE_TIMEOUT,
+          message: ResponseMessage.RECEIVE_TIMEOUT,
         );
       case DataSource.SEND_TIMEOUT:
         return ApiErrorModel(
@@ -213,7 +213,7 @@ ApiErrorModel _handleError(DioException error) {
     case DioExceptionType.sendTimeout:
       return DataSource.SEND_TIMEOUT.getFailure();
     case DioExceptionType.receiveTimeout:
-      return DataSource.RECIEVE_TIMEOUT.getFailure();
+      return DataSource.RECEIVE_TIMEOUT.getFailure();
     case DioExceptionType.badResponse:
       final responseData = error.response?.data;
       if (responseData != null) {

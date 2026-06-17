@@ -21,7 +21,13 @@ class ProfileCubit extends Cubit<ProfileState> {
     final ApiResult<ProfileUser> result = await _profileRepo.getProfile();
 
     result.when(
-      success: (profile) {
+      success: (profile) async {
+        await _sessionManager.saveProfile(
+          role: profile.roleLabel,
+          userId: int.tryParse(profile.userId),
+          fullName: profile.fullName,
+          email: profile.email,
+        );
         emit(ProfileSuccess(profile));
       },
       failure: (error) {

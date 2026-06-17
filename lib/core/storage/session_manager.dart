@@ -8,4 +8,18 @@ class SessionManager {
   Future<void> logout() async {
     await _sessionStorage.clearSession();
   }
+
+  Future<void> saveProfile({
+    String? role,
+    int? userId,
+    String? fullName,
+    String? email,
+  }) async {
+    await _sessionStorage.saveSession(
+      role: role,
+      userId: userId,
+      fullName: fullName,
+      email: email,
+    );
+  }
 }

@@ -28,121 +28,71 @@ final getit = GetIt.instance;
 Future<void> init() async {
   await CacheHelper.init();
 
-  if (!getit.isRegistered<SessionStorage>()) {
-    getit.registerLazySingleton<SessionStorage>(() => SecureSessionStorage());
-  }
-  if (!getit.isRegistered<SessionManager>()) {
-    getit.registerLazySingleton<SessionManager>(
-      () => SessionManager(getit<SessionStorage>()),
-    );
-  }
+  getit.registerLazySingleton<SessionStorage>(() => SecureSessionStorage());
+  getit.registerLazySingleton<SessionManager>(
+    () => SessionManager(getit<SessionStorage>()),
+  );
 
   DioFactory.initSessionStorage(getit<SessionStorage>());
   Dio dio = DioFactory.getDio();
 
-  if (!getit.isRegistered<ApiService>()) {
-    getit.registerLazySingleton<ApiService>(
-      () => ApiService(dio, baseUrl: ApiConstants.runtimeApiBaseUrl),
-    );
-  }
+  getit.registerLazySingleton<ApiService>(
+    () => ApiService(dio, baseUrl: ApiConstants.runtimeApiBaseUrl),
+  );
 
-  if (!getit.isRegistered<SignupRepo>()) {
-    getit.registerLazySingleton<SignupRepo>(
-      () => SignupRepo(getit.get<ApiService>()),
-    );
-  }
-  if (!getit.isRegistered<SignupCubit>()) {
-    getit.registerFactory<SignupCubit>(
-      () => SignupCubit(getit.get<SignupRepo>(), getit.get<SessionStorage>()),
-    );
-  }
+  getit.registerLazySingleton<SignupRepo>(
+    () => SignupRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<SignupCubit>(
+    () => SignupCubit(getit.get<SignupRepo>(), getit.get<SessionStorage>()),
+  );
 
-  if (!getit.isRegistered<LoginRepo>()) {
-    getit.registerLazySingleton<LoginRepo>(
-      () => LoginRepo(getit.get<ApiService>()),
-    );
-  }
-  if (!getit.isRegistered<LoginCubit>()) {
-    getit.registerFactory<LoginCubit>(
-      () => LoginCubit(getit.get<LoginRepo>(), getit.get<SessionStorage>()),
-    );
-  }
+  getit.registerLazySingleton<LoginRepo>(
+    () => LoginRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<LoginCubit>(
+    () => LoginCubit(getit.get<LoginRepo>(), getit.get<SessionStorage>()),
+  );
 
-  if (!getit.isRegistered<JoinExamRepo>()) {
-    getit.registerLazySingleton<JoinExamRepo>(
-      () => JoinExamRepo(getit.get<ApiService>()),
-    );
-  }
-  if (!getit.isRegistered<JoinExamCubit>()) {
-    getit.registerFactory<JoinExamCubit>(
-      () => JoinExamCubit(getit.get<JoinExamRepo>()),
-    );
-  }
+  getit.registerLazySingleton<JoinExamRepo>(
+    () => JoinExamRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<JoinExamCubit>(
+    () => JoinExamCubit(getit.get<JoinExamRepo>()),
+  );
 
-  if (!getit.isRegistered<StudentUpcomingExamsRepo>()) {
-    getit.registerLazySingleton<StudentUpcomingExamsRepo>(
-      () => StudentUpcomingExamsRepo(getit.get<ApiService>()),
-    );
-  }
-  if (!getit.isRegistered<StudentExamCubit>()) {
-    getit.registerFactory<StudentExamCubit>(
-      () => StudentExamCubit(getit.get<StudentUpcomingExamsRepo>()),
-    );
-  }
+  getit.registerLazySingleton<StudentUpcomingExamsRepo>(
+    () => StudentUpcomingExamsRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<StudentExamCubit>(
+    () => StudentExamCubit(getit.get<StudentUpcomingExamsRepo>()),
+  );
 
-  if (!getit.isRegistered<InstructorExamsRepo>()) {
-    getit.registerLazySingleton<InstructorExamsRepo>(
-      () => InstructorExamsRepo(getit.get<ApiService>()),
-    );
-  }
-  if (!getit.isRegistered<ExamsCubit>()) {
-    getit.registerFactory<ExamsCubit>(
-      () => ExamsCubit(getit.get<InstructorExamsRepo>()),
-    );
-  }
-  if (!getit.isRegistered<InstructorHomeRepo>()) {
-    getit.registerLazySingleton<InstructorHomeRepo>(
-      () => InstructorHomeRepo(getit.get<InstructorExamsRepo>()),
-    );
-  }
-  if (!getit.isRegistered<InstructorHomeCubit>()) {
-    getit.registerFactory<InstructorHomeCubit>(
-      () => InstructorHomeCubit(getit.get<InstructorHomeRepo>()),
-    );
-  }
+  getit.registerLazySingleton<InstructorExamsRepo>(
+    () => InstructorExamsRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<ExamsCubit>(
+    () => ExamsCubit(getit.get<InstructorExamsRepo>()),
+  );
 
-  if (!getit.isRegistered<ProfileRepo>()) {
-    getit.registerLazySingleton<ProfileRepo>(
-      () => ProfileRepo(getit.get<ApiService>(), getit.get<SessionStorage>()),
-    );
-  }
-  if (!getit.isRegistered<ProfileCubit>()) {
-    getit.registerFactory<ProfileCubit>(
-      () => ProfileCubit(getit.get<ProfileRepo>(), getit.get<SessionManager>()),
-    );
-  }
+  getit.registerLazySingleton<InstructorHomeRepo>(
+    () => InstructorHomeRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<InstructorHomeCubit>(
+    () => InstructorHomeCubit(getit.get<InstructorHomeRepo>()),
+  );
 
-  if (!getit.isRegistered<StudentHistoryRepo>()) {
-    getit.registerLazySingleton<StudentHistoryRepo>(
-      () => StudentHistoryRepo(getit.get<ApiService>()),
-    );
-  }
-  if (!getit.isRegistered<StudentResultsCubit>()) {
-    getit.registerFactory<StudentResultsCubit>(
-      () => StudentResultsCubit(getit.get<StudentHistoryRepo>()),
-    );
-  }
+  getit.registerLazySingleton<ProfileRepo>(
+    () => ProfileRepo(getit.get<ApiService>(), getit.get<SessionStorage>()),
+  );
+  getit.registerFactory<ProfileCubit>(
+    () => ProfileCubit(getit.get<ProfileRepo>(), getit.get<SessionManager>()),
+  );
 
-  // if (!getit.isRegistered<StudentHomeRepo>()) {
-  //   getit.registerLazySingleton<StudentHomeRepo>(() => StudentHomeRepo());
-  // }
-  // if (!getit.isRegistered<StudentProfileRepo>()) {
-  //   getit.registerLazySingleton<StudentProfileRepo>(() => StudentProfileRepo());
-  // }
-
-  // if (!getit.isRegistered<InstructorReportsRepo>()) {
-  //   getit.registerLazySingleton<InstructorReportsRepo>(
-  //     () => InstructorReportsRepo(),
-  //   );
-  // }
+  getit.registerLazySingleton<StudentHistoryRepo>(
+    () => StudentHistoryRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<StudentResultsCubit>(
+    () => StudentResultsCubit(getit.get<StudentHistoryRepo>()),
+  );
 }
