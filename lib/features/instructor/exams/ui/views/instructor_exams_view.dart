@@ -4,12 +4,16 @@ import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_cubit.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_state.dart';
+import 'package:examify/core/routing/routes.dart';
 import 'package:examify/features/instructor/exams/ui/views/instructor_exam_details_view.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/instructor_exam_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:toastification/toastification.dart';
+import 'package:examify/core/networking/api_service.dart';
+import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 
 class InstructorExamsView extends StatefulWidget {
   const InstructorExamsView({super.key});
@@ -31,6 +35,102 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _publishExam(BuildContext context, ExamModel exam) async {
+    toastification.show(
+      context: context,
+      title: const Text('Publishing exam...'),
+      type: ToastificationType.info,
+      autoCloseDuration: const Duration(seconds: 2),
+    );
+    try {
+      await getit<ApiService>().publishExam(exam.examId);
+      if (context.mounted) {
+        toastification.show(
+          context: context,
+          title: const Text('Exam published successfully!'),
+          type: ToastificationType.success,
+          autoCloseDuration: const Duration(seconds: 3),
+        );
+        _refreshExams(context);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        toastification.show(
+          context: context,
+          title: const Text('Failed to publish exam'),
+          type: ToastificationType.error,
+          autoCloseDuration: const Duration(seconds: 3),
+        );
+      }
+    }
+  }
+
+  void _showUpcomingExamOptions(BuildContext context, ExamModel exam) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.primaryBlack,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (bottomSheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 16.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Upcoming Exam Options',
+                  style: AppTextStyles.white20,
+                  textAlign: TextAlign.center,
+                ),
+                verticalSpace(24.h),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(bottomSheetContext);
+                    Navigator.pushNamed(
+                      context,
+                      Routes.manageQuestionsScreen,
+                      arguments: exam,
+                    );
+                  },
+                  icon: const Icon(Icons.edit_note),
+                  label: const Text('Manage Questions'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.mainBlue.withAlpha(50),
+                    foregroundColor: AppColors.mainBlue,
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                  ),
+                ),
+                verticalSpace(16.h),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(bottomSheetContext);
+                    _publishExam(context, exam);
+                  },
+                  icon: const Icon(Icons.publish),
+                  label: const Text('Publish Exam'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.mainGreen.withAlpha(50),
+                    foregroundColor: AppColors.mainGreen,
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   List<dynamic> _filterExams(List<dynamic> exams) {
@@ -212,155 +312,182 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => getit<ExamsCubit>()..getInstructorExams(),
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-          child: BlocBuilder<ExamsCubit, ExamsState>(
-            builder: (context, state) {
-              if (state is ExamsInitial || state is ExamsLoading) {
-                return _buildSkeletonList();
-              }
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushNamed(context, Routes.createExamScreen);
+          },
+          backgroundColor: AppColors.mainBlue,
+          label: Text(
+            '+ Create Exam',
+            style: AppTextStyles.white16w400.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            child: BlocBuilder<ExamsCubit, ExamsState>(
+              builder: (context, state) {
+                if (state is ExamsInitial || state is ExamsLoading) {
+                  return _buildSkeletonList();
+                }
 
-              if (state is ExamsFailure) {
-                return RefreshIndicator(
-                  color: AppColors.mainBlue,
-                  onRefresh: () => _refreshExams(context),
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(
-                      parent: BouncingScrollPhysics(),
-                    ),
-                    children: [
-                      SizedBox(height: 140.h),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w),
-                        child: Center(
-                          child: Text(
-                            state.message,
-                            style: AppTextStyles.white20,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                if (state is ExamsFailure) {
+                  return RefreshIndicator(
+                    color: AppColors.mainBlue,
+                    onRefresh: () => _refreshExams(context),
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(
+                        parent: BouncingScrollPhysics(),
                       ),
-                    ],
-                  ),
-                );
-              }
-
-              final successState = state as ExamsSuccess;
-              final exams = successState.exams;
-              final enrolledCounts = successState.enrolledCounts;
-              final searchedExams = _filterExams(exams);
-              final filteredExams = _applyExamFilter(searchedExams);
-              final liveCount = exams
-                  .where((exam) => exam.isLive == true)
-                  .length;
-              final upcomingCount = exams
-                  .where((exam) => exam.isUpcoming == true)
-                  .length;
-              final completedCount = exams
-                  .where((exam) => exam.isCompleted == true)
-                  .length;
-
-              if (exams.isEmpty) {
-                return RefreshIndicator(
-                  onRefresh: () => _refreshExams(context),
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(
-                      parent: BouncingScrollPhysics(),
-                    ),
-                    children: [
-                      SizedBox(height: 140.h),
-                      Center(
-                        child: Text(
-                          'There are no exams yet.\nPull down to refresh.',
-                          style: AppTextStyles.white20,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Exams', style: AppTextStyles.white20),
-                  _buildSearchBar(),
-                  SizedBox(height: 18.h),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    child: Row(
                       children: [
-                        _buildFilterChip(
-                          label: 'All',
-                          count: exams.length,
-                          filter: ExamFilter.all,
-                        ),
-                        horizontalSpace(14.w),
-                        _buildFilterChip(
-                          label: 'Live',
-                          count: liveCount,
-                          filter: ExamFilter.live,
-                        ),
-                        horizontalSpace(14.w),
-                        _buildFilterChip(
-                          label: 'Upcoming',
-                          count: upcomingCount,
-                          filter: ExamFilter.upcoming,
-                        ),
-                        horizontalSpace(14.w),
-                        _buildFilterChip(
-                          label: 'Completed',
-                          count: completedCount,
-                          filter: ExamFilter.completed,
+                        SizedBox(height: 140.h),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: Center(
+                            child: Text(
+                              state.message,
+                              style: AppTextStyles.white20,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Divider(color: AppColors.white10, thickness: 1.74.w),
-                  verticalSpace(12.h),
-                  Expanded(
-                    child: RefreshIndicator(
-                      color: AppColors.primaryBlack,
-                      onRefresh: () => _refreshExams(context),
-                      child: ListView.separated(
-                        physics: const AlwaysScrollableScrollPhysics(
-                          parent: BouncingScrollPhysics(),
-                        ),
-                        itemCount: filteredExams.length,
-                        separatorBuilder: (context, index) =>
-                            SizedBox(height: 12.h),
-                        itemBuilder: (context, index) {
-                          final exam = filteredExams[index];
-                          final isLive = exam.isLive;
-                          final isCompleted = exam.isCompleted;
-                          final enrolledCount =
-                              enrolledCounts[exam.examId] ?? 0;
+                  );
+                }
 
-                          return InstructorExamCard(
-                            exam: exam,
-                            isLive: isLive,
-                            isCompleted: isCompleted,
-                            enrolledCount: enrolledCount,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      InstructorExamDetailsView(exam: exam),
-                                ),
-                              );
-                            },
-                          );
-                        },
+                final successState = state as ExamsSuccess;
+                final exams = successState.exams;
+                final enrolledCounts = successState.enrolledCounts;
+                final searchedExams = _filterExams(exams);
+                final filteredExams = _applyExamFilter(searchedExams);
+                final liveCount = exams
+                    .where((exam) => exam.isLive == true)
+                    .length;
+                final upcomingCount = exams
+                    .where((exam) => exam.isUpcoming == true)
+                    .length;
+                final completedCount = exams
+                    .where((exam) => exam.isCompleted == true)
+                    .length;
+
+                if (exams.isEmpty) {
+                  return RefreshIndicator(
+                    onRefresh: () => _refreshExams(context),
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(
+                        parent: BouncingScrollPhysics(),
+                      ),
+                      children: [
+                        SizedBox(height: 140.h),
+                        Center(
+                          child: Text(
+                            'There are no exams yet.\nPull down to refresh.',
+                            style: AppTextStyles.white20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Exams', style: AppTextStyles.white20),
+                    _buildSearchBar(),
+                    SizedBox(height: 18.h),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        children: [
+                          _buildFilterChip(
+                            label: 'All',
+                            count: exams.length,
+                            filter: ExamFilter.all,
+                          ),
+                          horizontalSpace(14.w),
+                          _buildFilterChip(
+                            label: 'Live',
+                            count: liveCount,
+                            filter: ExamFilter.live,
+                          ),
+                          horizontalSpace(14.w),
+                          _buildFilterChip(
+                            label: 'Upcoming',
+                            count: upcomingCount,
+                            filter: ExamFilter.upcoming,
+                          ),
+                          horizontalSpace(14.w),
+                          _buildFilterChip(
+                            label: 'Completed',
+                            count: completedCount,
+                            filter: ExamFilter.completed,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              );
-            },
+                    SizedBox(height: 12.h),
+                    Divider(color: AppColors.white10, thickness: 1.74.w),
+                    verticalSpace(12.h),
+                    Expanded(
+                      child: RefreshIndicator(
+                        color: AppColors.primaryBlack,
+                        onRefresh: () => _refreshExams(context),
+                        child: ListView.separated(
+                          physics: const AlwaysScrollableScrollPhysics(
+                            parent: BouncingScrollPhysics(),
+                          ),
+                          itemCount: filteredExams.length,
+                          separatorBuilder: (context, index) =>
+                              SizedBox(height: 12.h),
+                          itemBuilder: (context, index) {
+                            final exam = filteredExams[index];
+                            final isLive = exam.isLive;
+                            final isCompleted = exam.isCompleted;
+                            final enrolledCount =
+                                enrolledCounts[exam.examId] ?? 0;
+
+                            return InstructorExamCard(
+                              exam: exam,
+                              isLive: isLive,
+                              isCompleted: isCompleted,
+                              enrolledCount: enrolledCount,
+                              onTap: () {
+                                if (exam.isUpcoming) {
+                                  if (exam.isPublished) {
+                                    Navigator.pushNamed(
+                                      context,
+                                      Routes.manageQuestionsScreen,
+                                      arguments: exam,
+                                    );
+                                  } else {
+                                    _showUpcomingExamOptions(context, exam);
+                                  }
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          InstructorExamDetailsView(exam: exam),
+                                    ),
+                                  );
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),

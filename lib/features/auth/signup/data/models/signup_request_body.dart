@@ -18,5 +18,8 @@ class SignupRequestBody {
     required this.role,
   });
 
+  factory SignupRequestBody.fromJson(Map<String, dynamic> json) =>
+      _$SignupRequestBodyFromJson(json);
+
   Map<String, dynamic> toJson() => _$SignupRequestBodyToJson(this);
 }

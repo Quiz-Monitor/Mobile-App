@@ -16,6 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:examify/core/routing/routes.dart';
 import 'package:printing/printing.dart';
 
 class InstructorExamDetailsView extends StatefulWidget {
@@ -430,13 +431,25 @@ class _InstructorExamDetailsViewState extends State<InstructorExamDetailsView> {
                               .map(
                                 (row) => Padding(
                                   padding: EdgeInsets.only(bottom: 16.h),
-                                  child: StudentResultTile(
-                                    row: row,
-                                    backColors: _scoreColor(row.finalScore),
-                                    statusColor: _statusColor(
-                                      row.cheatingStatus,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.gradingScreen,
+                                        arguments: {
+                                          'examId': widget.exam.examId,
+                                          'studentId': row.studentId,
+                                        },
+                                      );
+                                    },
+                                    child: StudentResultTile(
+                                      row: row,
+                                      backColors: _scoreColor(row.finalScore),
+                                      statusColor: _statusColor(
+                                        row.cheatingStatus,
+                                      ),
+                                      initials: _initials(row.studentName),
                                     ),
-                                    initials: _initials(row.studentName),
                                   ),
                                 ),
                               )

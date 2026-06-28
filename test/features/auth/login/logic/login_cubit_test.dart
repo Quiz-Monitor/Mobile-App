@@ -16,6 +16,8 @@ import 'package:examify/features/instructor/home/data/models/get_exams_response.
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_request_body.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_response.dart';
+import 'package:examify/features/instructor/exam_creation/data/models/exam_creation_models.dart';
+import 'package:examify/features/instructor/grading/data/models/written_answer_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeApiService implements ApiService {
@@ -86,6 +88,51 @@ class _FakeApiService implements ApiService {
 
   @override
   Future<void> deleteAccount(dynamic body) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<CreateExamResponse> createExam(CreateExamRequestBody body) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<AddQuestionResponse> addExamQuestion(
+    int examId,
+    AddQuestionRequestBody body,
+  ) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateExamQuestion(
+    int examId,
+    int questionId,
+    AddQuestionRequestBody body,
+  ) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<QuestionLocalDto>> getExamQuestions(int examId) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> publishExam(int examId) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<WrittenAnswerModel>> getWrittenAnswers(
+    int examId,
+    int studentId,
+  ) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> gradeAnswer(int answerId, GradeRequestBody body) {
     throw UnimplementedError();
   }
 }

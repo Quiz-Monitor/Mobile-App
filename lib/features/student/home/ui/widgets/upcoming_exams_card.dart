@@ -15,36 +15,77 @@ class UpcomingExamsCard extends StatefulWidget {
   State<UpcomingExamsCard> createState() => _UpcomingExamsCardState();
 }
 
-class _UpcomingExamsCardState extends State<UpcomingExamsCard> {
+class _UpcomingExamsCardState extends State<UpcomingExamsCard>
+    with TickerProviderStateMixin {
   Timer? _timer;
   late Duration _duration;
+
+  // Fade/glow pulse for the badge itself
+  late AnimationController _pulseController;
+
+  // Animated glow/shadow intensity
+  late Animation<double> _glowAnimation;
 
   @override
   void initState() {
     super.initState();
+
+    // --- Pulse (opacity) ---
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+
+    // --- Glow intensity ---
+    _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+
     _updateDuration();
+    if (widget.examModel.isLive) {
+      _startLiveAnimations();
+    }
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         setState(() {
           _updateDuration();
+          if (widget.examModel.isLive && !_pulseController.isAnimating) {
+            _startLiveAnimations();
+          } else if (!widget.examModel.isLive && _pulseController.isAnimating) {
+            _stopLiveAnimations();
+          }
         });
       }
     });
   }
 
+  void _startLiveAnimations() {
+    _pulseController.repeat(reverse: true);
+  }
+
+  void _stopLiveAnimations() {
+    _pulseController.stop();
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
+    _pulseController.dispose();
     super.dispose();
   }
 
   void _updateDuration() {
-    final remaining = widget.examModel.startTime.difference(DateTime.now());
+    final now = DateTime.now();
+    Duration remaining;
+    if (widget.examModel.isLive) {
+      remaining = widget.examModel.endTime.difference(now);
+    } else {
+      remaining = widget.examModel.startTime.difference(now);
+    }
     if (remaining.isNegative) {
       _duration = Duration.zero;
-      if (_timer != null && _timer!.isActive) {
-        _timer!.cancel();
-      }
+      _timer?.cancel();
     } else {
       _duration = remaining;
     }
@@ -72,7 +113,7 @@ class _UpcomingExamsCardState extends State<UpcomingExamsCard> {
                 end: Alignment.bottomRight,
                 colors: [
                   AppColors.greenAlpha10,
-                  AppColors.blueBorder.withAlpha(25),
+                 // AppColors.blueBorder.withAlpha(25),
                 ],
               )
             : null,
@@ -119,46 +160,7 @@ class _UpcomingExamsCardState extends State<UpcomingExamsCard> {
               ),
               if (examModel.isLive) ...[
                 SizedBox(width: 8.w),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 14.w,
-                    vertical: 8.h,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xff00C950).withAlpha(50),
-                        Color(0xff05DF72).withAlpha(50),
-                      ],
-                    ),
-                    border: Border.all(
-                      color: Color(0xff05DF72).withAlpha(100),
-                      width: 1.74,
-                    ),
-                    borderRadius: BorderRadius.circular(20.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.mainGreen.withAlpha(70),
-                        blurRadius: 16,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset('assets/icons/greendot.svg'),
-                      SizedBox(width: 8.w),
-                      Text(
-                        'Live Now',
-                        style: AppTextStyles.blue14w400.copyWith(
-                          color: AppColors.mainGreen,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                _LiveNowBadge(glowAnimation: _glowAnimation),
               ],
             ],
           ),
@@ -203,10 +205,7 @@ class _UpcomingExamsCardState extends State<UpcomingExamsCard> {
           SizedBox(height: 12.h),
           Row(
             children: [
-              SvgPicture.asset(
-                'assets/icons/person.svg',
-                width: 16.w,
-              ),
+              SvgPicture.asset('assets/icons/person.svg', width: 16.w),
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
@@ -245,6 +244,70 @@ class _UpcomingExamsCardState extends State<UpcomingExamsCard> {
                   ),
                 ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// "Live Now" badge — static container, animated glow shadow + animated dot.
+class _LiveNowBadge extends StatelessWidget {
+  const _LiveNowBadge({required this.glowAnimation});
+
+  final Animation<double> glowAnimation;
+
+  static const _green = Color(0xff05DF72);
+  static const _greenDark = Color(0xff00C950);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: glowAnimation,
+      builder: (_, child) {
+        // Interpolate glow: blur 8→26, spread 0→4, alpha 40→120
+        final blur = 8.0 + glowAnimation.value * 18.0;
+        final spread = glowAnimation.value * 4.0;
+        final shadowAlpha = (40 + (glowAnimation.value * 80)).toInt();
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [_greenDark.withAlpha(55), _green.withAlpha(55)],
+            ),
+            border: Border.all(color: _green.withAlpha(160), width: 1.74),
+            borderRadius: BorderRadius.circular(20.r),
+            boxShadow: [
+              BoxShadow(
+                color: _green.withAlpha(shadowAlpha),
+                blurRadius: blur,
+                spreadRadius: spread,
+              ),
+            ],
+          ),
+          child: child,
+        );
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Animated green dot: scales with glowAnimation
+          AnimatedBuilder(
+            animation: glowAnimation,
+            builder: (_, __) => Transform.scale(
+              scale: 0.85 + glowAnimation.value * 0.30,
+              child: SvgPicture.asset('assets/icons/greendot.svg'),
+            ),
+          ),
+          SizedBox(width: 6.w),
+          Text(
+            'Live Now',
+            style: TextStyle(
+              color: _green,
+              fontWeight: FontWeight.w600,
+              fontSize: 12.sp,
+              letterSpacing: 0.3,
+            ),
           ),
         ],
       ),

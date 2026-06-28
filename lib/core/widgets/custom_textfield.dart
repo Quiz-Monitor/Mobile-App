@@ -1,5 +1,6 @@
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextfield extends StatefulWidget {
@@ -13,6 +14,9 @@ class CustomTextfield extends StatefulWidget {
     this.controller,
     this.validator,
     this.keyboardType,
+    this.readOnly = false,
+    this.onTap,
+    this.inputFormatters,
   });
 
   final String? hintText;
@@ -23,6 +27,9 @@ class CustomTextfield extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
+  final bool readOnly;
+  final VoidCallback? onTap;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -40,7 +47,9 @@ class _CustomTextfieldState extends State<CustomTextfield> {
       controller: widget.controller,
       validator: widget.validator,
       obscureText: widget.isPassword ? _obscureText : false,
-
+      readOnly: widget.readOnly,
+      onTap: widget.onTap,
+      inputFormatters: widget.inputFormatters,
       keyboardType: widget.keyboardType,
       style: AppTextStyles.white16w400,
       decoration: InputDecoration(

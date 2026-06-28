@@ -62,6 +62,15 @@ class ApiConstants {
 
   // Instructor endpoints placeholders
   static const String getInstructorExams = "api/exams"; // ✅ done
+  static const String createExam = "api/exams";
+  static const String addExamQuestion = "api/exams/{examId}/questions";
+  static const String updateExamQuestion =
+      "api/exams/{examId}/questions/{questionId}";
+  static const String getExamQuestions = "api/exams/{examId}/questions";
+  static const String publishExam = "api/exams/{examId}/publish";
+  static const String getWrittenAnswers =
+      "api/exams/{examId}/students/{studentId}/written-answers";
+  static const String gradeAnswer = "api/answers/{answerId}/grade";
 
   // Shared placeholders
   // static const String notifications = "api/notifications";

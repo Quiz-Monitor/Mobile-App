@@ -4,8 +4,10 @@ import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/features/instructor/exams/ui/views/instructor_exams_view.dart';
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:toastification/toastification.dart';
 
 class InstructorExamCard extends StatelessWidget {
   const InstructorExamCard({
@@ -54,7 +56,70 @@ class InstructorExamCard extends StatelessWidget {
               verticalSpace(8.h),
 
               Text(exam.description, style: AppTextStyles.whit14w400alpha60),
-              SizedBox(height: 10.h),
+
+              if (!isLive && !isCompleted) ...[
+                SizedBox(height: 12.h),
+                Row(
+                  children: [
+                    Text(
+                      'Exam Code:',
+                      style: AppTextStyles.whit14w400alpha60.copyWith(
+                        color: AppColors.white60,
+                      ),
+                    ),
+                    horizontalSpace(8.w),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.mainBlue.withAlpha(20),
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(
+                          color: AppColors.mainBlue.withAlpha(50),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            exam.examCode,
+                            style: AppTextStyles.white16w400.copyWith(
+                              fontSize: 14.sp,
+                              color: AppColors.mainBlue,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          horizontalSpace(6.w),
+                          GestureDetector(
+                            onTap: () {
+                              Clipboard.setData(
+                                ClipboardData(text: exam.examCode),
+                              );
+                              toastification.show(
+                                context: context,
+                                type: ToastificationType.success,
+                                style: ToastificationStyle.fillColored,
+                                title: const Text('Exam code copied!'),
+                                autoCloseDuration: const Duration(seconds: 2),
+                                alignment: Alignment.bottomCenter,
+                              );
+                            },
+                            child: Icon(
+                              Icons.copy_rounded,
+                              color: AppColors.mainBlue,
+                              size: 16.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+
+              SizedBox(height: 12.h),
               Row(
                 children: [
                   Icon(

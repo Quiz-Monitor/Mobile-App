@@ -7,11 +7,22 @@ class ExamModel {
   int examId;
   String title;
   String description;
+
+  @JsonKey(fromJson: _parseDateTime)
   DateTime startTime;
+
+  @JsonKey(fromJson: _parseDateTime)
   DateTime endTime;
-  String durationMinutes;
+
+  int durationMinutes;
   String examCode;
+
+  @JsonKey(defaultValue: '')
   String instructorName;
+
+  @JsonKey(defaultValue: false)
+  bool isPublished;
+
   ExamModel({
     required this.examId,
     required this.title,
@@ -21,41 +32,16 @@ class ExamModel {
     required this.durationMinutes,
     required this.examCode,
     this.instructorName = '',
+    this.isPublished = false,
   });
 
-  factory ExamModel.fromJson(Map<String, dynamic> json) {
-    final startTime =
-        _readDateTime(json, const ['startTime', 'startAt']) ?? DateTime.now();
-    final durationMinutes =
-        _readString(json, const ['durationMinutes', 'duration']) ?? '60';
-    final parsedDuration = int.tryParse(durationMinutes) ?? 60;
-    final endTime =
-        _readDateTime(json, const ['endTime', 'endAt']) ??
-        startTime.add(Duration(minutes: parsedDuration));
+  factory ExamModel.fromJson(Map<String, dynamic> json) =>
+      _$ExamModelFromJson(json);
 
-    final title = _readString(json, const ['title', 'name']) ?? 'Untitled exam';
+  Map<String, dynamic> toJson() => _$ExamModelToJson(this);
 
-    return ExamModel(
-      examId: _readInt(json, const ['examId', 'id']) ?? 0,
-      title: title,
-      description: _readString(json, const ['description', 'details']) ?? '',
-      startTime: startTime,
-      endTime: endTime,
-      durationMinutes: durationMinutes,
-      examCode:
-          _readString(json, const ['examCode', 'code']) ??
-          _buildFallbackExamCode(title, startTime),
-      instructorName:
-          _readString(json, const [
-            'instructorName',
-            'professorName',
-            'professor',
-            'teacherName',
-            'ownerName',
-            'createdByName',
-          ]) ??
-          '',
-    );
+  static DateTime _parseDateTime(String value) {
+    return DateTime.parse(value).toLocal();
   }
 
   bool get isLive => isLiveAt(DateTime.now());
@@ -74,58 +60,5 @@ class ExamModel {
 
   bool isCompletedAt(DateTime moment) {
     return moment.isAfter(endTime);
-  }
-
-  static int? _readInt(Map<String, dynamic> json, List<String> keys) {
-    for (final key in keys) {
-      final value = json[key];
-      if (value is int) {
-        return value;
-      }
-      if (value is num) {
-        return value.toInt();
-      }
-      if (value != null) {
-        return int.tryParse(value.toString());
-      }
-    }
-    return null;
-  }
-
-  static String? _readString(Map<String, dynamic> json, List<String> keys) {
-    for (final key in keys) {
-      final value = json[key];
-      if (value != null) {
-        final text = value.toString().trim();
-        if (text.isNotEmpty) {
-          return text;
-        }
-      }
-    }
-    return null;
-  }
-
-  static DateTime? _readDateTime(Map<String, dynamic> json, List<String> keys) {
-    for (final key in keys) {
-      final value = json[key];
-      if (value is DateTime) {
-        return value;
-      }
-      if (value != null) {
-        return DateTime.tryParse(value.toString());
-      }
-    }
-    return null;
-  }
-
-  static String _buildFallbackExamCode(String title, DateTime startTime) {
-    final words = title
-        .split(RegExp(r'\s+'))
-        .where((word) => word.trim().isNotEmpty)
-        .toList();
-    final prefix = words.isEmpty
-        ? 'EX'
-        : words.take(2).map((word) => word[0].toUpperCase()).join();
-    return '$prefix${startTime.year}';
   }
 }

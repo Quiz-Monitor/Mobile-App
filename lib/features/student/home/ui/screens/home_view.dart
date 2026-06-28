@@ -1,6 +1,5 @@
 import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
-import 'package:examify/features/student/home/data/model/student_exam_model.dart';
 import 'package:examify/features/student/home/logic/cubit/cubit/student_exam_cubit.dart';
 import 'package:examify/features/student/home/logic/cubit/cubit/student_exam_state.dart';
 import 'package:examify/features/student/home/ui/widgets/custom_home_appbar.dart';
@@ -70,7 +69,7 @@ class _HomeViewState extends State<HomeView> {
             SizedBox(height: 20.h),
             _buildSearchBar(),
             SizedBox(height: 20.h),
-            Text('Upcoming Exams', style: AppTextStyles.white16w400),
+            Text('Upcoming & Live Exams', style: AppTextStyles.white16w400),
             SizedBox(height: 16.h),
             Expanded(
               child: RefreshIndicator(
@@ -91,16 +90,11 @@ class _HomeViewState extends State<HomeView> {
                           separatorBuilder: (context, index) =>
                               SizedBox(height: 10.h),
                           itemBuilder: (context, index) {
-                            return UpcomingExamsCard(
-                              examModel: StudentExamModel(
-                                examTitle: 'examTitle',
-                                instructorName: 'instructorName',
-                                examCode: 'examCode',
-                                examStatus: 'Live',
-                                startTime: DateTime.now(),
-                                endTime: DateTime.now(),
-                                durationMinutes: 2,
-                                questionCount: 2,
+                            return Container(
+                              height: 100.h,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14.r),
                               ),
                             );
                           },
@@ -127,7 +121,9 @@ class _HomeViewState extends State<HomeView> {
                         ),
                         children: const [
                           SizedBox(height: 120),
-                          _StateMessage(message: 'No upcoming exams yet.'),
+                          _StateMessage(
+                            message: 'No upcoming or live exams yet.',
+                          ),
                         ],
                       );
                     }

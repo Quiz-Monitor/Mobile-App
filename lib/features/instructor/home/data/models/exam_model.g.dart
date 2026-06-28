@@ -10,11 +10,12 @@ ExamModel _$ExamModelFromJson(Map<String, dynamic> json) => ExamModel(
   examId: (json['examId'] as num).toInt(),
   title: json['title'] as String,
   description: json['description'] as String,
-  startTime: DateTime.parse(json['startTime'] as String),
-  endTime: DateTime.parse(json['endTime'] as String),
-  durationMinutes: json['durationMinutes'] as String,
+  startTime: ExamModel._parseDateTime(json['startTime'] as String),
+  endTime: ExamModel._parseDateTime(json['endTime'] as String),
+  durationMinutes: (json['durationMinutes'] as num).toInt(),
   examCode: json['examCode'] as String,
   instructorName: json['instructorName'] as String? ?? '',
+  isPublished: json['isPublished'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$ExamModelToJson(ExamModel instance) => <String, dynamic>{
@@ -26,4 +27,5 @@ Map<String, dynamic> _$ExamModelToJson(ExamModel instance) => <String, dynamic>{
   'durationMinutes': instance.durationMinutes,
   'examCode': instance.examCode,
   'instructorName': instance.instructorName,
+  'isPublished': instance.isPublished,
 };

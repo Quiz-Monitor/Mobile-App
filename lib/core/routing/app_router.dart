@@ -15,6 +15,13 @@ import 'package:examify/core/di/service_locator.dart';
 import 'package:examify/features/auth/signup/logic/cubit/signup_cubit.dart';
 import 'package:examify/features/auth/login/logic/login_cubit.dart';
 import 'package:examify/features/instructor/navigation/ui/views/instructor_navigation.dart';
+import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_cubit.dart';
+import 'package:examify/features/instructor/exam_creation/ui/views/create_exam_form_view.dart';
+import 'package:examify/features/instructor/exam_creation/ui/views/add_question_view.dart';
+import 'package:examify/features/instructor/exam_creation/ui/views/manage_questions_view.dart';
+import 'package:examify/features/instructor/grading/logic/cubit/grading_cubit.dart';
+import 'package:examify/features/instructor/grading/ui/views/grading_view.dart';
+import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -65,6 +72,48 @@ class AppRouter {
         );
       case Routes.notificationsSettingsScreen:
         return CustomPageRoute(child: const NotificationsSettings());
+
+      // New Feature Routes
+      case Routes.createExamScreen:
+        return CustomPageRoute(
+          child: BlocProvider(
+            create: (_) => getit<ExamCreationCubit>(),
+            child: const CreateExamFormView(),
+          ),
+        );
+      case Routes.addQuestionScreen:
+        final cubit = settings.arguments as ExamCreationCubit;
+        return CustomPageRoute(
+          child: BlocProvider.value(
+            value: cubit,
+            child: const AddQuestionView(),
+          ),
+        );
+      case Routes.manageQuestionsScreen:
+        final exam = settings.arguments as ExamModel;
+        return CustomPageRoute(
+          child: BlocProvider(
+            create: (_) =>
+                getit<
+                  ExamCreationCubit
+                >(), // Note: assumes we want a fresh cubit here, unless we pass an existing one or it works fine.
+            child: ManageQuestionsView(exam: exam),
+          ),
+        );
+      case Routes.gradingScreen:
+        final args = settings.arguments as Map<String, int>;
+        return CustomPageRoute(
+          child: BlocProvider(
+            create: (_) =>
+                getit<GradingCubit>()
+                  ..loadAnswers(args['examId']!, args['studentId']!),
+            child: GradingView(
+              studentId: args['studentId']!,
+              examId: args['examId']!,
+            ),
+          ),
+        );
+
       default:
         return CustomPageRoute(
           child: const Scaffold(body: Center(child: Text('No route found'))),

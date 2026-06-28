@@ -20,6 +20,8 @@ class SignupResponse {
   factory SignupResponse.fromJson(Map<String, dynamic> json) =>
       _$SignupResponseFromJson(json);
 
+  Map<String, dynamic> toJson() => _$SignupResponseToJson(this);
+
   factory SignupResponse.fromNullableJson(Map<String, dynamic>? json) {
     if (json == null) {
       return const SignupResponse.empty();
@@ -58,6 +60,8 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 
   factory User.fromNullableJson(Map<String, dynamic>? json) {
     if (json == null) {

@@ -38,7 +38,6 @@ class _OnboardingState extends State<Onboarding> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff070B1D),
       body: Stack(
         children: [
           // Positioned.fill(

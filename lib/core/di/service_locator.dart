@@ -3,6 +3,7 @@ import 'package:examify/core/config/cache/cache_helper.dart';
 import 'package:examify/core/constants/api_constants.dart';
 import 'package:examify/core/networking/api_service.dart';
 import 'package:examify/core/networking/dio_factory.dart';
+import 'package:examify/core/services/notification_service.dart';
 import 'package:examify/core/storage/session_manager.dart';
 import 'package:examify/core/storage/session_storage.dart';
 import 'package:examify/features/auth/login/data/repo/login_repo.dart';
@@ -21,12 +22,18 @@ import 'package:examify/features/student/history/data/repo/student_history_repo.
 import 'package:examify/features/student/history/logic/cubit/student_results_cubit.dart';
 import 'package:examify/features/student/home/data/repo/student_upcoming_exams_repo.dart';
 import 'package:examify/features/student/home/logic/cubit/cubit/student_exam_cubit.dart';
+import 'package:examify/features/instructor/exam_creation/data/repo/exam_creation_repo.dart';
+import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_cubit.dart';
+import 'package:examify/features/instructor/grading/data/repo/grading_repo.dart';
+import 'package:examify/features/instructor/grading/logic/cubit/grading_cubit.dart';
 import 'package:get_it/get_it.dart';
 
 final getit = GetIt.instance;
 
 Future<void> init() async {
   await CacheHelper.init();
+
+  getit.registerLazySingleton<NotificationService>(() => NotificationService());
 
   getit.registerLazySingleton<SessionStorage>(() => SecureSessionStorage());
   getit.registerLazySingleton<SessionManager>(
@@ -65,7 +72,10 @@ Future<void> init() async {
     () => StudentUpcomingExamsRepo(getit.get<ApiService>()),
   );
   getit.registerFactory<StudentExamCubit>(
-    () => StudentExamCubit(getit.get<StudentUpcomingExamsRepo>()),
+    () => StudentExamCubit(
+      getit.get<StudentUpcomingExamsRepo>(),
+      getit.get<NotificationService>(),
+    ),
   );
 
   getit.registerLazySingleton<InstructorExamsRepo>(
@@ -94,5 +104,19 @@ Future<void> init() async {
   );
   getit.registerFactory<StudentResultsCubit>(
     () => StudentResultsCubit(getit.get<StudentHistoryRepo>()),
+  );
+
+  getit.registerLazySingleton<ExamCreationRepo>(
+    () => ExamCreationRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<ExamCreationCubit>(
+    () => ExamCreationCubit(getit.get<ExamCreationRepo>()),
+  );
+
+  getit.registerLazySingleton<GradingRepo>(
+    () => GradingRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<GradingCubit>(
+    () => GradingCubit(getit.get<GradingRepo>()),
   );
 }

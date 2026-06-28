@@ -21,6 +21,8 @@ class LoginResponse {
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>
       _$LoginResponseFromJson(json);
 
+  Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
+
   factory LoginResponse.fromNullableJson(Map<String, dynamic>? json) {
     if (json == null) {
       return const LoginResponse.empty();
@@ -59,6 +61,8 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 
   factory User.fromNullableJson(Map<String, dynamic>? json) {
     if (json == null) {

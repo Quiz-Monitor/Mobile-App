@@ -6,10 +6,24 @@ import 'package:examify/features/student/history/ui/widgets/exam_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 class CustomExamCard extends StatelessWidget {
   const CustomExamCard({super.key, required this.exHistoryModel});
   final ExamsHistoryModel exHistoryModel;
+
+  String _formatStatus() {
+    if (exHistoryModel.submitTime != null) {
+      try {
+        final dt = DateTime.parse(exHistoryModel.submitTime!).toLocal();
+        return DateFormat('dd MMM, yyyy - hh:mm a').format(dt);
+      } catch (e) {
+        return exHistoryModel.submitTime!;
+      }
+    }
+    return exHistoryModel.status;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -46,7 +60,7 @@ class CustomExamCard extends StatelessWidget {
             style: TextStyle(fontSize: 12.sp, color: Colors.white),
           ),
           subtitle: Text(
-            exHistoryModel.status,
+            _formatStatus(),
             style: AppTextStyles.whit14w400alpha60.copyWith(fontSize: 12.sp),
           ),
           trailing: exHistoryModel.isPending

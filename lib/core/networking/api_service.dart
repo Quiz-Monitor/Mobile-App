@@ -12,6 +12,8 @@ import 'package:examify/features/student/join_exam/data/model/join_exam_request_
 import 'package:examify/features/student/join_exam/data/model/join_exam_response.dart';
 import 'package:examify/features/shared/profile/data/models/change_password_request_body.dart';
 import 'package:examify/features/shared/profile/data/models/delete_account_request_body.dart';
+import 'package:examify/features/instructor/exam_creation/data/models/exam_creation_models.dart';
+import 'package:examify/features/instructor/grading/data/models/written_answer_model.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'api_service.g.dart';
@@ -66,4 +68,40 @@ abstract class ApiService {
   // Delete account service
   @DELETE(ApiConstants.deleteAccount)
   Future<void> deleteAccount(@Body() DeleteAccountRequestBody body);
+
+  // --- Exam Creation ---
+  @POST(ApiConstants.createExam)
+  Future<CreateExamResponse> createExam(@Body() CreateExamRequestBody body);
+
+  @POST(ApiConstants.addExamQuestion)
+  Future<AddQuestionResponse> addExamQuestion(
+    @Path('examId') int examId,
+    @Body() AddQuestionRequestBody body,
+  );
+
+  @PUT(ApiConstants.updateExamQuestion)
+  Future<void> updateExamQuestion(
+    @Path('examId') int examId,
+    @Path('questionId') int questionId,
+    @Body() AddQuestionRequestBody body,
+  );
+
+  @GET(ApiConstants.getExamQuestions)
+  Future<List<QuestionLocalDto>> getExamQuestions(@Path('examId') int examId);
+
+  @POST(ApiConstants.publishExam)
+  Future<void> publishExam(@Path('examId') int examId);
+
+  // --- Essay Answer Grading ---
+  @GET(ApiConstants.getWrittenAnswers)
+  Future<List<WrittenAnswerModel>> getWrittenAnswers(
+    @Path('examId') int examId,
+    @Path('studentId') int studentId,
+  );
+
+  @POST(ApiConstants.gradeAnswer)
+  Future<void> gradeAnswer(
+    @Path('answerId') int answerId,
+    @Body() GradeRequestBody body,
+  );
 }
