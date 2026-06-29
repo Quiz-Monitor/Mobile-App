@@ -5,6 +5,7 @@ import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/features/instructor/exams/data/models/instructor_exam_result_model.dart';
 import 'package:examify/features/instructor/exams/data/repo/instructor_exams_repo.dart';
+import 'package:examify/features/instructor/exams/ui/utils/exam_date_formatter.dart';
 import 'package:examify/features/instructor/exams/ui/views/instructor_exams_view.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/matric_card.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/section%20_card.dart';
@@ -314,7 +315,7 @@ class _InstructorExamDetailsViewState extends State<InstructorExamDetailsView> {
                           ),
                           horizontalSpace(6.w),
                           Text(
-                            formatDate(widget.exam.startTime),
+                            formatExamDate(widget.exam.startTime),
                             style: AppTextStyles.white12w400alpha40
                                 .copyWith(color: Colors.white.withAlpha(150))
                                 .copyWith(color: AppColors.white60),

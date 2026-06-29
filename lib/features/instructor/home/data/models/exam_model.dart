@@ -1,48 +1,38 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'exam_model.freezed.dart';
 part 'exam_model.g.dart';
 
-@JsonSerializable()
-class ExamModel {
-  int examId;
-  String title;
-  String description;
+class LocalDateTimeConverter implements JsonConverter<DateTime, String> {
+  const LocalDateTimeConverter();
 
-  @JsonKey(fromJson: _parseDateTime)
-  DateTime startTime;
+  @override
+  DateTime fromJson(String json) => DateTime.parse(json).toLocal();
 
-  @JsonKey(fromJson: _parseDateTime)
-  DateTime endTime;
+  @override
+  String toJson(DateTime object) => object.toIso8601String();
+}
 
-  int durationMinutes;
-  String examCode;
+enum ExamState { draft, live, upcoming, completed }
 
-  @JsonKey(defaultValue: '')
-  String instructorName;
+@freezed
+abstract class ExamModel with _$ExamModel {
+  const ExamModel._();
 
-  @JsonKey(defaultValue: false)
-  bool isPublished;
-
-  ExamModel({
-    required this.examId,
-    required this.title,
-    required this.description,
-    required this.startTime,
-    required this.endTime,
-    required this.durationMinutes,
-    required this.examCode,
-    this.instructorName = '',
-    this.isPublished = false,
-  });
+  const factory ExamModel({
+    required int examId,
+    required String title,
+    required String description,
+    @LocalDateTimeConverter() required DateTime startTime,
+    @LocalDateTimeConverter() required DateTime endTime,
+    required int durationMinutes,
+    required String examCode,
+    @Default('') String instructorName,
+    @Default(false) bool isPublished,
+  }) = _ExamModel;
 
   factory ExamModel.fromJson(Map<String, dynamic> json) =>
       _$ExamModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ExamModelToJson(this);
-
-  static DateTime _parseDateTime(String value) {
-    return DateTime.parse(value).toLocal();
-  }
 
   bool get isLive => isLiveAt(DateTime.now());
 
@@ -50,15 +40,18 @@ class ExamModel {
 
   bool get isCompleted => isCompletedAt(DateTime.now());
 
-  bool isLiveAt(DateTime moment) {
-    return !moment.isBefore(startTime) && !moment.isAfter(endTime);
-  }
+  bool isLiveAt(DateTime moment) =>
+      !moment.isBefore(startTime) && !moment.isAfter(endTime);
 
-  bool isUpcomingAt(DateTime moment) {
-    return moment.isBefore(startTime);
-  }
+  bool isUpcomingAt(DateTime moment) => moment.isBefore(startTime);
 
-  bool isCompletedAt(DateTime moment) {
-    return moment.isAfter(endTime);
+  bool isCompletedAt(DateTime moment) => moment.isAfter(endTime);
+
+  ExamState get examState {
+    if (!isPublished) return ExamState.draft;
+    final now = DateTime.now();
+    if (isLiveAt(now)) return ExamState.live;
+    if (isUpcomingAt(now)) return ExamState.upcoming;
+    return ExamState.completed;
   }
 }

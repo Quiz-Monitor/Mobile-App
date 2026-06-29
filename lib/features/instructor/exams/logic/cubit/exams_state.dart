@@ -1,26 +1,15 @@
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class ExamsState {
-  const ExamsState();
-}
+part 'exams_state.freezed.dart';
 
-class ExamsInitial extends ExamsState {
-  const ExamsInitial();
-}
-
-class ExamsLoading extends ExamsState {
-  const ExamsLoading();
-}
-
-class ExamsSuccess extends ExamsState {
-  final List<ExamModel> exams;
-  final Map<int, int> enrolledCounts;
-
-  const ExamsSuccess(this.exams, {this.enrolledCounts = const {}});
-}
-
-class ExamsFailure extends ExamsState {
-  final String message;
-
-  const ExamsFailure(this.message);
+@freezed
+class ExamsState with _$ExamsState {
+  const factory ExamsState.initial() = _Initial;
+  const factory ExamsState.loading() = _Loading;
+  const factory ExamsState.success({
+    required List<ExamModel> exams,
+    @Default(<int, int>{}) Map<int, int> enrolledCounts,
+  }) = _Success;
+  const factory ExamsState.failure(String message) = _Failure;
 }

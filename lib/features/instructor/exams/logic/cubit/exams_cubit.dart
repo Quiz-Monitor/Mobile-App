@@ -8,53 +8,42 @@ import 'exams_state.dart';
 class ExamsCubit extends Cubit<ExamsState> {
   final InstructorExamsRepo _instructorExamsRepo;
 
-  ExamsCubit(this._instructorExamsRepo) : super(const ExamsInitial());
+  ExamsCubit(this._instructorExamsRepo) : super(const ExamsState.initial());
 
   Future<void> getInstructorExams({bool showLoading = true}) async {
     if (showLoading) {
-      emit(const ExamsLoading());
+      emit(const ExamsState.loading());
     }
 
-    final ApiResult<List<ExamModel>> result = await _instructorExamsRepo
-        .getInstructorExams();
-
-    List<ExamModel>? exams;
-    String? errorMessage;
+    final result = await _instructorExamsRepo.getInstructorExams();
 
     result.when(
-      success: (value) {
-        exams = value;
+      success: (exams) async {
+        final enrolledCounts = await _loadEnrolledCounts(exams);
+        emit(ExamsState.success(exams: exams, enrolledCounts: enrolledCounts));
       },
       failure: (error) {
-        errorMessage = error.apiErrorModel.getAllErrorMessages();
+        emit(ExamsState.failure(error.apiErrorModel.getAllErrorMessages()));
       },
     );
+  }
 
-    if (errorMessage != null) {
-      emit(ExamsFailure(errorMessage!));
-      return;
-    }
-
-    final loadedExams = exams ?? const <ExamModel>[];
-    final enrolledCounts = <int, int>{};
-
-    await Future.wait(
-      loadedExams.map((exam) async {
+  Future<Map<int, int>> _loadEnrolledCounts(List<ExamModel> exams) async {
+    final entries = await Future.wait(
+      exams.map((exam) async {
         final countResult = await _instructorExamsRepo.getEnrolledStudentsCount(
           exam.examId,
         );
 
-        countResult.when(
-          success: (count) {
-            enrolledCounts[exam.examId] = count;
-          },
-          failure: (_) {
-            enrolledCounts[exam.examId] = 0;
-          },
+        final count = countResult.when(
+          success: (value) => value,
+          failure: (_) => 0,
         );
+
+        return MapEntry(exam.examId, count);
       }),
     );
 
-    emit(ExamsSuccess(loadedExams, enrolledCounts: enrolledCounts));
+    return Map<int, int>.fromEntries(entries);
   }
 }

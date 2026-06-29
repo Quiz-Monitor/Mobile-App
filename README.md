@@ -16,7 +16,7 @@
 
 ## 🌟 Overview
 
-**Examify** is a robust, cross-platform mobile application designed to streamline the examination process for both **Students** and **Instructors**. Built as a university capstone project, Examify bridges the gap between educational assessments and modern user experiences, providing a seamless, secure, and intuitive environment for academic testing.
+**Raqeeb** is a robust, cross-platform mobile application designed to streamline the examination process for both **Students** and **Instructors**. Built as a university capstone project, Examify bridges the gap between educational assessments and modern user experiences, providing a seamless, secure, and intuitive environment for academic testing.
 
 Built with **Flutter**, the system adheres to strict **Clean Architecture** patterns, leveraging **BLoC/Cubit** for reactive state management, and **Retrofit/Dio** for type-safe sophisticated REST API integration. 
 

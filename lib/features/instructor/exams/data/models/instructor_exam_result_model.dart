@@ -1,10 +1,15 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'instructor_exam_result_model.g.dart';
+
+@JsonSerializable()
 class InstructorExamResultModel {
   final int studentId;
   final String studentName;
   final double finalScore;
   final String cheatingStatus;
   final int totalViolations;
-
+  
   const InstructorExamResultModel({
     required this.studentId,
     required this.studentName,
@@ -13,53 +18,79 @@ class InstructorExamResultModel {
     required this.totalViolations,
   });
 
-  factory InstructorExamResultModel.fromJson(Map<String, dynamic> json) {
+  factory InstructorExamResultModel.fromJson(Map<String, dynamic> json) =>
+      _$InstructorExamResultModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InstructorExamResultModelToJson(this);
+
+  String get normalizedCheatingStatus => cheatingStatus.trim().toLowerCase();
+
+  bool get hasViolations => totalViolations > 0;
+
+  bool get isClean => totalViolations == 0;
+
+  bool get isSuspicious {
+    final status = normalizedCheatingStatus;
+    return hasViolations ||
+        status == 'cheating' ||
+        status == 'flagged' ||
+        status == 'suspicious' ||
+        status == 'violated';
+  }
+
+  String get displayStudentName =>
+      studentName.trim().isEmpty ? 'Unknown student' : studentName.trim();
+
+  String get displayCheatingStatus {
+    final status = cheatingStatus.trim();
+    return status.isEmpty ? 'unknown' : status;
+  }
+
+  String get scoreLabel => '${finalScore.toStringAsFixed(0)}%';
+
+  String get violationsLabel =>
+      totalViolations == 1 ? '1 violation' : '$totalViolations violations';
+
+  InstructorExamResultModel copyWith({
+    int? studentId,
+    String? studentName,
+    double? finalScore,
+    String? cheatingStatus,
+    int? totalViolations,
+  }) {
     return InstructorExamResultModel(
-      studentId: _readInt(json, const ['studentId', 'id']) ?? 0,
-      studentName:
-          _readString(json, const ['studentName', 'name']) ?? 'Unknown student',
-      finalScore: _readDouble(json, const ['finalScore', 'score']) ?? 0,
-      cheatingStatus:
-          _readString(json, const ['cheatingStatus', 'status']) ?? 'unknown',
-      totalViolations:
-          _readInt(json, const ['totalViolations', 'violations']) ?? 0,
+      studentId: studentId ?? this.studentId,
+      studentName: studentName ?? this.studentName,
+      finalScore: finalScore ?? this.finalScore,
+      cheatingStatus: cheatingStatus ?? this.cheatingStatus,
+      totalViolations: totalViolations ?? this.totalViolations,
     );
   }
 
-  static int? _readInt(Map<String, dynamic> json, List<String> keys) {
-    for (final key in keys) {
-      final value = json[key];
-      if (value is int) return value;
-      if (value is num) return value.toInt();
-      if (value != null) {
-        final parsed = int.tryParse(value.toString());
-        if (parsed != null) return parsed;
-      }
-    }
-    return null;
+  @override
+  String toString() {
+    return 'InstructorExamResultModel(studentId: $studentId, studentName: $studentName, finalScore: $finalScore, cheatingStatus: $cheatingStatus, totalViolations: $totalViolations)';
   }
 
-  static double? _readDouble(Map<String, dynamic> json, List<String> keys) {
-    for (final key in keys) {
-      final value = json[key];
-      if (value is double) return value;
-      if (value is num) return value.toDouble();
-      if (value != null) {
-        final parsed = double.tryParse(value.toString());
-        if (parsed != null) return parsed;
-      }
-    }
-    return null;
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is InstructorExamResultModel &&
+        other.studentId == studentId &&
+        other.studentName == studentName &&
+        other.finalScore == finalScore &&
+        other.cheatingStatus == cheatingStatus &&
+        other.totalViolations == totalViolations;
   }
 
-  static String? _readString(Map<String, dynamic> json, List<String> keys) {
-    for (final key in keys) {
-      final value = json[key];
-      if (value != null) {
-        final text = value.toString().trim();
-        if (text.isNotEmpty) return text;
-      }
-    }
-    return null;
+  @override
+  int get hashCode {
+    return Object.hash(
+      studentId,
+      studentName,
+      finalScore,
+      cheatingStatus,
+      totalViolations,
+    );
   }
 }
