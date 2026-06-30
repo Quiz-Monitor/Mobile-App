@@ -92,6 +92,9 @@ abstract class ApiService {
   @POST(ApiConstants.publishExam)
   Future<void> publishExam(@Path('examId') int examId);
 
+  @DELETE(ApiConstants.deleteExam)
+  Future<void> deleteExam(@Path('examId') int examId);
+
   // --- Essay Answer Grading ---
   @GET(ApiConstants.getWrittenAnswers)
   Future<List<WrittenAnswerModel>> getWrittenAnswers(

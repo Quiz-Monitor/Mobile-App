@@ -18,6 +18,7 @@ class InstructorExamsSuccessWidget extends StatelessWidget {
   final ValueChanged<ExamFilter> onFilterChanged;
   final Future<void> Function() onRefresh;
   final void Function(dynamic) onExamTap;
+  final void Function(dynamic)? onDeleteTap;
 
   const InstructorExamsSuccessWidget({
     super.key,
@@ -30,6 +31,7 @@ class InstructorExamsSuccessWidget extends StatelessWidget {
     required this.onFilterChanged,
     required this.onRefresh,
     required this.onExamTap,
+    this.onDeleteTap,
   });
 
   @override
@@ -81,6 +83,9 @@ class InstructorExamsSuccessWidget extends StatelessWidget {
                   isCompleted: exam.isCompleted,
                   enrolledCount: enrolledCounts[exam.examId] ?? 0,
                   onTap: () => onExamTap(exam),
+                  onDeleteTap: onDeleteTap != null
+                      ? () => onDeleteTap!(exam)
+                      : null,
                 );
               },
             ),

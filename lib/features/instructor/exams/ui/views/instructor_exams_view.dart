@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:examify/core/di/service_locator.dart';
 import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/app_text_styles.dart';
+import 'package:examify/core/networking/api_result.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_cubit.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_state.dart';
 import 'package:examify/features/instructor/exams/ui/views/instructor_exam_details_view.dart';
@@ -120,6 +123,7 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
                           setState(() => _selectedFilter = filter),
                       onRefresh: () => _refreshExams(context),
                       onExamTap: (exam) => _handleExamTap(context, exam),
+                      onDeleteTap: (exam) => _handleDeleteExam(context, exam),
                     );
                   },
                   orElse: () =>
@@ -160,5 +164,173 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
         ),
       );
     }
+  }
+
+  Future<void> _handleDeleteExam(BuildContext context, dynamic exam) async {
+    final cubit = context.read<ExamsCubit>();
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        bool isDeleting = false;
+        bool isSuccess = false;
+
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Dialog(
+                backgroundColor: AppColors.primaryBlack,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                  side: BorderSide(
+                    color: AppColors.white10,
+                    width: 1.74.w,
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(24.w),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(16.w),
+                        decoration: BoxDecoration(
+                          color: isSuccess
+                              ? AppColors.mainGreen.withAlpha(30)
+                              : const Color(0xffFB2C36).withAlpha(30),
+                          shape: BoxShape.circle,
+                        ),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          child: Icon(
+                            isSuccess
+                                ? Icons.check_circle_outline_rounded
+                                : Icons.delete_outline_rounded,
+                            key: ValueKey(isSuccess),
+                            color: isSuccess
+                                ? AppColors.mainGreen
+                                : const Color(0xffFB2C36),
+                            size: 32.sp,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        isSuccess ? 'Deleted!' : 'Delete Exam?',
+                        style: AppTextStyles.white16w400.copyWith(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        isSuccess
+                            ? 'The exam has been successfully deleted.'
+                            : 'This action cannot be undone. All your exam data will be permanently deleted.',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.whit14w400alpha60.copyWith(
+                          height: 1.5,
+                        ),
+                      ),
+                      SizedBox(height: 24.h),
+                      Row(
+                        children: [
+                          if (!isSuccess) ...[
+                            Expanded(
+                              child: InkWell(
+                                onTap: isDeleting
+                                    ? null
+                                    : () => Navigator.pop(dialogContext),
+                                borderRadius: BorderRadius.circular(12.r),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 14.h),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white5,
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Cancel',
+                                      style: AppTextStyles.white16w400,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                          ],
+                          Expanded(
+                            child: InkWell(
+                              onTap: (isDeleting || isSuccess)
+                                  ? null
+                                  : () async {
+                                      setState(() => isDeleting = true);
+                                      final result = await cubit.deleteExam(
+                                        exam.examId,
+                                      );
+
+                                      if (result is Success) {
+                                        setState(() {
+                                          isDeleting = false;
+                                          isSuccess = true;
+                                        });
+                                        await Future.delayed(
+                                          const Duration(milliseconds: 1500),
+                                        );
+                                        if (dialogContext.mounted) {
+                                          Navigator.pop(dialogContext);
+                                        }
+                                      } else {
+                                        setState(() => isDeleting = false);
+                                      }
+                                    },
+                              borderRadius: BorderRadius.circular(12.r),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                padding: EdgeInsets.symmetric(vertical: 14.h),
+                                decoration: BoxDecoration(
+                                  color: isSuccess
+                                      ? AppColors.mainGreen
+                                      : const Color(0xffFB2C36),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: Center(
+                                  child: isDeleting
+                                      ? SizedBox(
+                                          height: 20.sp,
+                                          width: 20.sp,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2.w,
+                                          ),
+                                        )
+                                      : isSuccess
+                                      ? const Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                        )
+                                      : Text(
+                                          'Delete',
+                                          style: AppTextStyles.white16w400
+                                              .copyWith(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                        ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }

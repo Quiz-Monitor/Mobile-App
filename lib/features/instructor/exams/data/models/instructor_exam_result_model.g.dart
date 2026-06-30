@@ -9,11 +9,11 @@ part of 'instructor_exam_result_model.dart';
 InstructorExamResultModel _$InstructorExamResultModelFromJson(
   Map<String, dynamic> json,
 ) => InstructorExamResultModel(
-  studentId: json['studentId'] as int,
+  studentId: (json['studentId'] as num).toInt(),
   studentName: json['studentName'] as String,
   finalScore: (json['finalScore'] as num).toDouble(),
   cheatingStatus: json['cheatingStatus'] as String,
-  totalViolations: json['totalViolations'] as int,
+  totalViolations: (json['totalViolations'] as num).toInt(),
 );
 
 Map<String, dynamic> _$InstructorExamResultModelToJson(

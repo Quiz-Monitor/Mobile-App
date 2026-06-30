@@ -41,4 +41,13 @@ class InstructorExamsRepo {
       failure: (error) => ApiResult.failure(error),
     );
   }
+
+  Future<ApiResult<void>> deleteExam(int examId) async {
+    try {
+      await _apiService.deleteExam(examId);
+      return const ApiResult.success(null);
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
 }

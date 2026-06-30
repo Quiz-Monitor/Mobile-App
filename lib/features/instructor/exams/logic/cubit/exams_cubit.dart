@@ -46,4 +46,14 @@ class ExamsCubit extends Cubit<ExamsState> {
 
     return Map<int, int>.fromEntries(entries);
   }
+
+  Future<ApiResult<void>> deleteExam(int examId) async {
+    final result = await _instructorExamsRepo.deleteExam(examId);
+
+    if (result case Success()) {
+      getInstructorExams(showLoading: false);
+    }
+
+    return result;
+  }
 }

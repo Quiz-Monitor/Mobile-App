@@ -20,11 +20,13 @@ class InstructorExamCard extends StatelessWidget {
     required this.isCompleted,
     required this.enrolledCount,
     this.onTap,
+    this.onDeleteTap,
   });
   final ExamModel exam;
   final bool isDraft, isLive, isCompleted;
   final int enrolledCount;
   final VoidCallback? onTap;
+  final VoidCallback? onDeleteTap;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -172,6 +174,16 @@ class InstructorExamCard extends StatelessWidget {
                       color: AppColors.white60,
                     ),
                   ),
+                  const Spacer(),
+                  if (onDeleteTap != null)
+                    GestureDetector(
+                      onTap: onDeleteTap,
+                      child: Icon(
+                        Icons.delete_outline_rounded,
+                        color: Colors.redAccent,
+                        size: 20.sp,
+                      ),
+                    ),
                 ],
               ),
             ],

@@ -135,6 +135,11 @@ class _FakeApiService implements ApiService {
   Future<void> gradeAnswer(int answerId, GradeRequestBody body) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> deleteExam(int examId) {
+    throw UnimplementedError();
+  }
 }
 
 void main() {
