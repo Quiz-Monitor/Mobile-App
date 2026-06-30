@@ -34,11 +34,13 @@ abstract class ExamModel with _$ExamModel {
   factory ExamModel.fromJson(Map<String, dynamic> json) =>
       _$ExamModelFromJson(json);
 
-  bool get isLive => isLiveAt(DateTime.now());
+  bool get isDraft => !isPublished;
 
-  bool get isUpcoming => isUpcomingAt(DateTime.now());
+  bool get isLive => isPublished && isLiveAt(DateTime.now());
 
-  bool get isCompleted => isCompletedAt(DateTime.now());
+  bool get isUpcoming => isPublished && isUpcomingAt(DateTime.now());
+
+  bool get isCompleted => isPublished && isCompletedAt(DateTime.now());
 
   bool isLiveAt(DateTime moment) =>
       !moment.isBefore(startTime) && !moment.isAfter(endTime);

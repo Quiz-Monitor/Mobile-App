@@ -1,21 +1,20 @@
 import 'package:examify/core/di/service_locator.dart';
-import 'package:examify/core/helpers/spacing.dart';
 import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_cubit.dart';
 import 'package:examify/features/instructor/exams/logic/cubit/exams_state.dart';
 import 'package:examify/features/instructor/exams/ui/views/instructor_exam_details_view.dart';
-import 'package:examify/features/instructor/exams/ui/widgets/instructor_exam_card.dart';
-import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_filter_chips.dart';
-import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_search_bar.dart';
+import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_empty_state.dart';
+import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_error_state.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_skeleton_list.dart';
+import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_success_widget.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/upcoming_exam_options_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-enum ExamFilter { all, live, upcoming, completed }
+enum ExamFilter { all, draft, live, upcoming, completed }
 
 class InstructorExamsView extends StatefulWidget {
   const InstructorExamsView({super.key});
@@ -58,6 +57,8 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
       switch (_selectedFilter) {
         case ExamFilter.all:
           return true;
+        case ExamFilter.draft:
+          return exam.isDraft == true;
         case ExamFilter.live:
           return exam.isLive == true;
         case ExamFilter.upcoming:
@@ -94,76 +95,31 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
                 return state.maybeWhen(
                   loading: () => const InstructorExamsSkeletonList(),
                   initial: () => const InstructorExamsSkeletonList(),
-                  failure: (message) => _buildErrorState(context, message),
+                  failure: (message) => InstructorExamsErrorState(
+                    message: message,
+                    onRefresh: () => _refreshExams(context),
+                  ),
                   success: (exams, enrolledCounts) {
                     if (exams.isEmpty) {
-                      return _buildEmptyState(context);
+                      return InstructorExamsEmptyState(
+                        onRefresh: () => _refreshExams(context),
+                      );
                     }
 
                     final searchedExams = _filterExams(exams);
                     final filteredExams = _applyExamFilter(searchedExams);
-                    final liveCount = exams
-                        .where((exam) => exam.isLive == true)
-                        .length;
-                    final upcomingCount = exams
-                        .where((exam) => exam.isUpcoming == true)
-                        .length;
-                    final completedCount = exams
-                        .where((exam) => exam.isCompleted == true)
-                        .length;
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Exams', style: AppTextStyles.white20),
-                        InstructorExamsSearchBar(
-                          controller: _searchController,
-                          onChanged: (value) =>
-                              setState(() => _searchQuery = value),
-                        ),
-                        SizedBox(height: 18.h),
-                        InstructorExamsFilterChips(
-                          selectedFilter: _selectedFilter,
-                          onFilterChanged: (filter) =>
-                              setState(() => _selectedFilter = filter),
-                          totalCount: exams.length,
-                          liveCount: liveCount,
-                          upcomingCount: upcomingCount,
-                          completedCount: completedCount,
-                        ),
-                        SizedBox(height: 12.h),
-                        Divider(color: AppColors.white10, thickness: 1.74.w),
-                        verticalSpace(12.h),
-                        Expanded(
-                          child: RefreshIndicator(
-                            color: AppColors.primaryBlack,
-                            onRefresh: () => _refreshExams(context),
-                            child: ListView.separated(
-                              physics: const AlwaysScrollableScrollPhysics(
-                                parent: BouncingScrollPhysics(),
-                              ),
-                              itemCount: filteredExams.length,
-                              separatorBuilder: (context, index) =>
-                                  SizedBox(height: 12.h),
-                              itemBuilder: (context, index) {
-                                final exam = filteredExams[index];
-                                final isLive = exam.isLive;
-                                final isCompleted = exam.isCompleted;
-                                final enrolledCount =
-                                    enrolledCounts[exam.examId] ?? 0;
-
-                                return InstructorExamCard(
-                                  exam: exam,
-                                  isLive: isLive,
-                                  isCompleted: isCompleted,
-                                  enrolledCount: enrolledCount,
-                                  onTap: () => _handleExamTap(context, exam),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
+                    return InstructorExamsSuccessWidget(
+                      exams: exams,
+                      filteredExams: filteredExams,
+                      enrolledCounts: enrolledCounts,
+                      searchController: _searchController,
+                      onSearchChanged: (value) =>
+                          setState(() => _searchQuery = value),
+                      selectedFilter: _selectedFilter,
+                      onFilterChanged: (filter) =>
+                          setState(() => _selectedFilter = filter),
+                      onRefresh: () => _refreshExams(context),
+                      onExamTap: (exam) => _handleExamTap(context, exam),
                     );
                   },
                   orElse: () =>
@@ -178,22 +134,24 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
   }
 
   void _handleExamTap(BuildContext context, dynamic exam) {
-    if (exam.isUpcoming) {
-      if (exam.isPublished) {
-        Navigator.pushNamed(
-          context,
-          Routes.manageQuestionsScreen,
-          arguments: exam,
-        );
-      } else {
-        showModalBottomSheet(
-          context: context,
-          builder: (context) => UpcomingExamOptionsBottomSheet(
-            exam: exam,
-            onPublishSuccess: () => _refreshExams(context),
-          ),
-        );
-      }
+    if (exam.isDraft) {
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: AppColors.primaryBlack,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        ),
+        builder: (context) => UpcomingExamOptionsBottomSheet(
+          exam: exam,
+          onPublishSuccess: () => _refreshExams(context),
+        ),
+      );
+    } else if (exam.isUpcoming) {
+      Navigator.pushNamed(
+        context,
+        Routes.manageQuestionsScreen,
+        arguments: exam,
+      );
     } else {
       Navigator.push(
         context,
@@ -202,50 +160,5 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
         ),
       );
     }
-  }
-
-  Widget _buildErrorState(BuildContext context, String message) {
-    return RefreshIndicator(
-      color: AppColors.mainBlue,
-      onRefresh: () => _refreshExams(context),
-      child: ListView(
-        physics: const AlwaysScrollableScrollPhysics(
-          parent: BouncingScrollPhysics(),
-        ),
-        children: [
-          SizedBox(height: 140.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w),
-            child: Center(
-              child: Text(
-                message,
-                style: AppTextStyles.white20,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () => _refreshExams(context),
-      child: ListView(
-        physics: const AlwaysScrollableScrollPhysics(
-          parent: BouncingScrollPhysics(),
-        ),
-        children: [
-          SizedBox(height: 140.h),
-          Center(
-            child: Text(
-              'There are no exams yet.\nPull down to refresh.',
-              style: AppTextStyles.white20,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

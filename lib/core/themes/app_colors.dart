@@ -9,6 +9,7 @@ class AppColors {
   static Color white60 = Colors.white.withAlpha((255 * .6).toInt());
   static Color white3 = Colors.white.withAlpha((255 * .03).round());
   static Color white2 = Colors.white.withAlpha((255 * .02).round());
+  static Color white90 = Colors.white.withAlpha((225));
   static Color textblue = const Color(0xff00D3F2);
   static Color mainBlue = const Color(0xff2B7FFF);
   static Color blue10alpha = const Color(0xff3B82F6).withAlpha((255 * .1).toInt());

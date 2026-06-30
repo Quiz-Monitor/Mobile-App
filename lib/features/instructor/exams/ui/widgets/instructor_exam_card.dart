@@ -15,13 +15,14 @@ class InstructorExamCard extends StatelessWidget {
   const InstructorExamCard({
     super.key,
     required this.exam,
+    this.isDraft = false,
     required this.isLive,
     required this.isCompleted,
     required this.enrolledCount,
     this.onTap,
   });
   final ExamModel exam;
-  final bool isLive, isCompleted;
+  final bool isDraft, isLive, isCompleted;
   final int enrolledCount;
   final VoidCallback? onTap;
   @override
@@ -34,7 +35,9 @@ class InstructorExamCard extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(18.w),
           decoration: BoxDecoration(
-            color: isCompleted
+            color: isDraft
+                ? Colors.grey.withAlpha(8)
+                : isCompleted
                 ? const Color(0xffAD46FF).withAlpha(8)
                 : isLive
                 ? const Color(0xff00C950).withAlpha(8)
@@ -52,14 +55,18 @@ class InstructorExamCard extends StatelessWidget {
                     child: Text(exam.title, style: AppTextStyles.white16w400),
                   ),
                   horizontalSpace(8.w),
-                  ExamStatusBadge(isLive: isLive, isCompleted: isCompleted),
+                  ExamStatusBadge(
+                    isDraft: isDraft,
+                    isLive: isLive,
+                    isCompleted: isCompleted,
+                  ),
                 ],
               ),
               verticalSpace(8.h),
 
               Text(exam.description, style: AppTextStyles.whit14w400alpha60),
 
-              if (!isLive && !isCompleted) ...[
+              if (!isLive && !isCompleted && !isDraft) ...[
                 SizedBox(height: 12.h),
                 Row(
                   children: [

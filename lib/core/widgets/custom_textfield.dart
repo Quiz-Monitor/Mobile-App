@@ -17,6 +17,7 @@ class CustomTextfield extends StatefulWidget {
     this.readOnly = false,
     this.onTap,
     this.inputFormatters,
+    this.maxLines = 1,
   });
 
   final String? hintText;
@@ -30,6 +31,7 @@ class CustomTextfield extends StatefulWidget {
   final bool readOnly;
   final VoidCallback? onTap;
   final List<TextInputFormatter>? inputFormatters;
+  final int? maxLines;
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -51,11 +53,12 @@ class _CustomTextfieldState extends State<CustomTextfield> {
       onTap: widget.onTap,
       inputFormatters: widget.inputFormatters,
       keyboardType: widget.keyboardType,
+      maxLines: widget.maxLines,
       style: AppTextStyles.white16w400,
       decoration: InputDecoration(
         labelText: widget.labelText,
         labelStyle: AppTextStyles.white16w400.copyWith(
-          color: Colors.white.withAlpha((255 * .6).round()),
+          color: Colors.white.withAlpha((25)),
         ),
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.isPassword

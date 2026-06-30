@@ -5,10 +5,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ExamStatusBadge extends StatelessWidget {
   const ExamStatusBadge({
     super.key,
+    this.isDraft = false,
     required this.isLive,
     required this.isCompleted,
   });
 
+  final bool isDraft;
   final bool isLive;
   final bool isCompleted;
 
@@ -17,13 +19,17 @@ class ExamStatusBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: isCompleted
+        color: isDraft
+            ? Colors.grey.withAlpha(50)
+            : isCompleted
             ? const Color(0xffAD46FF).withAlpha(50)
             : isLive
             ? const Color(0xff00C950).withAlpha(50)
             : const Color(0xff2B7FFF).withAlpha(50),
         border: Border.all(
-          color: isCompleted
+          color: isDraft
+              ? Colors.grey.withAlpha(75)
+              : isCompleted
               ? const Color(0xffA855F7).withAlpha(75)
               : isLive
               ? const Color(0xff00C950).withAlpha(75)
@@ -32,7 +38,16 @@ class ExamStatusBadge extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(16.r),
       ),
-      child: isCompleted
+      child: isDraft
+          ? Text(
+              'Draft',
+              style: TextStyle(
+                color: Colors.grey[400],
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+              ),
+            )
+          : isCompleted
           ? Text(
               'Completed',
               style: TextStyle(
@@ -43,6 +58,7 @@ class ExamStatusBadge extends StatelessWidget {
             )
           : isLive
           ? Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.circle, size: 6, color: const Color(0xff05DF72)),
                 horizontalSpace(4.w),

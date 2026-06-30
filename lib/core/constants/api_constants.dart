@@ -62,7 +62,7 @@ class ApiConstants {
 
   // Instructor endpoints placeholders
   static const String getInstructorExams = "api/exams"; // ✅ done
-  static const String createExam = "api/exams";
+  static const String createExam = "api/exams"; // ✅ done
   static const String addExamQuestion = "api/exams/{examId}/questions";
   static const String updateExamQuestion =
       "api/exams/{examId}/questions/{questionId}";

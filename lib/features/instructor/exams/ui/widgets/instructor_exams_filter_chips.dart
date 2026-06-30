@@ -10,6 +10,7 @@ class InstructorExamsFilterChips extends StatelessWidget {
     required this.selectedFilter,
     required this.onFilterChanged,
     required this.totalCount,
+    required this.draftCount,
     required this.liveCount,
     required this.upcomingCount,
     required this.completedCount,
@@ -18,6 +19,7 @@ class InstructorExamsFilterChips extends StatelessWidget {
   final ExamFilter selectedFilter;
   final ValueChanged<ExamFilter> onFilterChanged;
   final int totalCount;
+  final int draftCount;
   final int liveCount;
   final int upcomingCount;
   final int completedCount;
@@ -34,6 +36,13 @@ class InstructorExamsFilterChips extends StatelessWidget {
             count: totalCount,
             isSelected: selectedFilter == ExamFilter.all,
             onTap: () => onFilterChanged(ExamFilter.all),
+          ),
+          horizontalSpace(14.w),
+          _FilterChipItem(
+            label: 'Draft',
+            count: draftCount,
+            isSelected: selectedFilter == ExamFilter.draft,
+            onTap: () => onFilterChanged(ExamFilter.draft),
           ),
           horizontalSpace(14.w),
           _FilterChipItem(

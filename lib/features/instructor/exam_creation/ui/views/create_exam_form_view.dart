@@ -6,6 +6,10 @@ import 'package:examify/core/widgets/custom_button.dart';
 import 'package:examify/core/widgets/custom_textfield.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_cubit.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_state.dart';
+import 'package:examify/features/instructor/exam_creation/ui/widgets/creation_loading_overlay.dart';
+import 'package:examify/features/instructor/exam_creation/ui/widgets/form_stepper.dart';
+import 'package:examify/features/instructor/exam_creation/ui/widgets/proctoring_switch_tile.dart';
+import 'package:examify/features/instructor/exam_creation/ui/widgets/section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,13 +40,7 @@ class _CreateExamFormViewState extends State<CreateExamFormView> {
   bool _tabSwitchingDetection = true;
   bool _eyeTrackingEnabled = true;
   bool _multiplePersonDetection = true;
-  final _maxTabSwitchesController = TextEditingController();
   final _maxEyeAwaySecondsController = TextEditingController();
-
-  /// Tracks what the user wants after creating:
-  /// true  → navigate to Add Questions
-  /// false → publish immediately
-  bool _goToAddQuestions = true;
 
   @override
   void dispose() {
@@ -51,7 +49,6 @@ class _CreateExamFormViewState extends State<CreateExamFormView> {
     _descriptionController.dispose();
     _startDateController.dispose();
     _endDateController.dispose();
-    _maxTabSwitchesController.dispose();
     _maxEyeAwaySecondsController.dispose();
     super.dispose();
   }
@@ -133,7 +130,7 @@ class _CreateExamFormViewState extends State<CreateExamFormView> {
       tabSwitchingDetection: _tabSwitchingDetection,
       eyeTrackingEnabled: _eyeTrackingEnabled,
       multiplePersonDetection: _multiplePersonDetection,
-      maxTabSwitches: int.tryParse(_maxTabSwitchesController.text.trim()) ?? 0,
+      maxTabSwitches: 1,
       maxEyeAwaySeconds:
           int.tryParse(_maxEyeAwaySecondsController.text.trim()) ?? 0,
     );
@@ -142,14 +139,6 @@ class _CreateExamFormViewState extends State<CreateExamFormView> {
   void _onSaveAndAddQuestions() {
     final body = _buildRequestBody();
     if (body == null) return;
-    _goToAddQuestions = true;
-    context.read<ExamCreationCubit>().createExam(body);
-  }
-
-  void _onSaveAndPublish() {
-    final body = _buildRequestBody();
-    if (body == null) return;
-    _goToAddQuestions = false;
     context.read<ExamCreationCubit>().createExam(body);
   }
 
@@ -167,7 +156,6 @@ class _CreateExamFormViewState extends State<CreateExamFormView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryBlack,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -179,20 +167,15 @@ class _CreateExamFormViewState extends State<CreateExamFormView> {
           if (state is ExamCreationError) {
             _showToast(state.message, ToastificationType.error);
           } else if (state is ExamCreatedSuccess) {
-            if (_goToAddQuestions) {
-              _showToast(
-                'Exam created! Now add questions.',
-                ToastificationType.success,
-              );
-              Navigator.pushReplacementNamed(
-                context,
-                Routes.addQuestionScreen,
-                arguments: context.read<ExamCreationCubit>(),
-              );
-            } else {
-              // User chose "Save & Publish" → publish right away
-              context.read<ExamCreationCubit>().publishExam();
-            }
+            _showToast(
+              'Exam created! Now add questions.',
+              ToastificationType.success,
+            );
+            Navigator.pushReplacementNamed(
+              context,
+              Routes.addQuestionScreen,
+              arguments: context.read<ExamCreationCubit>(),
+            );
           } else if (state is ExamPublishedSuccess) {
             _showToast(
               'Exam published successfully! 🎉',
@@ -213,147 +196,176 @@ class _CreateExamFormViewState extends State<CreateExamFormView> {
                   key: _formKey,
                   child: ListView(
                     children: [
+                      const FormStepper(currentStep: 1),
+
                       // ── Exam Details Section ──
-                      _buildSectionHeader(
+                      const SectionHeader(
                         icon: Icons.description_outlined,
                         title: 'Exam Details',
                       ),
+                      verticalSpace(12.h),
+                      Container(
+                        padding: EdgeInsets.all(16.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.white3,
+                          borderRadius: BorderRadius.circular(14.r),
+                          border: Border.all(
+                            color: AppColors.white10,
+                            width: 1.74.w,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            CustomTextfield(
+                              controller: _titleController,
+                              hintText: 'Enter Exam Title',
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Please enter exam title';
+                                }
+                                return null;
+                              },
+                            ),
+                            verticalSpace(16.h),
+                            CustomTextfield(
+                              controller: _durationController,
+                              hintText: 'Duration in Minutes (e.g., 60)',
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Please enter exam duration';
+                                }
+                                if (int.tryParse(value.trim()) == null) {
+                                  return 'Duration must be a valid number';
+                                }
+                                return null;
+                              },
+                            ),
+                            verticalSpace(16.h),
+                            CustomTextfield(
+                              controller: _descriptionController,
+                              hintText: 'Enter Exam Description',
+                              maxLines: 4,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Please enter description';
+                                }
+                                return null;
+                              },
+                            ),
+                            verticalSpace(16.h),
+
+                            // ── Date/Time Row ──
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomTextfield(
+                                    controller: _startDateController,
+                                    hintText: 'Start Time',
+                                    readOnly: true,
+                                    onTap: () => _selectDateTime(context, true),
+                                    validator: (value) =>
+                                        value == null || value.isEmpty
+                                        ? 'Required'
+                                        : null,
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Expanded(
+                                  child: CustomTextfield(
+                                    controller: _endDateController,
+                                    hintText: 'End Time',
+                                    readOnly: true,
+                                    onTap: () =>
+                                        _selectDateTime(context, false),
+                                    validator: (value) =>
+                                        value == null || value.isEmpty
+                                        ? 'Required'
+                                        : null,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
                       verticalSpace(20.h),
-                      CustomTextfield(
-                        controller: _titleController,
-                        hintText: 'Enter Exam Title',
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter exam title';
-                          }
-                          return null;
-                        },
-                      ),
-                      verticalSpace(16.h),
-                      CustomTextfield(
-                        controller: _durationController,
-                        hintText: 'Duration in Minutes (e.g., 60)',
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter exam duration';
-                          }
-                          if (int.tryParse(value.trim()) == null) {
-                            return 'Duration must be a valid number';
-                          }
-                          return null;
-                        },
-                      ),
-                      verticalSpace(16.h),
-                      CustomTextfield(
-                        controller: _descriptionController,
-                        hintText: 'Enter Exam Description',
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter description';
-                          }
-                          return null;
-                        },
-                      ),
-                      verticalSpace(16.h),
-
-                      // ── Date/Time Row ──
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustomTextfield(
-                              controller: _startDateController,
-                              hintText: 'Start Time',
-                              readOnly: true,
-                              onTap: () => _selectDateTime(context, true),
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Required'
-                                  : null,
-                            ),
-                          ),
-                          SizedBox(width: 12.w),
-                          Expanded(
-                            child: CustomTextfield(
-                              controller: _endDateController,
-                              hintText: 'End Time',
-                              readOnly: true,
-                              onTap: () => _selectDateTime(context, false),
-                              validator: (value) =>
-                                  value == null || value.isEmpty
-                                  ? 'Required'
-                                  : null,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      verticalSpace(28.h),
 
                       // ── Proctoring Settings Section ──
-                      _buildSectionHeader(
-                        icon: Icons.security_outlined,
+                      const SectionHeader(
+                        icon: Icons.shield_outlined,
                         title: 'Proctoring Settings',
                       ),
-                      verticalSpace(16.h),
-                      _buildProctoringSwitch(
-                        title: 'Camera Required',
-                        subtitle: 'Students must enable camera',
-                        value: _cameraRequired,
-                        onChanged: (val) =>
-                            setState(() => _cameraRequired = val),
-                      ),
-                      _buildProctoringSwitch(
-                        title: 'Tab Switching Detection',
-                        subtitle: 'Detect when student leaves exam tab',
-                        value: _tabSwitchingDetection,
-                        onChanged: (val) =>
-                            setState(() => _tabSwitchingDetection = val),
-                      ),
-                      if (_tabSwitchingDetection) ...[
-                        Padding(
-                          padding: EdgeInsets.only(left: 16.w),
-                          child: CustomTextfield(
-                            controller: _maxTabSwitchesController,
-                            hintText: 'Max Tab Switches Allowed',
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
+                      verticalSpace(12.h),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 16.h,
+                          horizontal: 16.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.white3,
+                          borderRadius: BorderRadius.circular(16.r),
+                          border: Border.all(
+                            color: AppColors.white10,
+                            width: 1.74.w,
                           ),
                         ),
-                        verticalSpace(8.h),
-                      ],
-                      _buildProctoringSwitch(
-                        title: 'Eye Tracking',
-                        subtitle: 'Track student eye movement',
-                        value: _eyeTrackingEnabled,
-                        onChanged: (val) =>
-                            setState(() => _eyeTrackingEnabled = val),
-                      ),
-                      if (_eyeTrackingEnabled) ...[
-                        Padding(
-                          padding: EdgeInsets.only(left: 16.w),
-                          child: CustomTextfield(
-                            controller: _maxEyeAwaySecondsController,
-                            hintText: 'Max Eye Away Seconds',
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
+                        child: Column(
+                          children: [
+                            ProctoringSwitchTile(
+                              icon: Icons.visibility_outlined,
+                              title: 'Camera Required',
+                              subtitle: 'Students must enable camera',
+                              value: _cameraRequired,
+                              onChanged: (val) =>
+                                  setState(() => _cameraRequired = val),
+                            ),
+                            ProctoringSwitchTile(
+                              icon: Icons.desktop_windows_outlined,
+                              title: 'Tab Switching Detection',
+                              subtitle: 'Detect when student leaves exam tab',
+                              value: _tabSwitchingDetection,
+                              onChanged: (val) =>
+                                  setState(() => _tabSwitchingDetection = val),
+                            ),
+                            ProctoringSwitchTile(
+                              icon: Icons.remove_red_eye_outlined,
+                              title: 'Eye Tracking',
+                              subtitle: 'Track student eye movement',
+                              value: _eyeTrackingEnabled,
+                              onChanged: (val) =>
+                                  setState(() => _eyeTrackingEnabled = val),
+                            ),
+                            if (_eyeTrackingEnabled) ...[
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                child: CustomTextfield(
+                                  controller: _maxEyeAwaySecondsController,
+                                  hintText: 'Max Eye Away Seconds',
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                ),
+                              ),
+                              verticalSpace(16.h),
                             ],
-                          ),
+                            ProctoringSwitchTile(
+                              icon: Icons.people_outline,
+                              title: 'Multiple Person Detection',
+                              subtitle:
+                                  'Detect if more than one person is present',
+                              value: _multiplePersonDetection,
+                              onChanged: (val) => setState(
+                                () => _multiplePersonDetection = val,
+                              ),
+                            ),
+                          ],
                         ),
-                        verticalSpace(8.h),
-                      ],
-                      _buildProctoringSwitch(
-                        title: 'Multiple Person Detection',
-                        subtitle: 'Detect if more than one person is present',
-                        value: _multiplePersonDetection,
-                        onChanged: (val) =>
-                            setState(() => _multiplePersonDetection = val),
                       ),
 
                       verticalSpace(32.h),
@@ -363,11 +375,7 @@ class _CreateExamFormViewState extends State<CreateExamFormView> {
                         buttonContent: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.add_circle_outline,
-                              color: Colors.white,
-                              size: 20.sp,
-                            ),
+                            Icon(Icons.add, color: Colors.white, size: 20.sp),
                             SizedBox(width: 8.w),
                             Text(
                               'Save & Add Questions',
@@ -379,8 +387,6 @@ class _CreateExamFormViewState extends State<CreateExamFormView> {
                         ),
                         onPressed: isLoading ? null : _onSaveAndAddQuestions,
                       ),
-                      verticalSpace(14.h),
-                      _buildPublishButton(isLoading),
                       verticalSpace(40.h),
                     ],
                   ),
@@ -388,118 +394,15 @@ class _CreateExamFormViewState extends State<CreateExamFormView> {
               ),
 
               // ── Full-screen loading overlay ──
-              if (isLoading)
-                Container(
-                  color: Colors.black.withAlpha(150),
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const CircularProgressIndicator(color: Colors.white),
-                        verticalSpace(16.h),
-                        Text(
-                          state is ExamPublishing
-                              ? 'Publishing exam...'
-                              : 'Creating exam...',
-                          style: AppTextStyles.white16w400,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              CreationLoadingOverlay(
+                isLoading: isLoading,
+                message: state is ExamPublishing
+                    ? 'Publishing exam...'
+                    : 'Creating exam...',
+              ),
             ],
           );
         },
-      ),
-    );
-  }
-
-  // ─────────────────────────────────────────────────────────────────────────────
-  // Helper widgets
-  // ─────────────────────────────────────────────────────────────────────────────
-
-  Widget _buildSectionHeader({required IconData icon, required String title}) {
-    return Row(
-      children: [
-        Container(
-          padding: EdgeInsets.all(8.w),
-          decoration: BoxDecoration(
-            color: AppColors.mainBlue.withAlpha(25),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Icon(icon, color: AppColors.mainBlue, size: 20.sp),
-        ),
-        SizedBox(width: 12.w),
-        Text(
-          title,
-          style: AppTextStyles.white16w400.copyWith(
-            fontWeight: FontWeight.w600,
-            fontSize: 17.sp,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProctoringSwitch({
-    required String title,
-    required String subtitle,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 8.h),
-      decoration: BoxDecoration(
-        color: AppColors.white5,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.white10),
-      ),
-      child: SwitchListTile(
-        title: Text(title, style: const TextStyle(color: Colors.white)),
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(color: AppColors.white40, fontSize: 12.sp),
-        ),
-        value: value,
-        activeColor: AppColors.mainGreen,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        onChanged: onChanged,
-      ),
-    );
-  }
-
-  Widget _buildPublishButton(bool isLoading) {
-    return InkWell(
-      onTap: isLoading ? null : _onSaveAndPublish,
-      borderRadius: BorderRadius.circular(14.r),
-      child: Container(
-        height: 48.h,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: AppColors.mainGreen, width: 1.5),
-          color: AppColors.mainGreen.withAlpha(15),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.publish_outlined,
-              color: AppColors.mainGreen,
-              size: 20.sp,
-            ),
-            SizedBox(width: 8.w),
-            Text(
-              'Save & Publish Now',
-              style: AppTextStyles.white16w400.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppColors.mainGreen,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
