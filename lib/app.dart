@@ -7,6 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyApp extends StatelessWidget {
   final String initialRoute;
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   const MyApp({super.key, required this.initialRoute});
 
   @override
@@ -19,6 +22,7 @@ class MyApp extends StatelessWidget {
         return BlocProvider(
           create: (context) => RoleCubit(),
           child: MaterialApp(
+            navigatorKey: navigatorKey,
             theme: ThemeData(scaffoldBackgroundColor: AppColors.primaryBlack),
             onGenerateRoute: AppRouter().getapprouter,
             initialRoute: initialRoute,

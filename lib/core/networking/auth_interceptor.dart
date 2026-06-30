@@ -1,6 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:examify/core/constants/api_constants.dart';
+import 'package:examify/app.dart';
+import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/storage/session_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:toastification/toastification.dart';
 
 class AuthInterceptor extends Interceptor {
   AuthInterceptor(this._sessionStorage, this._dio);
@@ -42,6 +46,22 @@ class AuthInterceptor extends Interceptor {
       }
 
       await _sessionStorage.clearSession();
+      if (MyApp.navigatorKey.currentState != null) {
+        final context = MyApp.navigatorKey.currentState!.context;
+        MyApp.navigatorKey.currentState!.pushNamedAndRemoveUntil(
+          Routes.loginScreen,
+          (route) => false,
+        );
+        toastification.show(
+          context: context,
+          autoCloseDuration: const Duration(seconds: 5),
+          style: ToastificationStyle.fillColored,
+          description: RichText(
+            text: const TextSpan(text: 'Session expired. Please log in again.'),
+          ),
+          type: ToastificationType.error,
+        );
+      }
     }
 
     handler.next(err);
