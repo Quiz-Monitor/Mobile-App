@@ -66,6 +66,7 @@ AddQuestionRequestBody _$AddQuestionRequestBodyFromJson(
   text: json['questionText'] as String,
   type: json['questionType'] as String,
   points: (json['points'] as num).toInt(),
+  orderNumber: (json['orderNumber'] as num).toInt(),
   choices: (json['choices'] as List<dynamic>)
       .map((e) => ChoiceDto.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -77,6 +78,7 @@ Map<String, dynamic> _$AddQuestionRequestBodyToJson(
   'questionText': instance.text,
   'questionType': instance.type,
   'points': instance.points,
+  'orderNumber': instance.orderNumber,
   'choices': instance.choices,
 };
 
@@ -93,6 +95,7 @@ QuestionLocalDto _$QuestionLocalDtoFromJson(Map<String, dynamic> json) =>
       text: json['questionText'] as String,
       type: json['questionType'] as String,
       points: (json['points'] as num).toInt(),
+      orderNumber: (json['orderNumber'] as num?)?.toInt(),
       choices: (json['choices'] as List<dynamic>)
           .map((e) => ChoiceDto.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -104,6 +107,7 @@ Map<String, dynamic> _$QuestionLocalDtoToJson(QuestionLocalDto instance) =>
       'questionText': instance.text,
       'questionType': instance.type,
       'points': instance.points,
+      'orderNumber': instance.orderNumber,
       'choices': instance.choices,
     };
 

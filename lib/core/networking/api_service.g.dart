@@ -410,6 +410,25 @@ class _ApiService implements ApiService {
   }
 
   @override
+  Future<void> deleteExamQuestion(int examId, int questionId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<void>(
+      Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'api/exams/${examId}/questions/${questionId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
   Future<void> publishExam(int examId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

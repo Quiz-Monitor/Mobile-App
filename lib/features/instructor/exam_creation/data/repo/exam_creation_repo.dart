@@ -60,6 +60,17 @@ class ExamCreationRepo {
     }
   }
 
+  Future<ApiResult<void>> deleteExamQuestion(int examId, int questionId) async {
+    try {
+      await _apiService.deleteExamQuestion(examId, questionId);
+      return const ApiResult.success(null);
+    } on DioException catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
+
   Future<ApiResult<void>> publishExam(int examId) async {
     try {
       await _apiService.publishExam(examId);

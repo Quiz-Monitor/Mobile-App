@@ -81,12 +81,14 @@ class AddQuestionRequestBody {
   final String type;
 
   final int points;
+  final int orderNumber;
   final List<ChoiceDto> choices;
 
   AddQuestionRequestBody({
     required this.text,
     required this.type,
     required this.points,
+    required this.orderNumber,
     required this.choices,
   });
 
@@ -119,6 +121,7 @@ class QuestionLocalDto {
   final String type;
 
   final int points;
+  final int? orderNumber;
   final List<ChoiceDto> choices;
 
   QuestionLocalDto({
@@ -126,6 +129,7 @@ class QuestionLocalDto {
     required this.text,
     required this.type,
     required this.points,
+    this.orderNumber,
     required this.choices,
   });
 

@@ -64,10 +64,21 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
     }
 
     emit(QuestionAdding());
+
+    // Auto-calculate orderNumber as max currently present + 1
+    int nextOrderNumber = 1;
+    if (addedQuestions.isNotEmpty) {
+      final maxOrder = addedQuestions
+          .map((q) => q.orderNumber ?? 0)
+          .reduce((a, b) => a > b ? a : b);
+      nextOrderNumber = maxOrder + 1;
+    }
+
     final body = AddQuestionRequestBody(
       text: text,
       type: type,
       points: points,
+      orderNumber: nextOrderNumber,
       choices: choices,
     );
 
@@ -80,6 +91,7 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
             text: text,
             type: type,
             points: points,
+            orderNumber: nextOrderNumber,
             choices: choices,
           ),
         );
@@ -108,10 +120,25 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
     }
 
     emit(QuestionUpdating());
+
+    // Preserve existing orderNumber or fallback to a default
+    final existingQuestion = addedQuestions.firstWhere(
+      (q) => q.id == questionId,
+      orElse: () => QuestionLocalDto(
+        id: questionId,
+        text: text,
+        type: type,
+        points: points,
+        orderNumber: addedQuestions.length + 1,
+        choices: choices,
+      ),
+    );
+
     final body = AddQuestionRequestBody(
       text: text,
       type: type,
       points: points,
+      orderNumber: existingQuestion.orderNumber ?? addedQuestions.length + 1,
       choices: choices,
     );
 
@@ -129,6 +156,8 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
             text: text,
             type: type,
             points: points,
+            orderNumber:
+                existingQuestion.orderNumber ?? addedQuestions.length + 1,
             choices: choices,
           );
         }
@@ -138,6 +167,30 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
         emit(
           ExamCreationError(
             error.apiErrorModel.message ?? 'Failed to update question',
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> deleteQuestion(int questionId) async {
+    if (currentExamId == null) {
+      emit(ExamCreationError("Exam ID is missing."));
+      return;
+    }
+
+    emit(QuestionDeleting());
+
+    final result = await _repo.deleteExamQuestion(currentExamId!, questionId);
+    result.when(
+      success: (_) {
+        addedQuestions.removeWhere((q) => q.id == questionId);
+        emit(QuestionDeletedSuccess());
+      },
+      failure: (error) {
+        emit(
+          ExamCreationError(
+            error.apiErrorModel.message ?? 'Failed to delete question',
           ),
         );
       },

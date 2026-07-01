@@ -67,6 +67,8 @@ class ApiConstants {
   static const String updateExamQuestion =
       "api/exams/{examId}/questions/{questionId}";
   static const String getExamQuestions = "api/exams/{examId}/questions";
+  static const String deleteExamQuestion =
+      "api/exams/{examId}/questions/{questionId}";
   static const String publishExam = "api/exams/{examId}/publish";
   static const String deleteExam = "api/exams/{examId}";
   static const String updateExam = "api/exams/{examId}";

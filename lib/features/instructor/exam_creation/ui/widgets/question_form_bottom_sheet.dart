@@ -114,6 +114,7 @@ class _QuestionFormBottomSheetState extends State<QuestionFormBottomSheet> {
             isCorrect: _selectedType == 'mcq_multiple'
                 ? _multipleCorrectChoices.contains(i)
                 : i == _correctChoiceIndex,
+            orderNumber: i + 1,
           ),
         );
       } else if (_selectedType == 'true_false') {
@@ -124,8 +125,16 @@ class _QuestionFormBottomSheetState extends State<QuestionFormBottomSheet> {
           return;
         }
         choices = [
-          ChoiceDto(text: 'True', isCorrect: _trueFalseCorrect == true),
-          ChoiceDto(text: 'False', isCorrect: _trueFalseCorrect == false),
+          ChoiceDto(
+            text: 'True',
+            isCorrect: _trueFalseCorrect == true,
+            orderNumber: 1,
+          ),
+          ChoiceDto(
+            text: 'False',
+            isCorrect: _trueFalseCorrect == false,
+            orderNumber: 2,
+          ),
         ];
       }
 

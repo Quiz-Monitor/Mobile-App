@@ -23,6 +23,8 @@ class AddQuestionCubit extends Cubit<AddQuestionState> {
       text: text,
       type: type,
       points: points,
+      orderNumber:
+          1, // AddQuestionCubit doesn't track sequence, assume 1 or user-provided
       choices: choices,
     );
 

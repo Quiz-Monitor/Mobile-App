@@ -114,7 +114,17 @@ class _FakeApiService implements ApiService {
   }
 
   @override
-  Future<List<QuestionLocalDto>> getExamQuestions(int examId) {
+  Future<ExamQuestionsWrapper> getExamQuestions(int examId) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteExamQuestion(int examId, int questionId) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateExam(int examId, CreateExamRequestBody body) {
     throw UnimplementedError();
   }
 

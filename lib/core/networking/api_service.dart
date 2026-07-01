@@ -89,6 +89,12 @@ abstract class ApiService {
   @GET(ApiConstants.getExamQuestions)
   Future<ExamQuestionsWrapper> getExamQuestions(@Path('examId') int examId);
 
+  @DELETE(ApiConstants.deleteExamQuestion)
+  Future<void> deleteExamQuestion(
+    @Path('examId') int examId,
+    @Path('questionId') int questionId,
+  );
+
   @POST(ApiConstants.publishExam)
   Future<void> publishExam(@Path('examId') int examId);
 

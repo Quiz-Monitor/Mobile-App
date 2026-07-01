@@ -22,6 +22,10 @@ final class QuestionUpdating extends ExamCreationState {}
 
 final class QuestionUpdatedSuccess extends ExamCreationState {}
 
+final class QuestionDeleting extends ExamCreationState {}
+
+final class QuestionDeletedSuccess extends ExamCreationState {}
+
 final class ExamPublishing extends ExamCreationState {}
 
 final class ExamPublishedSuccess extends ExamCreationState {}
