@@ -12,7 +12,7 @@ import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_em
 import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_error_state.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_skeleton_list.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_success_widget.dart';
-import 'package:examify/features/instructor/exams/ui/widgets/upcoming_exam_options_bottom_sheet.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -139,17 +139,13 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
 
   void _handleExamTap(BuildContext context, dynamic exam) {
     if (exam.isDraft) {
-      showModalBottomSheet(
-        context: context,
-        backgroundColor: AppColors.primaryBlack,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-        ),
-        builder: (context) => UpcomingExamOptionsBottomSheet(
-          exam: exam,
-          onPublishSuccess: () => _refreshExams(context),
-        ),
-      );
+      Navigator.pushNamed(
+        context,
+        Routes.draftExamManagementScreen,
+        arguments: exam,
+      ).then((result) {
+        if (result == true) _refreshExams(context);
+      });
     } else if (exam.isUpcoming) {
       Navigator.pushNamed(
         context,
@@ -183,10 +179,7 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
                 backgroundColor: AppColors.primaryBlack,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.r),
-                  side: BorderSide(
-                    color: AppColors.white10,
-                    width: 1.74.w,
-                  ),
+                  side: BorderSide(color: AppColors.white10, width: 1.74.w),
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(24.w),

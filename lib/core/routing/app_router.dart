@@ -19,6 +19,7 @@ import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creat
 import 'package:examify/features/instructor/exam_creation/ui/views/create_exam_form_view.dart';
 import 'package:examify/features/instructor/exam_creation/ui/views/add_question_view.dart';
 import 'package:examify/features/instructor/exam_creation/ui/views/manage_questions_view.dart';
+import 'package:examify/features/instructor/exam_creation/ui/views/draft_exam_management_view.dart';
 import 'package:examify/features/instructor/grading/logic/cubit/grading_cubit.dart';
 import 'package:examify/features/instructor/grading/ui/views/grading_view.dart';
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
@@ -98,6 +99,14 @@ class AppRouter {
                   ExamCreationCubit
                 >(), // Note: assumes we want a fresh cubit here, unless we pass an existing one or it works fine.
             child: ManageQuestionsView(exam: exam),
+          ),
+        );
+      case Routes.draftExamManagementScreen:
+        final draftExam = settings.arguments as ExamModel;
+        return CustomPageRoute(
+          child: BlocProvider(
+            create: (_) => getit<ExamCreationCubit>(),
+            child: DraftExamManagementView(exam: draftExam),
           ),
         );
       case Routes.gradingScreen:

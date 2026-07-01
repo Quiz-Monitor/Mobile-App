@@ -51,8 +51,8 @@ class ExamCreationRepo {
 
   Future<ApiResult<List<QuestionLocalDto>>> getExamQuestions(int examId) async {
     try {
-      final questions = await _apiService.getExamQuestions(examId);
-      return ApiResult.success(questions);
+      final wrapper = await _apiService.getExamQuestions(examId);
+      return ApiResult.success(wrapper.questions);
     } on DioException catch (e) {
       return ApiResult.failure(ErrorHandler.handle(e));
     } catch (e) {
@@ -63,6 +63,20 @@ class ExamCreationRepo {
   Future<ApiResult<void>> publishExam(int examId) async {
     try {
       await _apiService.publishExam(examId);
+      return const ApiResult.success(null);
+    } on DioException catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    } catch (e) {
+      return ApiResult.failure(ErrorHandler.handle(e));
+    }
+  }
+
+  Future<ApiResult<void>> updateExam(
+    int examId,
+    CreateExamRequestBody body,
+  ) async {
+    try {
+      await _apiService.updateExam(examId, body);
       return const ApiResult.success(null);
     } on DioException catch (e) {
       return ApiResult.failure(ErrorHandler.handle(e));

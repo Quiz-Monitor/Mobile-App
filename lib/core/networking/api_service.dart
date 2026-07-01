@@ -87,13 +87,19 @@ abstract class ApiService {
   );
 
   @GET(ApiConstants.getExamQuestions)
-  Future<List<QuestionLocalDto>> getExamQuestions(@Path('examId') int examId);
+  Future<ExamQuestionsWrapper> getExamQuestions(@Path('examId') int examId);
 
   @POST(ApiConstants.publishExam)
   Future<void> publishExam(@Path('examId') int examId);
 
   @DELETE(ApiConstants.deleteExam)
   Future<void> deleteExam(@Path('examId') int examId);
+
+  @PUT(ApiConstants.updateExam)
+  Future<void> updateExam(
+    @Path('examId') int examId,
+    @Body() CreateExamRequestBody body,
+  );
 
   // --- Essay Answer Grading ---
   @GET(ApiConstants.getWrittenAnswers)

@@ -1,3 +1,4 @@
+import 'package:examify/features/instructor/exam_creation/data/models/exam_creation_models.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -24,6 +25,18 @@ final class QuestionUpdatedSuccess extends ExamCreationState {}
 final class ExamPublishing extends ExamCreationState {}
 
 final class ExamPublishedSuccess extends ExamCreationState {}
+
+// Draft exam management states
+final class QuestionsLoading extends ExamCreationState {}
+
+final class QuestionsLoaded extends ExamCreationState {
+  final List<QuestionLocalDto> questions;
+  QuestionsLoaded(this.questions);
+}
+
+final class ExamUpdateLoading extends ExamCreationState {}
+
+final class ExamUpdatedSuccess extends ExamCreationState {}
 
 final class ExamCreationError extends ExamCreationState {
   final String message;

@@ -383,12 +383,12 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<QuestionLocalDto>> getExamQuestions(int examId) async {
+  Future<ExamQuestionsWrapper> getExamQuestions(int examId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<QuestionLocalDto>>(
+    final _options = _setStreamType<ExamQuestionsWrapper>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -398,14 +398,10 @@ class _ApiService implements ApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<QuestionLocalDto> _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ExamQuestionsWrapper _value;
     try {
-      _value = _result.data!
-          .map(
-            (dynamic i) => QuestionLocalDto.fromJson(i as Map<String, dynamic>),
-          )
-          .toList();
+      _value = ExamQuestionsWrapper.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, _result);
       rethrow;
@@ -440,6 +436,26 @@ class _ApiService implements ApiService {
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<void>(
       Options(method: 'DELETE', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            'api/exams/${examId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
+  Future<void> updateExam(int examId, CreateExamRequestBody body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<void>(
+      Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
             'api/exams/${examId}',

@@ -57,8 +57,14 @@ class ChoiceDto {
   final int? choiceId;
   final String text;
   final bool isCorrect;
+  final int? orderNumber;
 
-  ChoiceDto({this.choiceId, required this.text, required this.isCorrect});
+  ChoiceDto({
+    this.choiceId,
+    required this.text,
+    required this.isCorrect,
+    this.orderNumber,
+  });
 
   factory ChoiceDto.fromJson(Map<String, dynamic> json) =>
       _$ChoiceDtoFromJson(json);
@@ -127,4 +133,27 @@ class QuestionLocalDto {
       _$QuestionLocalDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$QuestionLocalDtoToJson(this);
+}
+
+/// Wrapper for GET /api/exams/{examId}/questions response
+@JsonSerializable()
+class ExamQuestionsWrapper {
+  final int examId;
+  final String examTitle;
+  final bool isPublished;
+  final int totalQuestions;
+  final List<QuestionLocalDto> questions;
+
+  ExamQuestionsWrapper({
+    required this.examId,
+    required this.examTitle,
+    required this.isPublished,
+    required this.totalQuestions,
+    required this.questions,
+  });
+
+  factory ExamQuestionsWrapper.fromJson(Map<String, dynamic> json) =>
+      _$ExamQuestionsWrapperFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExamQuestionsWrapperToJson(this);
 }

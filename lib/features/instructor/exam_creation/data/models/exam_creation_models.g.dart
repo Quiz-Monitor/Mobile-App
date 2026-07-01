@@ -50,12 +50,14 @@ ChoiceDto _$ChoiceDtoFromJson(Map<String, dynamic> json) => ChoiceDto(
   choiceId: (json['choiceId'] as num?)?.toInt(),
   text: json['text'] as String,
   isCorrect: json['isCorrect'] as bool,
+  orderNumber: (json['orderNumber'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$ChoiceDtoToJson(ChoiceDto instance) => <String, dynamic>{
   'choiceId': instance.choiceId,
   'text': instance.text,
   'isCorrect': instance.isCorrect,
+  'orderNumber': instance.orderNumber,
 };
 
 AddQuestionRequestBody _$AddQuestionRequestBodyFromJson(
@@ -104,3 +106,25 @@ Map<String, dynamic> _$QuestionLocalDtoToJson(QuestionLocalDto instance) =>
       'points': instance.points,
       'choices': instance.choices,
     };
+
+ExamQuestionsWrapper _$ExamQuestionsWrapperFromJson(
+  Map<String, dynamic> json,
+) => ExamQuestionsWrapper(
+  examId: (json['examId'] as num).toInt(),
+  examTitle: json['examTitle'] as String,
+  isPublished: json['isPublished'] as bool,
+  totalQuestions: (json['totalQuestions'] as num).toInt(),
+  questions: (json['questions'] as List<dynamic>)
+      .map((e) => QuestionLocalDto.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
+
+Map<String, dynamic> _$ExamQuestionsWrapperToJson(
+  ExamQuestionsWrapper instance,
+) => <String, dynamic>{
+  'examId': instance.examId,
+  'examTitle': instance.examTitle,
+  'isPublished': instance.isPublished,
+  'totalQuestions': instance.totalQuestions,
+  'questions': instance.questions,
+};

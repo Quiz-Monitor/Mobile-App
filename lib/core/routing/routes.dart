@@ -16,5 +16,6 @@ class Routes {
   static const String createExamScreen = '/createExam';
   static const String addQuestionScreen = '/addQuestion';
   static const String manageQuestionsScreen = '/manageQuestions';
+  static const String draftExamManagementScreen = '/draftExamManagement';
   static const String gradingScreen = '/grading';
 }

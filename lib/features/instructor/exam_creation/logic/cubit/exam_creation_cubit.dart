@@ -29,6 +29,29 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
     );
   }
 
+  /// Fetches questions from the server for the given [examId] and
+  /// populates [addedQuestions].
+  Future<void> loadExamQuestions(int examId) async {
+    currentExamId = examId;
+    emit(QuestionsLoading());
+    final result = await _repo.getExamQuestions(examId);
+    result.when(
+      success: (questions) {
+        addedQuestions
+          ..clear()
+          ..addAll(questions);
+        emit(QuestionsLoaded(List.of(addedQuestions)));
+      },
+      failure: (error) {
+        emit(
+          ExamCreationError(
+            error.apiErrorModel.message ?? 'Failed to load questions',
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> addQuestion(
     String text,
     String type,
@@ -137,6 +160,23 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
         emit(
           ExamCreationError(
             error.apiErrorModel.message ?? 'Failed to publish exam',
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> updateExamInfo(int examId, CreateExamRequestBody body) async {
+    emit(ExamUpdateLoading());
+    final result = await _repo.updateExam(examId, body);
+    result.when(
+      success: (_) {
+        emit(ExamUpdatedSuccess());
+      },
+      failure: (error) {
+        emit(
+          ExamCreationError(
+            error.apiErrorModel.message ?? 'Failed to update exam',
           ),
         );
       },
