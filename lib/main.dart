@@ -25,7 +25,7 @@ void main() async {
     } else if (role == 'instructor') {
       initialRoute = Routes.instructorHomeScreen;
     }
-  }
+  } 
 
   runApp(MyApp(initialRoute: initialRoute));
 }

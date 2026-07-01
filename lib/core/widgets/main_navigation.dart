@@ -8,7 +8,7 @@ import 'package:examify/features/student/history/logic/cubit/student_results_cub
 import 'package:examify/features/student/home/ui/screens/home_view.dart';
 import 'package:examify/features/student/home/logic/cubit/cubit/student_exam_cubit.dart';
 import 'package:examify/features/student/notifications/ui/screens/notifications_view.dart';
-import 'package:examify/features/student/profile/ui/views/profile_view.dart';
+import 'package:examify/features/shared/profile/ui/views/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

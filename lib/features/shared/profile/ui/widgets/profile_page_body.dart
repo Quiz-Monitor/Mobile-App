@@ -66,11 +66,6 @@ class ProfilePageBody extends StatelessWidget {
                 style: AppTextStyles.whit14w400alpha60,
               ),
               SizedBox(height: 20.h),
-              ProfileSettingsCard(
-                iconPath: 'assets/icons/editprofile.svg',
-                title: editProfileTitle,
-                onTap: onEditProfileTap,
-              ),
               SizedBox(height: 8.h),
               ProfileSettingsCard(
                 iconPath: 'assets/icons/settings.svg',

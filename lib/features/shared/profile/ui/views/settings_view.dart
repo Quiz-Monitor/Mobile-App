@@ -1,8 +1,8 @@
 import 'package:examify/core/routing/routes.dart';
 import 'package:examify/core/themes/colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
-import 'package:examify/features/shared/profile/logic/cubit/profile_state.dart';
 import 'package:examify/features/shared/profile/ui/widgets/settings_type_card.dart';
+import 'package:examify/features/shared/profile/logic/cubit/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
