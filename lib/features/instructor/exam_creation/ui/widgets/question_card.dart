@@ -8,15 +8,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class QuestionCard extends StatelessWidget {
   final QuestionLocalDto question;
   final int index;
-  final VoidCallback onTap;
-  final VoidCallback onDelete;
+  final VoidCallback? onTap;
+  final VoidCallback? onDelete;
 
   const QuestionCard({
     super.key,
     required this.question,
     required this.index,
-    required this.onTap,
-    required this.onDelete,
+    this.onTap,
+    this.onDelete,
   });
 
   static const _typeColors = {
@@ -122,21 +122,22 @@ class QuestionCard extends StatelessWidget {
                     ),
                   ),
                 const Spacer(),
-                GestureDetector(
-                  onTap: onDelete,
-                  child: Container(
-                    padding: EdgeInsets.all(4.w),
-                    decoration: BoxDecoration(
-                      color: Colors.redAccent.withAlpha(20),
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    child: Icon(
-                      Icons.delete_outline,
-                      color: Colors.redAccent,
-                      size: 20.sp,
+                if (onDelete != null)
+                  GestureDetector(
+                    onTap: onDelete,
+                    child: Container(
+                      padding: EdgeInsets.all(4.w),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent.withAlpha(20),
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                      child: Icon(
+                        Icons.delete_outline,
+                        color: Colors.redAccent,
+                        size: 20.sp,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ],

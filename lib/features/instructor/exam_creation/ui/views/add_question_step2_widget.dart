@@ -6,18 +6,22 @@ import 'package:examify/core/widgets/custom_textfield.dart';
 import 'package:examify/features/instructor/exam_creation/data/models/exam_creation_models.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_cubit.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_state.dart';
+import 'package:examify/features/instructor/exam_creation/ui/widgets/form_stepper.dart';
+import 'package:examify/features/instructor/exam_creation/ui/widgets/question_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AddQuestionView extends StatefulWidget {
-  const AddQuestionView({super.key});
+class AddQuestionStep2Widget extends StatefulWidget {
+  final VoidCallback onContinue;
+
+  const AddQuestionStep2Widget({super.key, required this.onContinue});
 
   @override
-  State<AddQuestionView> createState() => _AddQuestionViewState();
+  State<AddQuestionStep2Widget> createState() => _AddQuestionStep2WidgetState();
 }
 
-class _AddQuestionViewState extends State<AddQuestionView> {
+class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
   final _formKey = GlobalKey<FormState>();
   final _questionController = TextEditingController();
   final _pointsController = TextEditingController();
@@ -108,77 +112,95 @@ class _AddQuestionViewState extends State<AddQuestionView> {
     }
   }
 
-  void _onPublish() {
-    context.read<ExamCreationCubit>().publishExam();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.primaryBlack,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text('Add Questions', style: AppTextStyles.white20),
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          TextButton(
-            onPressed: _onPublish,
-            child: Text(
-              'Publish',
-              style: AppTextStyles.white16w400
-                  .copyWith(fontWeight: FontWeight.w600)
-                  .copyWith(color: AppColors.mainBlue),
-            ),
-          ),
-        ],
-      ),
-      body: BlocConsumer<ExamCreationCubit, ExamCreationState>(
-        listener: (context, state) {
-          if (state is ExamCreationError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-          } else if (state is QuestionAddedSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Question correctly added!')),
-            );
-            _resetForm();
-          } else if (state is ExamPublishedSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Exam published successfully!')),
-            );
-            Navigator.pop(context); // Go back to instructor home/exams
-          }
-        },
-        builder: (context, state) {
-          return CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-                sliver: SliverToBoxAdapter(
+    return BlocConsumer<ExamCreationCubit, ExamCreationState>(
+      listener: (context, state) {
+        if (state is ExamCreationError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        } else if (state is QuestionAddedSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Question correctly added!')),
+          );
+          _resetForm();
+        }
+      },
+      builder: (context, state) {
+        final cubit = context.read<ExamCreationCubit>();
+        final questions = cubit.addedQuestions;
+
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const FormStepper(currentStep: 2),
+                verticalSpace(24.h),
+                if (questions.isNotEmpty) ...[
+                  Text(
+                    '${questions.length} QUESTION${questions.length > 1 ? 'S' : ''} ADDED',
+                    style: AppTextStyles.white12w400alpha40.copyWith(
+                      color: AppColors.white40,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  verticalSpace(12.h),
+                  ...questions.asMap().entries.map((entry) {
+                    final int index = entry.key;
+                    final QuestionLocalDto question = entry.value;
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: QuestionCard(
+                        question: question,
+                        index: index,
+                        onTap: () {
+                          // optional: prefill edit form
+                        },
+                        onDelete: () {
+                          if (question.id != null) {
+                            cubit.deleteQuestion(question.id!);
+                          }
+                        },
+                      ),
+                    );
+                  }),
+                  verticalSpace(24.h),
+                ],
+                Container(
+                  padding: EdgeInsets.all(16.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.white3,
+                    borderRadius: BorderRadius.circular(14.r),
+                    border: Border.all(color: AppColors.white10, width: 1.74.w),
+                  ),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Question Layout',
+                          'Add Question',
                           style: AppTextStyles.white16w400.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         verticalSpace(16.h),
                         DropdownButtonFormField<String>(
-                          value: _selectedType,
+                          initialValue: _selectedType,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Colors.white.withAlpha(
-                              (255 * .05).round(),
-                            ),
+                            fillColor: AppColors.primaryBlack,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14.r),
-                              borderSide: BorderSide.none,
+                              borderSide: BorderSide(color: AppColors.white10),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(14.r),
+                              borderSide: BorderSide(color: AppColors.white10),
                             ),
                           ),
                           dropdownColor: AppColors.primaryBlack,
@@ -193,7 +215,6 @@ class _AddQuestionViewState extends State<AddQuestionView> {
                             if (val != null) {
                               setState(() {
                                 _selectedType = val;
-                                // Reset correct choices when type changes
                                 _correctChoiceIndex = 0;
                                 _multipleCorrectChoices.clear();
                                 _trueFalseCorrect = null;
@@ -241,10 +262,11 @@ class _AddQuestionViewState extends State<AddQuestionView> {
                                       groupValue: _correctChoiceIndex,
                                       activeColor: AppColors.mainGreen,
                                       onChanged: (val) {
-                                        if (val != null)
+                                        if (val != null) {
                                           setState(
                                             () => _correctChoiceIndex = val,
                                           );
+                                        }
                                       },
                                     )
                                   else
@@ -258,9 +280,7 @@ class _AddQuestionViewState extends State<AddQuestionView> {
                                           if (val == true) {
                                             _multipleCorrectChoices.add(index);
                                           } else {
-                                            _multipleCorrectChoices.remove(
-                                              index,
-                                            );
+                                            _multipleCorrectChoices.remove(index);
                                           }
                                         });
                                       },
@@ -269,8 +289,7 @@ class _AddQuestionViewState extends State<AddQuestionView> {
                                     child: CustomTextfield(
                                       controller: _choiceControllers[index],
                                       hintText: 'Choice ${index + 1}',
-                                      validator: (value) =>
-                                          value!.trim().isEmpty
+                                      validator: (value) => value!.trim().isEmpty
                                           ? 'Cannot be empty'
                                           : null,
                                     ),
@@ -333,24 +352,62 @@ class _AddQuestionViewState extends State<AddQuestionView> {
                           const Center(child: CircularProgressIndicator())
                         else
                           CustomButton(
-                            buttonContent: Text(
-                              'Add Question',
-                              style: AppTextStyles.white16w400.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                            buttonContent: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.add, color: Colors.white, size: 20.sp),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  'Add Question',
+                                  style: AppTextStyles.white16w400.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
                             onPressed: _onAddQuestion,
                           ),
-                        verticalSpace(40.h),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ],
-          );
-        },
-      ),
+                if (questions.isNotEmpty) ...[
+                  verticalSpace(24.h),
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 48.h),
+                      side: BorderSide(color: AppColors.white10, width: 1.74.w),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      backgroundColor: AppColors.white3,
+                    ),
+                    onPressed: widget.onContinue,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Continue to Review',
+                          style: AppTextStyles.white16w400.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          color: Colors.white,
+                          size: 20.sp,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                verticalSpace(40.h),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

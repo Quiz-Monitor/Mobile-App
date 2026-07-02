@@ -7,6 +7,7 @@ import 'package:examify/features/instructor/exam_creation/data/models/exam_creat
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_cubit.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -54,6 +55,16 @@ class _QuestionFormBottomSheetState extends State<QuestionFormBottomSheet> {
 
     if (widget.initialQuestion != null) {
       _selectedType = widget.initialQuestion!.type;
+
+      // Handle legacy or undefined types to prevent Dropdown assertion error
+      if (!_questionTypes.any((type) => type['value'] == _selectedType)) {
+        if (_selectedType == 'open_ended') {
+          _selectedType = 'essay';
+        } else {
+          _selectedType = 'mcq_single'; // fallback
+        }
+      }
+
       final choices = widget.initialQuestion!.choices;
 
       if (_selectedType == 'mcq_single' || _selectedType == 'mcq_multiple') {
@@ -242,6 +253,7 @@ class _QuestionFormBottomSheetState extends State<QuestionFormBottomSheet> {
                       controller: _pointsController,
                       hintText: 'Points (e.g. 5)',
                       keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: (value) =>
                           (value!.trim().isEmpty || int.tryParse(value) == null)
                           ? 'Enter valid points'
@@ -356,7 +368,9 @@ class _QuestionFormBottomSheetState extends State<QuestionFormBottomSheet> {
                         if (state is QuestionAdding ||
                             state is QuestionUpdating) {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
                           );
                         }
                         return CustomButton(

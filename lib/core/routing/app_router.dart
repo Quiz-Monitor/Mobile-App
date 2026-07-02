@@ -1,8 +1,10 @@
 import 'package:examify/core/routing/routes.dart';
+import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/core/widgets/main_navigation.dart';
 import 'package:examify/features/auth/login/ui/screens/check_email_view.dart';
 import 'package:examify/features/auth/login/ui/screens/login_view.dart';
 import 'package:examify/features/auth/onboarding/onboarding.dart';
+import 'package:examify/features/instructor/exam_creation/ui/views/create_exam_screen.dart';
 import 'package:examify/features/shared/profile/ui/views/change_password_view.dart';
 import 'package:examify/features/shared/profile/ui/views/settings_view.dart';
 import 'package:examify/features/auth/signup/ui/views/role_selection_view.dart';
@@ -16,8 +18,6 @@ import 'package:examify/features/auth/signup/logic/cubit/signup_cubit.dart';
 import 'package:examify/features/auth/login/logic/login_cubit.dart';
 import 'package:examify/features/instructor/navigation/ui/views/instructor_navigation.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_cubit.dart';
-import 'package:examify/features/instructor/exam_creation/ui/views/create_exam_form_view.dart';
-import 'package:examify/features/instructor/exam_creation/ui/views/add_question_view.dart';
 import 'package:examify/features/instructor/exam_creation/ui/views/manage_questions_view.dart';
 import 'package:examify/features/instructor/exam_creation/ui/views/draft_exam_management_view.dart';
 import 'package:examify/features/instructor/grading/logic/cubit/grading_cubit.dart';
@@ -78,16 +78,8 @@ class AppRouter {
       case Routes.createExamScreen:
         return CustomPageRoute(
           child: BlocProvider(
-            create: (_) => getit<ExamCreationCubit>(),
-            child: const CreateExamFormView(),
-          ),
-        );
-      case Routes.addQuestionScreen:
-        final cubit = settings.arguments as ExamCreationCubit;
-        return CustomPageRoute(
-          child: BlocProvider.value(
-            value: cubit,
-            child: const AddQuestionView(),
+            create: (context) => getit<ExamCreationCubit>(),
+            child: const CreateExamScreen(),
           ),
         );
       case Routes.manageQuestionsScreen:
@@ -125,7 +117,11 @@ class AppRouter {
 
       default:
         return CustomPageRoute(
-          child: const Scaffold(body: Center(child: Text('No route found'))),
+          child: Scaffold(
+            body: Center(
+              child: Text('No route found', style: AppTextStyles.white20),
+            ),
+          ),
         );
     }
   }

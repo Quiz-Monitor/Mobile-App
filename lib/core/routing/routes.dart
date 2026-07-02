@@ -9,13 +9,16 @@ class Routes {
   static const String homeScreen = '/homeScreen';
   static const String instructorHomeScreen = '/instructorHomeScreen';
   static const String settingsScreen = '/settings';
+  static const String instructorExamDetailsScreen =
+      '/instructorExamDetailsScreen';
+  static const String liveStudentScreen = '/liveStudentScreen';
   static const String changePasswordScreen = '/changePassword';
   static const String notificationsSettingsScreen = '/notificationsSettings';
 
   // New Feature Routes
   static const String createExamScreen = '/createExam';
-  static const String addQuestionScreen = '/addQuestion';
   static const String manageQuestionsScreen = '/manageQuestions';
   static const String draftExamManagementScreen = '/draftExamManagement';
   static const String gradingScreen = '/grading';
+  static const String previewExamScreen = '/previewExam';
 }

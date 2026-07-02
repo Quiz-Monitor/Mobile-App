@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ExamCreationCubit extends Cubit<ExamCreationState> {
   final ExamCreationRepo _repo;
   int? currentExamId;
+  CreateExamRequestBody? currentExamDetails;
   final List<QuestionLocalDto> addedQuestions = [];
 
   ExamCreationCubit(this._repo) : super(ExamCreationInitial());
@@ -17,6 +18,7 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
     result.when(
       success: (examId) {
         currentExamId = examId;
+        currentExamDetails = requestBody;
         emit(ExamCreatedSuccess(examId));
       },
       failure: (error) {

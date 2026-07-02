@@ -2,7 +2,6 @@ import 'package:examify/core/helpers/spacing.dart';
 import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/features/instructor/exams/ui/utils/exam_date_formatter.dart';
-import 'package:examify/features/instructor/exams/ui/views/instructor_exams_view.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/exam_status_badge.dart';
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 import 'package:flutter/material.dart';
