@@ -69,7 +69,13 @@ class ChoiceDto {
   factory ChoiceDto.fromJson(Map<String, dynamic> json) =>
       _$ChoiceDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ChoiceDtoToJson(this);
+  /// Custom toJson that omits null fields so the API doesn't reject the request
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{'text': text, 'isCorrect': isCorrect};
+    if (choiceId != null) map['choiceId'] = choiceId;
+    if (orderNumber != null) map['orderNumber'] = orderNumber;
+    return map;
+  }
 }
 
 @JsonSerializable()

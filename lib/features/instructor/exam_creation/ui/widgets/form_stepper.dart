@@ -10,49 +10,82 @@ class FormStepper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.h),
+      padding: EdgeInsets.symmetric(vertical: 16.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildStep(1, currentStep >= 1),
+          _buildStep(1),
           _buildLine(currentStep >= 2),
-          _buildStep(2, currentStep >= 2),
+          _buildStep(2),
           _buildLine(currentStep >= 3),
-          _buildStep(3, currentStep >= 3),
+          _buildStep(3),
         ],
       ),
     );
   }
 
-  Widget _buildStep(int step, bool isActive) {
+  Widget _buildStep(int step) {
+    final bool isCompleted = currentStep > step;
+    final bool isCurrent = currentStep == step;
+
+    Color bgColor;
+    Color borderColor;
+    Widget child;
+
+    if (isCompleted) {
+      bgColor = Colors.transparent;
+      borderColor = AppColors.mainGreen;
+      child = Icon(
+        Icons.check_rounded,
+        color: AppColors.mainGreen,
+        size: 18.sp,
+      );
+    } else if (isCurrent) {
+      bgColor = AppColors.mainBlue;
+      borderColor = AppColors.mainBlue;
+      child = Text(
+        step.toString(),
+        style: TextStyle(
+          fontSize: 14.sp,
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+        ),
+      );
+    } else {
+      bgColor = Colors.transparent;
+      borderColor = AppColors.white10;
+      child = Text(
+        step.toString(),
+        style: TextStyle(
+          fontSize: 14.sp,
+          color: AppColors.white40,
+          fontWeight: FontWeight.w600,
+        ),
+      );
+    }
+
     return Container(
-      width: 32.w,
-      height: 32.w,
+      width: 36.w,
+      height: 36.w,
       decoration: BoxDecoration(
-        color: isActive ? AppColors.mainBlue : Colors.transparent,
+        color: bgColor,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: isActive ? AppColors.mainBlue : AppColors.white10,
-        ),
+        border: Border.all(color: borderColor, width: 2),
       ),
-      child: Center(
-        child: Text(
-          step.toString(),
-          style: TextStyle(
-            fontSize: 14.sp,
-            color: isActive ? Colors.white : AppColors.white40,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+      child: Center(child: child),
     );
   }
 
   Widget _buildLine(bool isActive) {
-    return Container(
-      width: 60.w,
-      height: 1,
-      color: isActive ? AppColors.mainBlue : AppColors.white10,
+    return Expanded(
+      child: Container(
+        height: 2,
+        margin: EdgeInsets.symmetric(horizontal: 4.w),
+        decoration: BoxDecoration(
+          color: isActive ? AppColors.mainGreen : AppColors.white10,
+          borderRadius: BorderRadius.circular(1),
+        ),
+      ),
     );
   }
 }

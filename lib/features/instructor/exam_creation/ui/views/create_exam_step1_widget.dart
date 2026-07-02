@@ -4,7 +4,6 @@ import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/core/widgets/custom_button.dart';
 import 'package:examify/core/widgets/custom_textfield.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_cubit.dart';
-import 'package:examify/features/instructor/exam_creation/ui/widgets/form_stepper.dart';
 import 'package:examify/features/instructor/exam_creation/ui/widgets/proctoring_switch_tile.dart';
 import 'package:examify/features/instructor/exam_creation/ui/widgets/section_header.dart';
 import 'package:flutter/material.dart';
@@ -152,8 +151,6 @@ class _CreateExamStep1WidgetState extends State<CreateExamStep1Widget> {
         key: _formKey,
         child: ListView(
           children: [
-            const FormStepper(currentStep: 1),
-
             // ── Exam Details Section ──
             const SectionHeader(
               icon: Icons.description_outlined,

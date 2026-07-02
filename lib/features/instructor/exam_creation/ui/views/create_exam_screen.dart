@@ -5,8 +5,10 @@ import 'package:examify/features/instructor/exam_creation/ui/views/add_question_
 import 'package:examify/features/instructor/exam_creation/ui/views/create_exam_step1_widget.dart';
 import 'package:examify/features/instructor/exam_creation/ui/views/preview_exam_step3_widget.dart';
 import 'package:examify/features/instructor/exam_creation/ui/widgets/creation_loading_overlay.dart';
+import 'package:examify/features/instructor/exam_creation/ui/widgets/form_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:toastification/toastification.dart';
 
 class CreateExamScreen extends StatefulWidget {
@@ -84,7 +86,17 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
 
           return Stack(
             children: [
-              currentWidget,
+              Column(
+                children: [
+                  // Fixed step indicator at the top
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: FormStepper(currentStep: _currentStep),
+                  ),
+                  // Scrollable content below
+                  Expanded(child: currentWidget),
+                ],
+              ),
               CreationLoadingOverlay(
                 isLoading: isLoading,
                 message: state is ExamPublishing
@@ -98,4 +110,3 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
     );
   }
 }
-

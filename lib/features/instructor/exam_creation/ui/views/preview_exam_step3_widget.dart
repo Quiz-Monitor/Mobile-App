@@ -4,7 +4,6 @@ import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:examify/core/widgets/custom_button.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_cubit.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_state.dart';
-import 'package:examify/features/instructor/exam_creation/ui/widgets/form_stepper.dart';
 import 'package:examify/features/instructor/exam_creation/ui/widgets/question_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -119,7 +118,6 @@ class PreviewExamStep3Widget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const FormStepper(currentStep: 3),
                         verticalSpace(24.h),
 
                         // EXAM DETAILS Section

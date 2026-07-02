@@ -10,6 +10,10 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
   CreateExamRequestBody? currentExamDetails;
   final List<QuestionLocalDto> addedQuestions = [];
 
+  /// Monotonically increasing counter — never decreases, even after deletes.
+  /// This prevents the "order number X already exists" backend error.
+  int _nextOrderNumber = 1;
+
   ExamCreationCubit(this._repo) : super(ExamCreationInitial());
 
   Future<void> createExam(CreateExamRequestBody requestBody) async {
@@ -42,6 +46,13 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
         addedQuestions
           ..clear()
           ..addAll(questions);
+        // Sync counter so new questions always get a higher orderNumber
+        if (addedQuestions.isNotEmpty) {
+          final maxOrder = addedQuestions
+              .map((q) => q.orderNumber ?? 0)
+              .reduce((a, b) => a > b ? a : b);
+          _nextOrderNumber = maxOrder + 1;
+        }
         emit(QuestionsLoaded(List.of(addedQuestions)));
       },
       failure: (error) {
@@ -67,20 +78,14 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
 
     emit(QuestionAdding());
 
-    // Auto-calculate orderNumber as max currently present + 1
-    int nextOrderNumber = 1;
-    if (addedQuestions.isNotEmpty) {
-      final maxOrder = addedQuestions
-          .map((q) => q.orderNumber ?? 0)
-          .reduce((a, b) => a > b ? a : b);
-      nextOrderNumber = maxOrder + 1;
-    }
+    // Use the monotonic counter — never reuses a number even after deletes
+    final orderNumber = _nextOrderNumber;
 
     final body = AddQuestionRequestBody(
       text: text,
       type: type,
       points: points,
-      orderNumber: nextOrderNumber,
+      orderNumber: orderNumber,
       choices: choices,
     );
 
@@ -93,10 +98,12 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
             text: text,
             type: type,
             points: points,
-            orderNumber: nextOrderNumber,
+            orderNumber: orderNumber,
             choices: choices,
           ),
         );
+        // Increment ONLY on success so the number isn't wasted on failure
+        _nextOrderNumber++;
         emit(QuestionAddedSuccess());
       },
       failure: (error) {

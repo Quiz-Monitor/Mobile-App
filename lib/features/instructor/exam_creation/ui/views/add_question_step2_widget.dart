@@ -6,11 +6,12 @@ import 'package:examify/core/widgets/custom_textfield.dart';
 import 'package:examify/features/instructor/exam_creation/data/models/exam_creation_models.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_cubit.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_state.dart';
-import 'package:examify/features/instructor/exam_creation/ui/widgets/form_stepper.dart';
 import 'package:examify/features/instructor/exam_creation/ui/widgets/question_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:toastification/toastification.dart';
 
 class AddQuestionStep2Widget extends StatefulWidget {
   final VoidCallback onContinue;
@@ -73,10 +74,13 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
       if (_selectedType == 'mcq_single' || _selectedType == 'mcq_multiple') {
         if (_selectedType == 'mcq_multiple' &&
             _multipleCorrectChoices.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Select at least one correct choice.'),
-            ),
+          toastification.show(
+            context: context,
+            type: ToastificationType.warning,
+            style: ToastificationStyle.fillColored,
+            title: const Text('Select at least one correct choice.'),
+            autoCloseDuration: const Duration(seconds: 3),
+            alignment: Alignment.bottomCenter,
           );
           return;
         }
@@ -87,20 +91,35 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
             isCorrect: _selectedType == 'mcq_multiple'
                 ? _multipleCorrectChoices.contains(i)
                 : i == _correctChoiceIndex,
+            orderNumber: i + 1,
           ),
         );
       } else if (_selectedType == 'true_false') {
         if (_trueFalseCorrect == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Select True or False.')),
+          toastification.show(
+            context: context,
+            type: ToastificationType.warning,
+            style: ToastificationStyle.fillColored,
+            title: const Text('Please select True or False.'),
+            autoCloseDuration: const Duration(seconds: 3),
+            alignment: Alignment.bottomCenter,
           );
           return;
         }
         choices = [
-          ChoiceDto(text: 'True', isCorrect: _trueFalseCorrect == true),
-          ChoiceDto(text: 'False', isCorrect: _trueFalseCorrect == false),
+          ChoiceDto(
+            text: 'True',
+            isCorrect: _trueFalseCorrect == true,
+            orderNumber: 1,
+          ),
+          ChoiceDto(
+            text: 'False',
+            isCorrect: _trueFalseCorrect == false,
+            orderNumber: 2,
+          ),
         ];
       }
+      // For short_answer and essay, choices remains []
 
       final points = int.parse(_pointsController.text.trim());
       context.read<ExamCreationCubit>().addQuestion(
@@ -116,13 +135,14 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
   Widget build(BuildContext context) {
     return BlocConsumer<ExamCreationCubit, ExamCreationState>(
       listener: (context, state) {
-        if (state is ExamCreationError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
-        } else if (state is QuestionAddedSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Question correctly added!')),
+        if (state is QuestionAddedSuccess) {
+          toastification.show(
+            context: context,
+            type: ToastificationType.success,
+            style: ToastificationStyle.fillColored,
+            title: const Text('Question added successfully!'),
+            autoCloseDuration: const Duration(seconds: 2),
+            alignment: Alignment.bottomCenter,
           );
           _resetForm();
         }
@@ -132,13 +152,11 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
         final questions = cubit.addedQuestions;
 
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const FormStepper(currentStep: 2),
-                verticalSpace(24.h),
                 if (questions.isNotEmpty) ...[
                   Text(
                     '${questions.length} QUESTION${questions.length > 1 ? 'S' : ''} ADDED',
@@ -190,7 +208,7 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
                         ),
                         verticalSpace(16.h),
                         DropdownButtonFormField<String>(
-                          initialValue: _selectedType,
+                          value: _selectedType,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: AppColors.primaryBlack,
@@ -231,10 +249,14 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
                               : null,
                         ),
                         verticalSpace(16.h),
+                        // Points field — digits only
                         CustomTextfield(
                           controller: _pointsController,
                           hintText: 'Points (e.g. 5)',
                           keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           validator: (value) =>
                               (value!.trim().isEmpty ||
                                   int.tryParse(value) == null)
@@ -280,7 +302,9 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
                                           if (val == true) {
                                             _multipleCorrectChoices.add(index);
                                           } else {
-                                            _multipleCorrectChoices.remove(index);
+                                            _multipleCorrectChoices.remove(
+                                              index,
+                                            );
                                           }
                                         });
                                       },
@@ -289,7 +313,8 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
                                     child: CustomTextfield(
                                       controller: _choiceControllers[index],
                                       hintText: 'Choice ${index + 1}',
-                                      validator: (value) => value!.trim().isEmpty
+                                      validator: (value) =>
+                                          value!.trim().isEmpty
                                           ? 'Cannot be empty'
                                           : null,
                                     ),
@@ -349,13 +374,21 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
                         ],
                         verticalSpace(24.h),
                         if (state is QuestionAdding || state is ExamPublishing)
-                          const Center(child: CircularProgressIndicator())
+                          Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.mainBlue,
+                            ),
+                          )
                         else
                           CustomButton(
                             buttonContent: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.add, color: Colors.white, size: 20.sp),
+                                Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 20.sp,
+                                ),
                                 SizedBox(width: 8.w),
                                 Text(
                                   'Add Question',
