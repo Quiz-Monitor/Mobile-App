@@ -1,0 +1,1 @@
+﻿class Result<T> { const Result(); } class Success<T> extends Result<T> { const Success(); } void main() { Result<void> a = const Success<dynamic>(); if (a case Success()) { print('matched'); } else { print('not matched'); } }

@@ -12,6 +12,7 @@ import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_em
 import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_error_state.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_skeleton_list.dart';
 import 'package:examify/features/instructor/exams/ui/widgets/instructor_exams_success_widget.dart';
+import 'package:toastification/toastification.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -144,7 +145,9 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
         Routes.draftExamManagementScreen,
         arguments: exam,
       ).then((result) {
-        if (result == true) _refreshExams(context);
+        if (result == true && context.mounted) {
+          _refreshExams(context);
+        }
       });
     } else if (exam.isUpcoming) {
       Navigator.pushNamed(
@@ -263,20 +266,38 @@ class _InstructorExamsViewState extends State<InstructorExamsView> {
                                         exam.examId,
                                       );
 
-                                      if (result is Success) {
-                                        setState(() {
-                                          isDeleting = false;
-                                          isSuccess = true;
-                                        });
-                                        await Future.delayed(
-                                          const Duration(milliseconds: 1500),
-                                        );
-                                        if (dialogContext.mounted) {
-                                          Navigator.pop(dialogContext);
-                                        }
-                                      } else {
-                                        setState(() => isDeleting = false);
-                                      }
+                                      result.when(
+                                        success: (_) async {
+                                          setState(() {
+                                            isDeleting = false;
+                                            isSuccess = true;
+                                          });
+                                          await Future.delayed(
+                                            const Duration(milliseconds: 1500),
+                                          );
+                                          if (dialogContext.mounted) {
+                                            Navigator.pop(dialogContext);
+                                          }
+                                        },
+                                        failure: (error) {
+                                          setState(() => isDeleting = false);
+                                          if (context.mounted) {
+                                            toastification.show(
+                                              context: context,
+                                              title: Text(
+                                                error.apiErrorModel.message ??
+                                                    'Failed to delete exam',
+                                              ),
+                                              style: ToastificationStyle
+                                                  .fillColored,
+                                              type: ToastificationType.error,
+                                              autoCloseDuration: const Duration(
+                                                seconds: 3,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      );
                                     },
                               borderRadius: BorderRadius.circular(12.r),
                               child: AnimatedContainer(
