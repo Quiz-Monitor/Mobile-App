@@ -3,7 +3,6 @@ import 'package:examify/core/networking/api_consts.dart';
 
 import 'api_error_model.dart';
 
-
 enum DataSource {
   NO_CONTENT,
   BAD_REQUEST,
@@ -239,6 +238,11 @@ ApiErrorModel _handleError(DioException error) {
       }
 
       final rootError = error.error?.toString();
+      if (rootError != null &&
+          (rootError.contains('SocketException') ||
+              rootError.contains('Failed host lookup'))) {
+        return DataSource.NO_INTERNET_CONNECTION.getFailure();
+      }
       if (rootError != null && rootError.trim().isNotEmpty) {
         return ApiErrorModel(message: rootError);
       }
@@ -247,9 +251,7 @@ ApiErrorModel _handleError(DioException error) {
     case DioExceptionType.cancel:
       return DataSource.CANCEL.getFailure();
     case DioExceptionType.connectionError:
-      return ApiErrorModel(
-        message: error.message ?? ResponseMessage.NO_INTERNET_CONNECTION,
-      );
+      return DataSource.NO_INTERNET_CONNECTION.getFailure();
     case DioExceptionType.badCertificate:
       return ApiErrorModel(
         message: error.message ?? 'Certificate validation failed',
