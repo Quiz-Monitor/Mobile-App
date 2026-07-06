@@ -36,8 +36,9 @@ class AuthInterceptor extends Interceptor {
     final statusCode = err.response?.statusCode;
     final requestPath = err.requestOptions.path;
     final isRefreshRequest = requestPath.contains(ApiConstants.refreshToken);
+    final isLoginRequest = requestPath.contains(ApiConstants.login);
 
-    if (statusCode == 401 && !isRefreshRequest) {
+    if (statusCode == 401 && !isRefreshRequest && !isLoginRequest) {
       final refreshed = await _refreshAccessToken();
       if (refreshed) {
         final retriedResponse = await _retryRequest(err.requestOptions);

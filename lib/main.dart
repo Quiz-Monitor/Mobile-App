@@ -1,9 +1,11 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:examify/app.dart';
 import 'package:examify/core/config/cache/cache_constants.dart';
 import 'package:examify/core/config/cache/cache_helper.dart';
 import 'package:examify/core/di/service_locator.dart';
 import 'package:examify/core/services/notification_service.dart';
 import 'package:examify/core/routing/routes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -25,7 +27,9 @@ void main() async {
     } else if (role == 'instructor') {
       initialRoute = Routes.instructorHomeScreen;
     }
-  } 
+  }
 
-  runApp(MyApp(initialRoute: initialRoute));
+  runApp(
+    MyApp(initialRoute: initialRoute),
+  );
 }

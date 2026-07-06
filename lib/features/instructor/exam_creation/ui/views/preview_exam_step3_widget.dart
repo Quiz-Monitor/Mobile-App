@@ -74,8 +74,8 @@ class PreviewExamStep3Widget extends StatelessWidget {
             autoCloseDuration: const Duration(seconds: 3),
             alignment: Alignment.bottomCenter,
           );
-          // Pop until home
-          Navigator.popUntil(context, (route) => route.isFirst);
+          // Pop the screen
+          Navigator.pop(context);
         }
       },
       builder: (context, state) {

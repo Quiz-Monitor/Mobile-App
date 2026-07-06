@@ -34,8 +34,6 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<LoginCubit, LoginState>(
-        listenWhen: (previous, current) =>
-            current is LoginSuccess || current is LoginFailure,
         listener: (context, state) {
           state.whenOrNull(
             success: (loginResponse) {
@@ -49,24 +47,27 @@ class _LoginViewState extends State<LoginView> {
                 );
               }
               toastification.show(
+                context: context,
                 autoCloseDuration: const Duration(seconds: 5),
                 style: ToastificationStyle.fillColored,
-                description: RichText(
-                  text: TextSpan(text: 'Login Successful!'),
-                ),
-                context: context,
+                title: const Text('Login Successful!'),
                 type: ToastificationType.success,
+                alignment: Alignment.bottomCenter,
               );
             },
             failure: (errorMessage) {
+              final displayMessage =
+                  (errorMessage.trim().isEmpty ||
+                      errorMessage == 'defaultError')
+                  ? 'Invalid email or password. Please try again.'
+                  : errorMessage;
               toastification.show(
+                context: context,
                 autoCloseDuration: const Duration(seconds: 5),
                 style: ToastificationStyle.fillColored,
-                description: RichText(
-                  text: TextSpan(text: errorMessage.toString()),
-                ),
-                context: context,
+                title: Text(displayMessage),
                 type: ToastificationType.error,
+                alignment: Alignment.bottomCenter,
               );
             },
           );
@@ -188,6 +189,7 @@ class _LoginViewState extends State<LoginView> {
 
   void validateThenDoLogin(BuildContext context) {
     if (_formKey.currentState!.validate()) {
+      FocusManager.instance.primaryFocus?.unfocus();
       context.read<LoginCubit>().emitLoginState(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),

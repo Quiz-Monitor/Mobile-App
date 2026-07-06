@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:toastification/toastification.dart';
+
 class Signup extends StatelessWidget {
   const Signup({super.key});
 
@@ -17,31 +18,27 @@ class Signup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<SignupCubit, SignupState>(
-        listenWhen: (previous, current) =>
-            current is SignupSuccess || current is SignupFailure,
         listener: (context, state) {
           state.whenOrNull(
             success: (signupResponse) {
               Navigator.pushReplacementNamed(context, Routes.loginScreen);
               toastification.show(
+                context: context,
                 autoCloseDuration: const Duration(seconds: 5),
                 style: ToastificationStyle.fillColored,
-                description: RichText(
-                  text: const TextSpan(text: 'Signup Successful! Please Login'),
-                ),
-                context: context,
+                title: const Text('Signup Successful! Please Login'),
                 type: ToastificationType.success,
+                alignment: Alignment.bottomCenter,
               );
             },
             failure: (errorMessage) {
               toastification.show(
+                context: context,
                 autoCloseDuration: const Duration(seconds: 5),
                 style: ToastificationStyle.fillColored,
-                description: RichText(
-                  text: TextSpan(text: errorMessage.toString()),
-                ),
-                context: context,
+                title: Text(errorMessage.toString()),
                 type: ToastificationType.error,
+                alignment: Alignment.bottomCenter,
               );
             },
           );
