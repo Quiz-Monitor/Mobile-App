@@ -260,7 +260,7 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
   }
 
   Widget _buildLoadingState() {
-    return const Center(child: CircularProgressIndicator(color: Colors.white,));
+    return const Center(child: CircularProgressIndicator(color: Colors.white));
   }
 
   @override
@@ -323,29 +323,32 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                                   StatCard(
                                     borderIconColor: const Color(0xff00D3F3),
                                     iconUrl: 'assets/icons/exams.svg',
-                                    value: dashboard.totalExams.toString(),
+                                    value: dashboard.totalExamsCreated
+                                        .toString(),
                                     label: 'Total Exams',
                                     iconColor: const Color(0xff00B8DB),
                                   ),
                                   StatCard(
                                     borderIconColor: const Color(0xff51A2FF),
-                                    iconUrl: 'assets/icons/live.svg',
-                                    value: dashboard.liveNow.toString(),
-                                    label: 'Live Now',
+                                    iconUrl: 'assets/icons/students.svg',
+                                    value: dashboard.totalUniqueStudents
+                                        .toString(),
+                                    label: 'Total Students',
                                     iconColor: const Color(0xff2B7FFF),
                                   ),
                                   StatCard(
                                     borderIconColor: const Color(0xff05DF72),
-                                    iconUrl: 'assets/icons/calendar.svg',
-                                    value: dashboard.upcomingExams.toString(),
-                                    label: 'Upcoming',
+                                    iconUrl: 'assets/icons/live.svg',
+                                    value: dashboard.liveNow.toString(),
+                                    label: 'Live Now',
                                     iconColor: const Color(0xff00C950),
                                   ),
                                   StatCard(
                                     borderIconColor: const Color(0xffC27AFF),
                                     iconUrl: 'assets/icons/trend.svg',
-                                    value: dashboard.completedExams.toString(),
-                                    label: 'Completed',
+                                    value:
+                                        '${dashboard.averageScorePercentage.toStringAsFixed(1)}%',
+                                    label: 'Avg Score',
                                     iconColor: const Color(0xffAD46FF),
                                   ),
                                 ],
@@ -399,7 +402,6 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                               else
                                 Column(
                                   children: liveExams
-                                      .take(2)
                                       .map(
                                         (exam) => Padding(
                                           padding: EdgeInsets.only(
@@ -411,10 +413,7 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                                       .toList(),
                                 ),
                               verticalSpace(24),
-                              _buildSectionHeader(
-                                'Upcoming Exams',
-                                
-                              ),
+                              _buildSectionHeader('Upcoming Exams'),
                               verticalSpace(12),
                               if (upcomingExams.isEmpty)
                                 _buildEmptyState('No upcoming exams scheduled.')
@@ -457,23 +456,23 @@ class _InstructorHomeViewState extends State<InstructorHomeView> {
                                   ),
                                   StatCard(
                                     borderIconColor: Color(0xff51A2FF),
-                                    iconUrl: 'assets/icons/live.svg',
+                                    iconUrl: 'assets/icons/students.svg',
                                     value: '--',
-                                    label: 'Live Now',
+                                    label: 'Total Students',
                                     iconColor: Color(0xff2B7FFF),
                                   ),
                                   StatCard(
                                     borderIconColor: Color(0xff05DF72),
-                                    iconUrl: 'assets/icons/calendar.svg',
+                                    iconUrl: 'assets/icons/live.svg',
                                     value: '--',
-                                    label: 'Upcoming',
+                                    label: 'Live Now',
                                     iconColor: Color(0xff00C950),
                                   ),
                                   StatCard(
                                     borderIconColor: Color(0xffC27AFF),
                                     iconUrl: 'assets/icons/trend.svg',
                                     value: '--',
-                                    label: 'Completed',
+                                    label: 'Avg Score',
                                     iconColor: Color(0xffAD46FF),
                                   ),
                                 ],

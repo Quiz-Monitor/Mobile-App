@@ -8,6 +8,7 @@ import 'package:examify/features/auth/signup/data/models/signup_request_body.dar
 import 'package:examify/features/auth/signup/data/models/signup_response.dart';
 import 'package:examify/features/instructor/exams/data/models/instructor_exam_result_model.dart';
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
+import 'package:examify/features/instructor/home/data/models/instructor_statistics_response.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_request_body.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_response.dart';
 import 'package:examify/features/shared/profile/data/models/change_password_request_body.dart';
@@ -39,6 +40,10 @@ abstract class ApiService {
   // Student Exam Join service
   @POST(ApiConstants.studentExamJoin)
   Future<JoinExamResponse> joinExam(@Body() JoinExamRequestBody body);
+
+  // Instructor profile service
+  @GET(ApiConstants.getInstructorProfile)
+  Future<InstructorStatisticsResponse> getInstructorProfile();
 
   // Get exams service
   @GET(ApiConstants.getInstructorExams)

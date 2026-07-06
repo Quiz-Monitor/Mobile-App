@@ -79,22 +79,7 @@ class SettingsView extends StatelessWidget {
                 iconColor: AppColors.white40,
               ),
               SizedBox(height: 24.h),
-              Text('Notifications', style: AppTextStyles.white14w400alpha70),
-              SizedBox(height: 12.h),
-              SettingsTypeCard(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    Routes.notificationsSettingsScreen,
-                  );
-                },
-                title: 'Notifications Settings',
-                subtitle: 'Manage your notifications',
-
-                iconUrl: 'assets/icons/notificationsSettings.svg',
-                iconColor: AppColors.white40,
-              ),
-              SizedBox(height: 24.h),
+             
               Text(
                 'Danger Zone',
                 style: AppTextStyles.white14w400alpha70.copyWith(

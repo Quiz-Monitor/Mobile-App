@@ -24,17 +24,20 @@ class ApiConstants {
   static const String deleteAccount = "/api/auth/delete-account"; // ✅ done
 
   // Instructor endpoints placeholders
+  static const String getInstructorProfile =
+      "/api/instructors/me/statistics"; // ✅ done
   static const String getInstructorExams = "api/exams"; // ✅ done
   static const String createExam = "api/exams"; // ✅ done
   static const String addExamQuestion = "api/exams/{examId}/questions";
   static const String updateExamQuestion =
-      "api/exams/{examId}/questions/{questionId}";
-  static const String getExamQuestions = "api/exams/{examId}/questions";
+      "api/exams/{examId}/questions/{questionId}"; // ✅ done
+  static const String getExamQuestions =
+      "api/exams/{examId}/questions"; // ✅ done
   static const String deleteExamQuestion =
-      "api/exams/{examId}/questions/{questionId}";
-  static const String publishExam = "api/exams/{examId}/publish";
-  static const String deleteExam = "api/exams/{examId}";
-  static const String updateExam = "api/exams/{examId}";
+      "api/exams/{examId}/questions/{questionId}"; // ✅ done
+  static const String publishExam = "api/exams/{examId}/publish"; // ✅ done
+  static const String deleteExam = "api/exams/{examId}"; // ✅ done
+  static const String updateExam = "api/exams/{examId}"; // ✅ done
   static const String getWrittenAnswers =
       "api/exams/{examId}/students/{studentId}/written-answers";
   static const String gradeAnswer = "api/answers/{answerId}/grade";

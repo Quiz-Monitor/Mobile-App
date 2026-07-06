@@ -11,7 +11,6 @@ import 'package:examify/features/auth/signup/ui/views/role_selection_view.dart';
 import 'package:examify/features/auth/signup/ui/views/signup.dart';
 import 'package:examify/features/auth/login/ui/screens/forgot_password.dart';
 import 'package:examify/features/shared/profile/logic/cubit/profile_cubit.dart';
-import 'package:examify/features/shared/profile/ui/views/notifications_settings.dart';
 import 'package:examify/features/student/home/ui/screens/home_view.dart';
 import 'package:examify/core/di/service_locator.dart';
 import 'package:examify/features/auth/signup/logic/cubit/signup_cubit.dart';
@@ -71,8 +70,6 @@ class AppRouter {
             child: const SettingsView(),
           ),
         );
-      case Routes.notificationsSettingsScreen:
-        return CustomPageRoute(child: const NotificationsSettings());
 
       // New Feature Routes
       case Routes.createExamScreen:

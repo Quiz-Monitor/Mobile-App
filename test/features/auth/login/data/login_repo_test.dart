@@ -11,6 +11,7 @@ import 'package:examify/features/auth/signup/data/models/signup_response.dart'
     as signup_models;
 import 'package:examify/features/instructor/exams/data/models/instructor_exam_result_model.dart';
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
+import 'package:examify/features/instructor/home/data/models/instructor_statistics_response.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_request_body.dart';
 import 'package:examify/features/student/join_exam/data/model/join_exam_response.dart';
 import 'package:examify/features/instructor/exam_creation/data/models/exam_creation_models.dart';
@@ -47,6 +48,11 @@ class _FakeApiService implements ApiService {
 
   @override
   Future<JoinExamResponse> joinExam(JoinExamRequestBody body) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<InstructorStatisticsResponse> getInstructorProfile() {
     throw UnimplementedError();
   }
 

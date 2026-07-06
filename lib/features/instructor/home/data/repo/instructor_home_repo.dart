@@ -5,18 +5,24 @@ import 'package:examify/core/networking/api_service.dart';
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
 
 class InstructorDashboardDto {
-  final int totalExams;
+  final int totalExamsCreated;
+  final int totalUniqueStudents;
+  final double averageScorePercentage;
   final int liveNow;
   final int upcomingExams;
   final int completedExams;
   final List<ExamModel> exams;
+  final List<ExamModel> liveExams;
 
   const InstructorDashboardDto({
-    required this.totalExams,
+    required this.totalExamsCreated,
+    required this.totalUniqueStudents,
+    required this.averageScorePercentage,
     required this.liveNow,
     required this.upcomingExams,
     required this.completedExams,
     required this.exams,
+    required this.liveExams,
   });
 }
 
@@ -27,24 +33,30 @@ class InstructorHomeRepo {
 
   Future<ApiResult<InstructorDashboardDto>> getDashboard() async {
     try {
+      final statisticsResponse = await _apiService.getInstructorProfile();
       final exams = await _apiService.getExams();
+      // No dedicated live endpoint — filter client-side.
+      // isLive = isPublished && startTime <= now && now <= endTime
+      final liveExams = exams.where((e) => e.isLive).toList();
 
-      final now = DateTime.now();
-      final liveNow = exams.where((exam) => exam.isLiveAt(now)).length;
-      final upcomingExams = exams
-          .where((exam) => exam.isUpcomingAt(now))
-          .length;
-      final completedExams = exams
-          .where((exam) => exam.isCompletedAt(now))
-          .length;
+      final liveNow = liveExams.length;
+      final upcomingExams = exams.where((exam) => exam.isUpcoming).length;
+      final completedExams = exams.where((exam) => exam.isCompleted).length;
 
       return ApiResult.success(
         InstructorDashboardDto(
-          totalExams: exams.length,
+          totalExamsCreated:
+              statisticsResponse.examOverview?.totalExamsCreated ??
+              exams.length,
+          totalUniqueStudents:
+              statisticsResponse.studentOverview?.totalUniqueStudents ?? 0,
+          averageScorePercentage:
+              statisticsResponse.scoreStatistics?.averageScorePercentage ?? 0.0,
           liveNow: liveNow,
           upcomingExams: upcomingExams,
           completedExams: completedExams,
           exams: exams,
+          liveExams: liveExams,
         ),
       );
     } on DioException catch (e) {

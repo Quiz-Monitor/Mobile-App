@@ -13,7 +13,6 @@ class Routes {
       '/instructorExamDetailsScreen';
   static const String liveStudentScreen = '/liveStudentScreen';
   static const String changePasswordScreen = '/changePassword';
-  static const String notificationsSettingsScreen = '/notificationsSettings';
 
   // New Feature Routes
   static const String createExamScreen = '/createExam';
