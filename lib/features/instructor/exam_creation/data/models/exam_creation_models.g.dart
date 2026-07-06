@@ -95,7 +95,9 @@ QuestionLocalDto _$QuestionLocalDtoFromJson(Map<String, dynamic> json) =>
       text: json['questionText'] as String,
       type: json['questionType'] as String,
       points: (json['points'] as num).toInt(),
-      orderNumber: (json['orderNumber'] as num?)?.toInt(),
+      orderNumber:
+          (QuestionLocalDto._readOrderNumber(json, 'orderNumber') as num?)
+              ?.toInt(),
       choices: (json['choices'] as List<dynamic>)
           .map((e) => ChoiceDto.fromJson(e as Map<String, dynamic>))
           .toList(),

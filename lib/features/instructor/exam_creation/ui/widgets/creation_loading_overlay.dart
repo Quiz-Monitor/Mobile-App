@@ -16,16 +16,19 @@ class CreationLoadingOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!isLoading) return const SizedBox.shrink();
-    return Container(
-      color: Colors.black.withAlpha(150),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const CircularProgressIndicator(color: Colors.white),
-            verticalSpace(16.h),
-            Text(message, style: AppTextStyles.white16w400),
-          ],
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        color: Colors.black.withAlpha(150),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(color: Colors.white),
+              verticalSpace(16.h),
+              Text(message, style: AppTextStyles.white16w400),
+            ],
+          ),
         ),
       ),
     );

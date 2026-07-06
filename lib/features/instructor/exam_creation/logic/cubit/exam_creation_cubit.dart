@@ -1,4 +1,5 @@
 import 'package:examify/core/networking/api_result.dart';
+import 'package:examify/core/networking/api_error_handler.dart';
 import 'package:examify/features/instructor/exam_creation/data/models/exam_creation_models.dart';
 import 'package:examify/features/instructor/exam_creation/data/repo/exam_creation_repo.dart';
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_state.dart';
@@ -51,7 +52,11 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
           final maxOrder = addedQuestions
               .map((q) => q.orderNumber ?? 0)
               .reduce((a, b) => a > b ? a : b);
-          _nextOrderNumber = maxOrder + 1;
+          if (maxOrder == 0) {
+            _nextOrderNumber = addedQuestions.length + 1;
+          } else {
+            _nextOrderNumber = maxOrder + 1;
+          }
         }
         emit(QuestionsLoaded(List.of(addedQuestions)));
       },
@@ -182,10 +187,10 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
     );
   }
 
-  Future<void> deleteQuestion(int questionId) async {
+  Future<ApiResult<void>> deleteQuestion(int questionId) async {
     if (currentExamId == null) {
       emit(ExamCreationError("Exam ID is missing."));
-      return;
+      return ApiResult.failure(ErrorHandler.handle("Exam ID is missing."));
     }
 
     emit(QuestionDeleting());
@@ -204,6 +209,8 @@ class ExamCreationCubit extends Cubit<ExamCreationState> {
         );
       },
     );
+
+    return result;
   }
 
   Future<void> publishExam() async {

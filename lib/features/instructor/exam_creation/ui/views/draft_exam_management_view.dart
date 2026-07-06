@@ -6,8 +6,8 @@ import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creat
 import 'package:examify/features/instructor/exam_creation/ui/widgets/edit_exam_info_tab.dart';
 import 'package:examify/features/instructor/exam_creation/ui/widgets/question_form_bottom_sheet.dart';
 import 'package:examify/features/instructor/exam_creation/ui/widgets/questions_tab.dart';
-import 'package:examify/features/instructor/exams/ui/utils/exam_actions_handler.dart';
 import 'package:examify/features/instructor/home/data/models/exam_model.dart';
+import 'package:examify/features/instructor/exam_creation/ui/widgets/creation_loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,11 +63,7 @@ class _DraftExamManagementViewState extends State<DraftExamManagementView>
   }
 
   void _handlePublish() {
-    ExamActionsHandler.publishExam(
-      context,
-      widget.exam,
-      () => Navigator.of(context).pop(true),
-    );
+    context.read<ExamCreationCubit>().publishExam();
   }
 
   void _showToast(String message, ToastificationType type) {
@@ -117,71 +113,87 @@ class _DraftExamManagementViewState extends State<DraftExamManagementView>
           _showToast(state.message, ToastificationType.error);
         }
       },
-      child: Scaffold(
-        backgroundColor: AppColors.primaryBlack,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: BlocBuilder<ExamCreationCubit, ExamCreationState>(
+        builder: (context, state) {
+          return Stack(
             children: [
-              Text(widget.exam.title, style: AppTextStyles.white20),
-              Text(
-                'Draft',
-                style: AppTextStyles.white12w400alpha40.copyWith(
-                  color: const Color(0xFFFACC15),
-                  fontSize: 11.sp,
+              Scaffold(
+                backgroundColor: AppColors.primaryBlack,
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.exam.title, style: AppTextStyles.white20),
+                      Text(
+                        'Draft',
+                        style: AppTextStyles.white12w400alpha40.copyWith(
+                          color: const Color(0xFFFACC15),
+                          fontSize: 11.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                  iconTheme: const IconThemeData(color: Colors.white),
+                  actions: [
+                    TextButton.icon(
+                      onPressed: _handlePublish,
+                      icon: const Icon(Icons.publish, size: 18),
+                      label: const Text('Publish'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.mainGreen,
+                      ),
+                    ),
+                  ],
+                  bottom: TabBar(
+                    controller: _tabController,
+                    indicatorColor: AppColors.mainBlue,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: AppColors.white40,
+                    tabs: const [
+                      Tab(icon: Icon(Icons.quiz_outlined), text: 'Questions'),
+                      Tab(icon: Icon(Icons.edit_outlined), text: 'Exam Info'),
+                    ],
+                  ),
+                ),
+                body: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    QuestionsTab(
+                      examId: widget.exam.examId,
+                      onAddQuestion: _showQuestionForm,
+                    ),
+                    EditExamInfoTab(exam: widget.exam, showToast: _showToast),
+                  ],
+                ),
+                floatingActionButton: AnimatedBuilder(
+                  animation: _tabController,
+                  builder: (context, _) {
+                    if (_tabController.index != 0) {
+                      return const SizedBox.shrink();
+                    }
+                    return FloatingActionButton.extended(
+                      onPressed: () => _showQuestionForm(),
+                      backgroundColor: AppColors.mainBlue,
+                      icon: const Icon(Icons.add, color: Colors.white),
+                      label: Text(
+                        'Add Question',
+                        style: AppTextStyles.white16w400.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-            ],
-          ),
-          iconTheme: const IconThemeData(color: Colors.white),
-          actions: [
-            TextButton.icon(
-              onPressed: _handlePublish,
-              icon: const Icon(Icons.publish, size: 18),
-              label: const Text('Publish'),
-              style: TextButton.styleFrom(foregroundColor: AppColors.mainGreen),
-            ),
-          ],
-          bottom: TabBar(
-            controller: _tabController,
-            indicatorColor: AppColors.mainBlue,
-            labelColor: Colors.white,
-            unselectedLabelColor: AppColors.white40,
-            tabs: const [
-              Tab(icon: Icon(Icons.quiz_outlined), text: 'Questions'),
-              Tab(icon: Icon(Icons.edit_outlined), text: 'Exam Info'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            QuestionsTab(
-              examId: widget.exam.examId,
-              onAddQuestion: _showQuestionForm,
-            ),
-            EditExamInfoTab(exam: widget.exam, showToast: _showToast),
-          ],
-        ),
-        floatingActionButton: AnimatedBuilder(
-          animation: _tabController,
-          builder: (context, _) {
-            if (_tabController.index != 0) return const SizedBox.shrink();
-            return FloatingActionButton.extended(
-              onPressed: () => _showQuestionForm(),
-              backgroundColor: AppColors.mainBlue,
-              icon: const Icon(Icons.add, color: Colors.white),
-              label: Text(
-                'Add Question',
-                style: AppTextStyles.white16w400.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+              CreationLoadingOverlay(
+                isLoading: state is ExamPublishing,
+                message: 'Publishing exam...',
               ),
-            );
-          },
-        ),
+            ],
+          );
+        },
       ),
     );
   }

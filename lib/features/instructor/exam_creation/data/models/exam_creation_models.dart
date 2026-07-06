@@ -127,8 +127,18 @@ class QuestionLocalDto {
   final String type;
 
   final int points;
+
+  @JsonKey(readValue: _readOrderNumber)
   final int? orderNumber;
+
   final List<ChoiceDto> choices;
+
+  static dynamic _readOrderNumber(Map map, String key) {
+    return map['orderNumber'] ??
+        map['order_number'] ??
+        map['orderNum'] ??
+        map['orderSequence'];
+  }
 
   QuestionLocalDto({
     this.id,
