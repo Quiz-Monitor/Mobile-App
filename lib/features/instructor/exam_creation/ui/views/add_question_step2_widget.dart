@@ -35,6 +35,7 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
   final Set<int> _multipleCorrectChoices = {};
   bool? _trueFalseCorrect;
   String _selectedType = 'mcq_single';
+  QuestionLocalDto? _editingQuestion;
 
   final List<Map<String, String>> _questionTypes = [
     {'label': 'MCQ (Single Correct)', 'value': 'mcq_single'},
@@ -64,10 +65,63 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
       _correctChoiceIndex = 0;
       _multipleCorrectChoices.clear();
       _trueFalseCorrect = null;
+      _editingQuestion = null;
     });
   }
 
-  void _onAddQuestion() {
+  void _populateForm(QuestionLocalDto question) {
+    setState(() {
+      _editingQuestion = question;
+      _questionController.text = question.text;
+      _pointsController.text = question.points.toString();
+      _selectedType = question.type;
+
+      // Handle legacy or undefined types
+      if (!_questionTypes.any((type) => type['value'] == _selectedType)) {
+        if (_selectedType == 'open_ended') {
+          _selectedType = 'essay';
+        } else {
+          _selectedType = 'mcq_single'; // fallback
+        }
+      }
+
+      final choices = question.choices;
+      _multipleCorrectChoices.clear();
+      _correctChoiceIndex = 0;
+      _trueFalseCorrect = null;
+
+      for (var c in _choiceControllers) {
+        c.clear();
+      }
+
+      if (_selectedType == 'mcq_single' || _selectedType == 'mcq_multiple') {
+        for (int i = 0; i < choices.length && i < 4; i++) {
+          _choiceControllers[i].text = choices[i].text;
+          if (choices[i].isCorrect) {
+            if (_selectedType == 'mcq_single') {
+              _correctChoiceIndex = i;
+            } else {
+              _multipleCorrectChoices.add(i);
+            }
+          }
+        }
+      } else if (_selectedType == 'true_false') {
+        if (choices.isNotEmpty) {
+          _trueFalseCorrect =
+              choices
+                  .firstWhere(
+                    (c) => c.isCorrect,
+                    orElse: () => ChoiceDto(text: 'True', isCorrect: true),
+                  )
+                  .text
+                  .toLowerCase() ==
+              'true';
+        }
+      }
+    });
+  }
+
+  void _onSaveQuestion() {
     if (_formKey.currentState!.validate()) {
       List<ChoiceDto> choices = [];
 
@@ -122,12 +176,23 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
       // For short_answer and essay, choices remains []
 
       final points = int.parse(_pointsController.text.trim());
-      context.read<ExamCreationCubit>().addQuestion(
-        _questionController.text.trim(),
-        _selectedType,
-        points,
-        choices,
-      );
+
+      if (_editingQuestion != null && _editingQuestion!.id != null) {
+        context.read<ExamCreationCubit>().editQuestion(
+          _editingQuestion!.id!,
+          _questionController.text.trim(),
+          _selectedType,
+          points,
+          choices,
+        );
+      } else {
+        context.read<ExamCreationCubit>().addQuestion(
+          _questionController.text.trim(),
+          _selectedType,
+          points,
+          choices,
+        );
+      }
     }
   }
 
@@ -141,6 +206,16 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
             type: ToastificationType.success,
             style: ToastificationStyle.fillColored,
             title: const Text('Question added successfully!'),
+            autoCloseDuration: const Duration(seconds: 2),
+            alignment: Alignment.bottomCenter,
+          );
+          _resetForm();
+        } else if (state is QuestionUpdatedSuccess) {
+          toastification.show(
+            context: context,
+            type: ToastificationType.success,
+            style: ToastificationStyle.fillColored,
+            title: const Text('Question updated successfully!'),
             autoCloseDuration: const Duration(seconds: 2),
             alignment: Alignment.bottomCenter,
           );
@@ -176,7 +251,7 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
                         question: question,
                         index: index,
                         onTap: () {
-                          // optional: prefill edit form
+                          _populateForm(question);
                         },
                         onDelete: () {
                           if (question.id != null) {
@@ -201,14 +276,16 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Add Question',
+                          _editingQuestion != null
+                              ? 'Edit Question'
+                              : 'Add Question',
                           style: AppTextStyles.white16w400.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         verticalSpace(16.h),
                         DropdownButtonFormField<String>(
-                          value: _selectedType,
+                          initialValue: _selectedType,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: AppColors.primaryBlack,
@@ -373,32 +450,57 @@ class _AddQuestionStep2WidgetState extends State<AddQuestionStep2Widget> {
                           ),
                         ],
                         verticalSpace(24.h),
-                        if (state is QuestionAdding || state is ExamPublishing)
+                        if (state is QuestionAdding ||
+                            state is QuestionUpdating ||
+                            state is ExamPublishing)
                           Center(
                             child: CircularProgressIndicator(
                               color: AppColors.mainBlue,
                             ),
                           )
                         else
-                          CustomButton(
-                            buttonContent: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 20.sp,
-                                ),
-                                SizedBox(width: 8.w),
-                                Text(
-                                  'Add Question',
-                                  style: AppTextStyles.white16w400.copyWith(
-                                    fontWeight: FontWeight.w600,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomButton(
+                                  buttonContent: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        _editingQuestion != null
+                                            ? Icons.save
+                                            : Icons.add,
+                                        color: Colors.white,
+                                        size: 20.sp,
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      Text(
+                                        _editingQuestion != null
+                                            ? 'Update Question'
+                                            : 'Add Question',
+                                        style: AppTextStyles.white16w400
+                                            .copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                      ),
+                                    ],
                                   ),
+                                  onPressed: _onSaveQuestion,
+                                ),
+                              ),
+                              if (_editingQuestion != null) ...[
+                                SizedBox(width: 12.w),
+                                IconButton(
+                                  onPressed: _resetForm,
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Colors.grey,
+                                  ),
+                                  tooltip: 'Cancel Edit',
                                 ),
                               ],
-                            ),
-                            onPressed: _onAddQuestion,
+                            ],
                           ),
                       ],
                     ),

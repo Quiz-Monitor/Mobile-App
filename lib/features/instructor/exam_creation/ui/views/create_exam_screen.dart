@@ -66,7 +66,7 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
               autoCloseDuration: const Duration(seconds: 3),
               alignment: Alignment.bottomCenter,
             );
-            Navigator.popUntil(context, (route) => route.isFirst);
+            Navigator.pop(context);
           }
         },
         builder: (context, state) {

@@ -212,7 +212,7 @@ class _QuestionFormBottomSheetState extends State<QuestionFormBottomSheet> {
                     ),
                     verticalSpace(16.h),
                     DropdownButtonFormField<String>(
-                      value: _selectedType,
+                      initialValue: _selectedType,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white.withAlpha((255 * .05).round()),
@@ -280,8 +280,9 @@ class _QuestionFormBottomSheetState extends State<QuestionFormBottomSheet> {
                                   groupValue: _correctChoiceIndex,
                                   activeColor: AppColors.mainGreen,
                                   onChanged: (val) {
-                                    if (val != null)
+                                    if (val != null) {
                                       setState(() => _correctChoiceIndex = val);
+                                    }
                                   },
                                 )
                               else

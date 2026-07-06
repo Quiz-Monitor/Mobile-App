@@ -1,8 +1,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'signup_response.g.dart';
 
+Object? readToken(Map map, String key) {
+  return map['accessToken'] ?? map['token'];
+}
+
 @JsonSerializable()
 class SignupResponse {
+  @JsonKey(readValue: readToken)
   final String? token;
   final String? message;
   final String? refreshToken;

@@ -151,7 +151,7 @@ class ErrorHandler implements Exception {
 }
 
 ApiErrorModel _handleError(DioException error) {
-  ApiErrorModel _parseResponseData(dynamic responseData, {int? statusCode}) {
+  ApiErrorModel parseResponseData(dynamic responseData, {int? statusCode}) {
     if (responseData is Map<String, dynamic>) {
       final errorModel = ApiErrorModel.fromJson(responseData);
 
@@ -193,7 +193,7 @@ ApiErrorModel _handleError(DioException error) {
     }
 
     if (responseData is Map) {
-      return _parseResponseData(
+      return parseResponseData(
         responseData.cast<String, dynamic>(),
         statusCode: statusCode,
       );
@@ -216,7 +216,7 @@ ApiErrorModel _handleError(DioException error) {
     case DioExceptionType.badResponse:
       final responseData = error.response?.data;
       if (responseData != null) {
-        return _parseResponseData(
+        return parseResponseData(
           responseData,
           statusCode: error.response?.statusCode,
         );
@@ -231,7 +231,7 @@ ApiErrorModel _handleError(DioException error) {
     case DioExceptionType.unknown:
       final responseData = error.response?.data;
       if (responseData != null) {
-        return _parseResponseData(
+        return parseResponseData(
           responseData,
           statusCode: error.response?.statusCode,
         );

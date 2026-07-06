@@ -2,8 +2,13 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'login_response.g.dart';
 
+Object? readToken(Map map, String key) {
+  return map['accessToken'] ?? map['token'];
+}
+
 @JsonSerializable()
 class LoginResponse {
+  @JsonKey(readValue: readToken)
   final String? token;
   final String? message;
   final String? refreshToken;

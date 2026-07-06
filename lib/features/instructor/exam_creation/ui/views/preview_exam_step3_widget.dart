@@ -65,17 +65,6 @@ class PreviewExamStep3Widget extends StatelessWidget {
             autoCloseDuration: const Duration(seconds: 3),
             alignment: Alignment.bottomCenter,
           );
-        } else if (state is ExamPublishedSuccess) {
-          toastification.show(
-            context: context,
-            type: ToastificationType.success,
-            style: ToastificationStyle.fillColored,
-            title: const Text('Exam published successfully! 🎉'),
-            autoCloseDuration: const Duration(seconds: 3),
-            alignment: Alignment.bottomCenter,
-          );
-          // Pop the screen
-          Navigator.pop(context);
         }
       },
       builder: (context, state) {
