@@ -29,20 +29,28 @@ class StatCardWidget extends StatelessWidget {
         children: [
           Icon(icon, color: Colors.white.withAlpha(200), size: 20.r),
           SizedBox(height: 8.h),
-          Text(
-            value,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w700,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           SizedBox(height: 2.h),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withAlpha(180),
-              fontSize: 11.sp,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: Colors.white.withAlpha(180),
+                fontSize: 11.sp,
+              ),
             ),
           ),
         ],

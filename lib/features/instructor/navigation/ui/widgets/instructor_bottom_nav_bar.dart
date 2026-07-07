@@ -20,42 +20,38 @@ class InstructorBottomNavBar extends StatelessWidget {
       child: SafeArea(
         bottom: true,
         top: false,
-        child: Container(
-          height: 70.h,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _NavBarItem(
-                index: 0,
-                iconUrl: 'assets/icons/Icon.svg',
-                label: 'Home',
-                isSelected: currentIndex == 0,
-                onTap: onTap,
-              ),
-              _NavBarItem(
-                index: 1,
-                iconUrl: 'assets/icons/docs.svg',
-                label: 'Exams',
-                isSelected: currentIndex == 1,
-                onTap: onTap,
-              ),
-              _NavBarItem(
-                index: 2,
-                iconUrl:
-                    'assets/icons/radio.svg', // Assuming this for reports for now
-                label: 'Reports',
-                isSelected: currentIndex == 2,
-                onTap: onTap,
-              ),
-              _NavBarItem(
-                index: 3,
-                iconUrl: 'assets/icons/profile.svg',
-                label: 'Profile',
-                isSelected: currentIndex == 3,
-                onTap: onTap,
-              ),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _NavBarItem(
+              index: 0,
+              iconUrl: 'assets/icons/Icon.svg',
+              label: 'Home',
+              isSelected: currentIndex == 0,
+              onTap: onTap,
+            ),
+            _NavBarItem(
+              index: 1,
+              iconUrl: 'assets/icons/docs.svg',
+              label: 'Exams',
+              isSelected: currentIndex == 1,
+              onTap: onTap,
+            ),
+            _NavBarItem(
+              index: 2,
+              iconUrl: 'assets/icons/stats2.svg',
+              label: 'Stats',
+              isSelected: currentIndex == 2,
+              onTap: onTap,
+            ),
+            _NavBarItem(
+              index: 3,
+              iconUrl: 'assets/icons/profile.svg',
+              label: 'Profile',
+              isSelected: currentIndex == 3,
+              onTap: onTap,
+            ),
+          ],
         ),
       ),
     );
@@ -86,19 +82,25 @@ class _NavBarItem extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
         child: Column(
+          mainAxisSize: MainAxisSize.min, // Make column responsive to content
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             SvgPicture.asset(
               iconUrl,
+              height: 24.h,
+              width: 24.w,
               colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             ),
             SizedBox(height: 3.h),
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 11.sp,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11.sp,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],

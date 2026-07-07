@@ -74,8 +74,10 @@ class IntegritySectionWidget extends StatelessWidget {
               if (total > 0)
                 IntegrityBarWidget(integrity: integrity, total: total),
               SizedBox(height: 16.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                spacing: 12.w,
+                runSpacing: 12.h,
+                alignment: WrapAlignment.spaceBetween,
                 children: [
                   InfoPillWidget(
                     label: 'Total Violations',

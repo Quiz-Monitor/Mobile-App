@@ -161,6 +161,11 @@ class _FakeApiService implements ApiService {
   Future<dynamic> getStudentStatistics() {
     throw UnimplementedError();
   }
+
+  @override
+  Future<dynamic> getInstructorStats() {
+    throw UnimplementedError();
+  }
 }
 
 void main() {

@@ -30,19 +30,25 @@ class IntegrityBadge extends StatelessWidget {
         children: [
           Icon(icon, color: color, size: 20.r),
           SizedBox(height: 6.h),
-          Text(
-            count.toString(),
-            style: TextStyle(
-              color: color,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w700,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              count.toString(),
+              style: TextStyle(
+                color: color,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withAlpha(140),
-              fontSize: 10.sp,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: Colors.white.withAlpha(140),
+                fontSize: 10.sp,
+              ),
             ),
           ),
         ],

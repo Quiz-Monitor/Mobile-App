@@ -108,17 +108,7 @@ class _UpcomingExamsCardState extends State<UpcomingExamsCard>
         bottom: 22.h,
       ),
       decoration: BoxDecoration(
-        gradient: examModel.isLive
-            ? LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.mainGreen.withAlpha(20),
-                  AppColors.mainGreen.withAlpha(5),
-                ],
-              )
-            : null,
-        color: !examModel.isLive ? AppColors.white5 : null,
+        color: !examModel.isLive ? AppColors.white5 : AppColors.mainGreen.withAlpha(20),
         border: Border.all(width: 1.74.w, color: AppColors.white10),
         borderRadius: BorderRadius.circular(16.r),
       ),
@@ -169,12 +159,8 @@ class _UpcomingExamsCardState extends State<UpcomingExamsCard>
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.blueBorder.withAlpha(10),
-                  AppColors.blueBorder.withAlpha(20),
-                ],
-              ),
+              color: AppColors.blueBorder.withAlpha(10),
+
               borderRadius: BorderRadius.circular(10.r),
               border: Border.all(
                 color: AppColors.blueBorder.withAlpha(75),

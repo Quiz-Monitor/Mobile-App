@@ -140,15 +140,7 @@ class LiveExamCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    color: const Color(0xff05DF72),
-                    size: 18.sp,
-                  ),
-                ],
-              ),
+             
             ],
           ),
           verticalSpace(24),

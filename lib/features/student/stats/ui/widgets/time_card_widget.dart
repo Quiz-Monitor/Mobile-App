@@ -29,20 +29,28 @@ class TimeCardWidget extends StatelessWidget {
         children: [
           Icon(icon, color: color, size: 22.r),
           SizedBox(height: 10.h),
-          Text(
-            value,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 22.sp,
-              fontWeight: FontWeight.w700,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22.sp,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           SizedBox(height: 4.h),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withAlpha(140),
-              fontSize: 12.sp,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: Colors.white.withAlpha(140),
+                fontSize: 12.sp,
+              ),
             ),
           ),
         ],

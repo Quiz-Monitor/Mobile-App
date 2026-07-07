@@ -17,7 +17,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:examify/core/routing/routes.dart';
-import 'package:printing/printing.dart';
+import 'package:file_saver/file_saver.dart';
+import 'package:toastification/toastification.dart';
 
 class InstructorExamDetailsView extends StatefulWidget {
   const InstructorExamDetailsView({super.key, required this.exam});
@@ -130,7 +131,7 @@ class _InstructorExamDetailsViewState extends State<InstructorExamDetailsView> {
           pw.Header(level: 0, child: pw.Text(widget.exam.title)),
           pw.Text('Exam results (${results.length})'),
           pw.SizedBox(height: 12),
-          pw.Table.fromTextArray(
+          pw.TableHelper.fromTextArray(
             headers: tableHeaders,
             data: tableData,
             headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
@@ -143,16 +144,36 @@ class _InstructorExamDetailsViewState extends State<InstructorExamDetailsView> {
     final pdfBytes = await doc.save();
 
     try {
-      await Printing.sharePdf(
+      final fileName = '${widget.exam.title}_results';
+      final savedPath = await FileSaver.instance.saveFile(
+        name: fileName,
         bytes: pdfBytes,
-        filename: '${widget.exam.title}_results.pdf',
+        fileExtension: 'pdf',
+        mimeType: MimeType.pdf,
+      );
+
+      if (!mounted) return;
+      toastification.show(
+        context: context,
+        type: ToastificationType.success,
+        style: ToastificationStyle.flat,
+        title: const Text('Export Successful'),
+        description: Text('Report saved to:\n$savedPath'),
+        alignment: Alignment.bottomCenter,
+        autoCloseDuration: const Duration(seconds: 5),
+        showProgressBar: false,
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: AppColors.primaryBlack,
-          content: Text('Failed to export PDF: ${e.toString()}'),
-        ),
+      if (!mounted) return;
+      toastification.show(
+        context: context,
+        type: ToastificationType.error,
+        style: ToastificationStyle.flat,
+        title: const Text('Export Failed'),
+        description: Text('Failed to save PDF: $e'),
+        alignment: Alignment.bottomCenter,
+        autoCloseDuration: const Duration(seconds: 4),
+        showProgressBar: false,
       );
     }
   }

@@ -28,6 +28,8 @@ import 'package:examify/features/instructor/grading/data/repo/grading_repo.dart'
 import 'package:examify/features/instructor/grading/logic/cubit/grading_cubit.dart';
 import 'package:examify/features/student/stats/data/repo/student_stats_repo.dart';
 import 'package:examify/features/student/stats/logic/cubit/student_stats_cubit.dart';
+import 'package:examify/features/instructor/stats/data/repo/instructor_stats_repo.dart';
+import 'package:examify/features/instructor/stats/logic/cubit/instructor_stats_cubit.dart';
 import 'package:get_it/get_it.dart';
 
 final getit = GetIt.instance;
@@ -127,5 +129,12 @@ Future<void> init() async {
   );
   getit.registerFactory<StudentStatsCubit>(
     () => StudentStatsCubit(getit.get<StudentStatsRepo>()),
+  );
+
+  getit.registerLazySingleton<InstructorStatsRepo>(
+    () => InstructorStatsRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<InstructorStatsCubit>(
+    () => InstructorStatsCubit(getit.get<InstructorStatsRepo>()),
   );
 }

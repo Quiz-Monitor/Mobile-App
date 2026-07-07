@@ -45,6 +45,10 @@ abstract class ApiService {
   @GET(ApiConstants.getInstructorProfile)
   Future<InstructorStatisticsResponse> getInstructorProfile();
 
+  // Instructor statistics (raw dynamic response for full stats parsing)
+  @GET(ApiConstants.getInstructorProfile)
+  Future<dynamic> getInstructorStats();
+
   // Get exams service
   @GET(ApiConstants.getInstructorExams)
   Future<List<ExamModel>> getExams();
