@@ -43,7 +43,7 @@ class CustomBottomNavBar extends StatelessWidget {
               _NavBarItem(
                 index: 3,
                 iconUrl: 'assets/icons/notifications.svg',
-                label: 'Alerts',
+                label: 'Stats',
                 isSelected: currentIndex == 3,
                 onTap: onTap,
               ),

@@ -7,7 +7,8 @@ import 'package:examify/features/student/history/ui/views/exams_history.dart';
 import 'package:examify/features/student/history/logic/cubit/student_results_cubit.dart';
 import 'package:examify/features/student/home/ui/screens/home_view.dart';
 import 'package:examify/features/student/home/logic/cubit/cubit/student_exam_cubit.dart';
-import 'package:examify/features/student/notifications/ui/screens/notifications_view.dart';
+import 'package:examify/features/student/stats/logic/cubit/student_stats_cubit.dart';
+import 'package:examify/features/student/stats/ui/screens/student_stats_view.dart';
 import 'package:examify/features/shared/profile/ui/views/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,8 +37,11 @@ class _MainNavigationState extends State<MainNavigation> {
     ),
     // Index 2: Not used (center button)
     const SizedBox.shrink(),
-    // Index 3: Notifications
-    const NotificationsView(),
+    // Index 3: Stats
+    BlocProvider(
+      create: (_) => getit<StudentStatsCubit>()..getStatistics(),
+      child: const StudentStatsView(),
+    ),
     // Index 4: Profile
     const ProfileView(),
   ];

@@ -62,6 +62,10 @@ abstract class ApiService {
   @GET(ApiConstants.studentExamHistory)
   Future<dynamic> getStudentExamHistory();
 
+  // Student statistics service
+  @GET(ApiConstants.studentStats)
+  Future<dynamic> getStudentStatistics();
+
   // User profile service
   @GET(ApiConstants.userProfile)
   Future<dynamic> getUserProfile();

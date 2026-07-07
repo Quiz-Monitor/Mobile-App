@@ -26,6 +26,8 @@ import 'package:examify/features/instructor/exam_creation/data/repo/exam_creatio
 import 'package:examify/features/instructor/exam_creation/logic/cubit/exam_creation_cubit.dart';
 import 'package:examify/features/instructor/grading/data/repo/grading_repo.dart';
 import 'package:examify/features/instructor/grading/logic/cubit/grading_cubit.dart';
+import 'package:examify/features/student/stats/data/repo/student_stats_repo.dart';
+import 'package:examify/features/student/stats/logic/cubit/student_stats_cubit.dart';
 import 'package:get_it/get_it.dart';
 
 final getit = GetIt.instance;
@@ -118,5 +120,12 @@ Future<void> init() async {
   );
   getit.registerFactory<GradingCubit>(
     () => GradingCubit(getit.get<GradingRepo>()),
+  );
+
+  getit.registerLazySingleton<StudentStatsRepo>(
+    () => StudentStatsRepo(getit.get<ApiService>()),
+  );
+  getit.registerFactory<StudentStatsCubit>(
+    () => StudentStatsCubit(getit.get<StudentStatsRepo>()),
   );
 }
