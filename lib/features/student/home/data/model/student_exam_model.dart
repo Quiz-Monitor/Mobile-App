@@ -1,20 +1,15 @@
-import 'package:json_annotation/json_annotation.dart';
-part 'student_exam_model.g.dart';
+// Model for Student Exams
 
-@JsonSerializable()
 class StudentExamModel {
   final int examId;
   final String examTitle, instructorName, examCode, examStatus;
-  @JsonKey(fromJson: _parseDateTime)
   final DateTime startTime;
-
-  @JsonKey(fromJson: _parseDateTime)
   final DateTime endTime;
-
   final int durationMinutes;
   final int questionCount;
 
   static DateTime _parseDateTime(dynamic value) {
+    if (value == null) return DateTime.now();
     if (value is DateTime) return value.isUtc ? value.toLocal() : value;
     String strValue = value.toString();
     if (!strValue.contains('Z') &&
@@ -45,6 +40,37 @@ class StudentExamModel {
         (startTime.isBefore(now) && endTime.isAfter(now));
   }
 
-  factory StudentExamModel.fromJson(Map<String, dynamic> json) =>
-      _$StudentExamModelFromJson(json);
+  factory StudentExamModel.fromJson(Map<String, dynamic> json) {
+    return StudentExamModel(
+      examId:
+          (json['examId'] as num?)?.toInt() ??
+          (json['id'] as num?)?.toInt() ??
+          0,
+      examTitle:
+          json['examTitle']?.toString() ??
+          json['title']?.toString() ??
+          'Untitled Exam',
+      instructorName:
+          json['instructorName']?.toString() ??
+          json['instructor']?.toString() ??
+          'Instructor',
+      examCode: json['examCode']?.toString() ?? json['code']?.toString() ?? '',
+      examStatus:
+          json['examStatus']?.toString() ??
+          json['status']?.toString() ??
+          (json['isPublished'] == true ? 'Published' : 'Draft'),
+      startTime: _parseDateTime(
+        json['startTime'] ?? json['startAt'] ?? json['createdAt'],
+      ),
+      endTime: _parseDateTime(json['endTime'] ?? json['endAt']),
+      durationMinutes:
+          (json['durationMinutes'] as num?)?.toInt() ??
+          (json['duration'] as num?)?.toInt() ??
+          60,
+      questionCount:
+          (json['questionCount'] as num?)?.toInt() ??
+          (json['questionsCount'] as num?)?.toInt() ??
+          0,
+    );
+  }
 }

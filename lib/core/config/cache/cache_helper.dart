@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 import 'cache_constants.dart';
 
 class CacheHelper {
@@ -13,27 +14,52 @@ class CacheHelper {
   }
 
   static Future<void> setAccessToken(String token) async {
-    await _secureStorage.write(key: CacheConstants.accessToken, value: token);
+    if (kIsWeb) {
+      await _sharedPreferences?.setString(CacheConstants.accessToken, token);
+    } else {
+      await _secureStorage.write(key: CacheConstants.accessToken, value: token);
+    }
   }
 
   static Future<void> setRefreshToken(String token) async {
-    await _secureStorage.write(key: CacheConstants.refreshToken, value: token);
+    if (kIsWeb) {
+      await _sharedPreferences?.setString(CacheConstants.refreshToken, token);
+    } else {
+      await _secureStorage.write(
+        key: CacheConstants.refreshToken,
+        value: token,
+      );
+    }
   }
 
   static Future<String?> getAccessToken() async {
+    if (kIsWeb) {
+      return _sharedPreferences?.getString(CacheConstants.accessToken);
+    }
     return _secureStorage.read(key: CacheConstants.accessToken);
   }
 
   static Future<String?> getRefreshToken() async {
+    if (kIsWeb) {
+      return _sharedPreferences?.getString(CacheConstants.refreshToken);
+    }
     return _secureStorage.read(key: CacheConstants.refreshToken);
   }
 
   static Future<void> removeAccessToken() async {
-    await _secureStorage.delete(key: CacheConstants.accessToken);
+    if (kIsWeb) {
+      await _sharedPreferences?.remove(CacheConstants.accessToken);
+    } else {
+      await _secureStorage.delete(key: CacheConstants.accessToken);
+    }
   }
 
   static Future<void> removeRefreshToken() async {
-    await _secureStorage.delete(key: CacheConstants.refreshToken);
+    if (kIsWeb) {
+      await _sharedPreferences?.remove(CacheConstants.refreshToken);
+    } else {
+      await _secureStorage.delete(key: CacheConstants.refreshToken);
+    }
   }
 
   static Future<void> saveString(String key, String value) async {

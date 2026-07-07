@@ -4,19 +4,13 @@ final List<Package> screens = const [
   Package(
     imagePath: 'assets/images/WelcomeIllustration.svg',
     subTitle:
-        'Your smart companion for AI-powered exams. Experience seamless testing with advanced features',
+        'Your intelligent companion for academic testing. Experience fair, seamless, and dynamic evaluations anywhere.',
     heading: 'Welcome to RAQEEB',
   ),
   Package(
-    heading: 'Smart Notifications',
+    heading: 'Export & Share Results',
     subTitle:
-        'Get timely reminders before exams start and instant notifications when grades are available',
-    imagePath: 'assets/images/NotificationIllustration.svg',
-  ),
-  Package(
-    heading: 'Ready to Excel?',
-    subTitle:
-        'Join thousands of students achieving their academic goals with our platform',
+        'Instantly generate and download comprehensive PDF reports of exam results. Keep accurate records effortlessly.',
     imagePath: 'assets/images/GetStartedIllustration.svg',
   ),
 ];

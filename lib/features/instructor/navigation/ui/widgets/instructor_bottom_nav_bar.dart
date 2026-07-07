@@ -16,41 +16,47 @@ class InstructorBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70.h,
-      decoration: BoxDecoration(color: AppColors.primaryBlack),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _NavBarItem(
-            index: 0,
-            iconUrl: 'assets/icons/Icon.svg',
-            label: 'Home',
-            isSelected: currentIndex == 0,
-            onTap: onTap,
+      color: AppColors.primaryBlack,
+      child: SafeArea(
+        bottom: true,
+        top: false,
+        child: Container(
+          height: 70.h,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _NavBarItem(
+                index: 0,
+                iconUrl: 'assets/icons/Icon.svg',
+                label: 'Home',
+                isSelected: currentIndex == 0,
+                onTap: onTap,
+              ),
+              _NavBarItem(
+                index: 1,
+                iconUrl: 'assets/icons/docs.svg',
+                label: 'Exams',
+                isSelected: currentIndex == 1,
+                onTap: onTap,
+              ),
+              _NavBarItem(
+                index: 2,
+                iconUrl:
+                    'assets/icons/radio.svg', // Assuming this for reports for now
+                label: 'Reports',
+                isSelected: currentIndex == 2,
+                onTap: onTap,
+              ),
+              _NavBarItem(
+                index: 3,
+                iconUrl: 'assets/icons/profile.svg',
+                label: 'Profile',
+                isSelected: currentIndex == 3,
+                onTap: onTap,
+              ),
+            ],
           ),
-          _NavBarItem(
-            index: 1,
-            iconUrl: 'assets/icons/docs.svg',
-            label: 'Exams',
-            isSelected: currentIndex == 1,
-            onTap: onTap,
-          ),
-          _NavBarItem(
-            index: 2,
-            iconUrl:
-                'assets/icons/radio.svg', // Assuming this for reports for now
-            label: 'Reports',
-            isSelected: currentIndex == 2,
-            onTap: onTap,
-          ),
-          _NavBarItem(
-            index: 3,
-            iconUrl: 'assets/icons/profile.svg',
-            label: 'Profile',
-            isSelected: currentIndex == 3,
-            onTap: onTap,
-          ),
-        ],
+        ),
       ),
     );
   }

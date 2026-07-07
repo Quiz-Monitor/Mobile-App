@@ -16,43 +16,47 @@ class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70.h,
-      decoration: BoxDecoration(
-        color: AppColors.primaryBlack, // Dark background matching your UI
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _NavBarItem(
-            index: 0,
-            iconUrl: 'assets/icons/Icon.svg',
-            label: 'Home',
-            isSelected: currentIndex == 0,
-            onTap: onTap,
+      color: AppColors.primaryBlack,
+      child: SafeArea(
+        bottom: true,
+        top: false,
+        child: Container(
+          height: 70.h,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _NavBarItem(
+                index: 0,
+                iconUrl: 'assets/icons/Icon.svg',
+                label: 'Home',
+                isSelected: currentIndex == 0,
+                onTap: onTap,
+              ),
+              _NavBarItem(
+                index: 1,
+                iconUrl: 'assets/icons/history.svg',
+                label: 'History',
+                isSelected: currentIndex == 1,
+                onTap: onTap,
+              ),
+              _CenterAddButton(onTap: () => onTap(2)),
+              _NavBarItem(
+                index: 3,
+                iconUrl: 'assets/icons/notifications.svg',
+                label: 'Alerts',
+                isSelected: currentIndex == 3,
+                onTap: onTap,
+              ),
+              _NavBarItem(
+                iconUrl: 'assets/icons/profile.svg',
+                index: 4,
+                label: 'Profile',
+                isSelected: currentIndex == 4,
+                onTap: onTap,
+              ),
+            ],
           ),
-          _NavBarItem(
-            index: 1,
-            iconUrl: 'assets/icons/history.svg',
-            label: 'History',
-            isSelected: currentIndex == 1,
-            onTap: onTap,
-          ),
-          _CenterAddButton(onTap: () => onTap(2)),
-          _NavBarItem(
-            index: 3,
-            iconUrl: 'assets/icons/notifications.svg',
-            label: 'Alerts',
-            isSelected: currentIndex == 3,
-            onTap: onTap,
-          ),
-          _NavBarItem(
-            iconUrl: 'assets/icons/profile.svg',
-            index: 4,
-            label: 'Profile',
-            isSelected: currentIndex == 4,
-            onTap: onTap,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -78,18 +82,16 @@ class _NavBarItem extends StatelessWidget {
     final color = isSelected ? AppColors.blueBorder : AppColors.greyIcon;
     return GestureDetector(
       onTap: () => onTap(index),
-      behavior: HitTestBehavior.deferToChild,
+      behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
         child: Column(
-          // mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             SvgPicture.asset(
               iconUrl,
               colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             ),
-
             SizedBox(height: 3.h),
             Text(
               label,
@@ -116,7 +118,7 @@ class _CenterAddButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all( 12),
+        padding: EdgeInsets.all(12),
         margin: EdgeInsets.symmetric(horizontal: 10.w),
         width: 56,
         height: 56,

@@ -76,13 +76,14 @@ class _UpcomingExamsCardState extends State<UpcomingExamsCard>
   }
 
   void _updateDuration() {
-    final now = DateTime.now();
-    Duration remaining;
     if (widget.examModel.isLive) {
-      remaining = widget.examModel.endTime.difference(now);
-    } else {
-      remaining = widget.examModel.startTime.difference(now);
+      _duration = Duration.zero;
+      return;
     }
+
+    final now = DateTime.now();
+    final remaining = widget.examModel.startTime.difference(now);
+
     if (remaining.isNegative) {
       _duration = Duration.zero;
       _timer?.cancel();
@@ -111,10 +112,7 @@ class _UpcomingExamsCardState extends State<UpcomingExamsCard>
             ? LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  AppColors.greenAlpha10,
-                 // AppColors.blueBorder.withAlpha(25),
-                ],
+                colors: [AppColors.mainGreen.withAlpha(20)],
               )
             : null,
         color: !examModel.isLive ? AppColors.white5 : null,
@@ -228,6 +226,7 @@ class _UpcomingExamsCardState extends State<UpcomingExamsCard>
                     border: Border.all(color: AppColors.white10, width: 1.74.w),
                   ),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       SvgPicture.asset(
                         'assets/icons/calendar.svg',

@@ -1,4 +1,3 @@
-
 import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';

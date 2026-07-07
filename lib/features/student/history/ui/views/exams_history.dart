@@ -1,3 +1,4 @@
+import 'package:examify/core/themes/app_colors.dart';
 import 'package:examify/core/themes/text_styles.dart';
 import 'package:examify/features/student/history/data/models/exams_history_model.dart';
 import 'package:examify/features/student/history/logic/cubit/student_results_cubit.dart';
@@ -102,19 +103,20 @@ class ExamsHistory extends StatelessWidget {
                         ),
                         SizedBox(height: 28.h),
                         if (state is StudentResultsFailure)
-                          Center(
-                            child: Text(
-                              state.message,
-                              style: TextStyle(color: Colors.red),
+                          Padding(
+                            padding: EdgeInsets.only(top: 80.h),
+                            child: _StateMessage(
+                              icon: Icons.error_outline_rounded,
+                              message: state.message,
                             ),
                           )
                         else if (state is StudentResultsEmpty)
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                'No previous exams',
-                                style: AppTextStyles.white16w400,
-                              ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 80.h),
+                            child: const _StateMessage(
+                              icon: Icons.history_toggle_off_rounded,
+                              message:
+                                  'You have no exam history yet.\nJoin an exam to see your results here.',
                             ),
                           )
                         else
@@ -138,6 +140,39 @@ class ExamsHistory extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StateMessage extends StatelessWidget {
+  const _StateMessage({required this.message, this.icon});
+
+  final String message;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, size: 68.sp, color: AppColors.white40),
+              SizedBox(height: 16.h),
+            ],
+            Text(
+              message,
+              style: AppTextStyles.white16w400.copyWith(
+                color: AppColors.white60,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );

@@ -94,6 +94,7 @@ class _HomeViewState extends State<HomeView> {
                               height: 100.h,
                               width: double.infinity,
                               decoration: BoxDecoration(
+                                color: AppColors.white5,
                                 borderRadius: BorderRadius.circular(14.r),
                               ),
                             );
@@ -109,7 +110,10 @@ class _HomeViewState extends State<HomeView> {
                         ),
                         children: [
                           SizedBox(height: 120.h),
-                          _StateMessage(message: state.message),
+                          _StateMessage(
+                            icon: Icons.error_outline_rounded,
+                            message: state.message,
+                          ),
                         ],
                       );
                     }
@@ -119,10 +123,12 @@ class _HomeViewState extends State<HomeView> {
                         physics: const AlwaysScrollableScrollPhysics(
                           parent: BouncingScrollPhysics(),
                         ),
-                        children: const [
-                          SizedBox(height: 120),
-                          _StateMessage(
-                            message: 'No upcoming or live exams yet.',
+                        children: [
+                          SizedBox(height: 120.h),
+                          const _StateMessage(
+                            icon: Icons.event_available_rounded,
+                            message:
+                                'You have no live or upcoming exams right now.\nTake a break or review your history.',
                           ),
                         ],
                       );
@@ -147,9 +153,12 @@ class _HomeViewState extends State<HomeView> {
                         physics: const AlwaysScrollableScrollPhysics(
                           parent: BouncingScrollPhysics(),
                         ),
-                        children: const [
-                          SizedBox(height: 120),
-                          _StateMessage(message: 'No matching exams found.'),
+                        children: [
+                          SizedBox(height: 120.h),
+                          const _StateMessage(
+                            icon: Icons.search_off_rounded,
+                            message: 'No exams found matching your search.',
+                          ),
                         ],
                       );
                     }
@@ -179,9 +188,10 @@ class _HomeViewState extends State<HomeView> {
 }
 
 class _StateMessage extends StatelessWidget {
-  const _StateMessage({required this.message});
+  const _StateMessage({required this.message, this.icon});
 
   final String message;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -191,9 +201,16 @@ class _StateMessage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (icon != null) ...[
+              Icon(icon, size: 68.sp, color: AppColors.white40),
+              SizedBox(height: 16.h),
+            ],
             Text(
               message,
-              style: AppTextStyles.white16w400,
+              style: AppTextStyles.white16w400.copyWith(
+                color: AppColors.white60,
+                height: 1.5,
+              ),
               textAlign: TextAlign.center,
             ),
           ],

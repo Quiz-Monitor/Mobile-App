@@ -14,13 +14,16 @@ class NotificationsView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Notifications', style: AppTextStyles.white16w400.copyWith(fontSize: 20.sp)),
+            Text(
+              'Notifications',
+              style: AppTextStyles.white16w400.copyWith(fontSize: 20.sp),
+            ),
             SizedBox(height: 48.h),
             Expanded(
               child: ListView.builder(
                 itemCount: 5,
                 itemBuilder: (context, index) {
-                 return Padding(
+                  return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: NotificationsCardItem(),
                   );

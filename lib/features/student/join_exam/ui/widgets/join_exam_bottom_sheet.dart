@@ -57,75 +57,80 @@ class _JoinExamBottomSheetState extends State<JoinExamBottomSheet> {
           widget.onJoinSuccess();
         }
       },
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.3177,
-        decoration: const BoxDecoration(color: Colors.transparent),
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 13,
-            right: 20,
-            left: 20,
-            bottom: 32,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: AppColors.white40,
-                  borderRadius: BorderRadius.circular(16.r),
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+          decoration: const BoxDecoration(color: Colors.transparent),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 13,
+              right: 20,
+              left: 20,
+              bottom: 32,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.white40,
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
                 ),
-              ),
-              Form(
-                key: _formKey,
-                child: CustomTextfield(
-                  hintText: 'Enter exam code',
-                  controller: widget.examCodeController,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Exam code is required';
-                    }
-                    return null;
+                SizedBox(height: 40.h),
+                Form(
+                  key: _formKey,
+                  child: CustomTextfield(
+                    hintText: 'Enter exam code',
+                    controller: widget.examCodeController,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Exam code is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                SizedBox(height: 30.h),
+                BlocBuilder<JoinExamCubit, JoinExamState>(
+                  builder: (context, state) {
+                    final isLoading = state is JoinExamLoading;
+                    return CustomButton(
+                      buttonContent: isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              'Join Exam',
+                              style: AppTextStyles.white16w400.copyWith(),
+                            ),
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              final isValid =
+                                  _formKey.currentState?.validate() ?? false;
+                              if (!isValid) {
+                                return;
+                              }
+
+                              context.read<JoinExamCubit>().joinExam(
+                                widget.examCodeController.text,
+                              );
+                            },
+                    );
                   },
                 ),
-              ),
-              SizedBox(height: 20.h),
-              BlocBuilder<JoinExamCubit, JoinExamState>(
-                builder: (context, state) {
-                  final isLoading = state is JoinExamLoading;
-                  return CustomButton(
-                    buttonContent: isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Text(
-                            'Join Exam',
-                            style: AppTextStyles.white16w400.copyWith(),
-                          ),
-                    onPressed: isLoading
-                        ? null
-                        : () {
-                            final isValid =
-                                _formKey.currentState?.validate() ?? false;
-                            if (!isValid) {
-                              return;
-                            }
-
-                            context.read<JoinExamCubit>().joinExam(
-                              widget.examCodeController.text,
-                            );
-                          },
-                  );
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

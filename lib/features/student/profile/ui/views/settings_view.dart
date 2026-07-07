@@ -79,7 +79,7 @@ class SettingsView extends StatelessWidget {
                 iconColor: AppColors.white40,
               ),
               SizedBox(height: 24.h),
-             
+
               Text(
                 'Danger Zone',
                 style: AppTextStyles.white14w400alpha70.copyWith(
@@ -140,7 +140,7 @@ class SettingsView extends StatelessWidget {
                                   return null;
                                 },
                                 labelText: 'Enter password to confirm',
-                               // hintText: 'Enter password to confirm',
+                                // hintText: 'Enter password to confirm',
                                 isPassword: true,
                               ),
                             ],

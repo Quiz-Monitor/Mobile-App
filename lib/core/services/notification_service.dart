@@ -2,6 +2,7 @@ import 'package:examify/features/student/home/data/model/student_exam_model.dart
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter/foundation.dart'; // import foundation for kIsWeb
 
 /// Handles scheduling local notifications for upcoming exams.
 ///
@@ -47,6 +48,8 @@ class NotificationService {
 
   /// Schedule "10 min before" and "starts now" notifications for each exam.
   Future<void> scheduleExamNotifications(List<StudentExamModel> exams) async {
+    if (kIsWeb) return;
+
     for (final exam in exams) {
       final now = DateTime.now();
 
@@ -75,6 +78,7 @@ class NotificationService {
 
   /// Cancel all previously scheduled notifications.
   Future<void> cancelAllNotifications() async {
+    if (kIsWeb) return;
     await _plugin.cancelAll();
   }
 

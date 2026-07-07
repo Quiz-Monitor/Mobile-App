@@ -104,7 +104,7 @@ class _OnboardingState extends State<Onboarding> {
                 Expanded(
                   child: PageView(
                     controller: controller,
-                    children: [screens[0], screens[1], screens[2]],
+                    children: [screens[0], screens[1]],
                   ),
                 ),
                 SizedBox(height: 5.h),
@@ -114,7 +114,7 @@ class _OnboardingState extends State<Onboarding> {
                 ActionButton(
                   controller: controller,
                   onPressed: () {
-                    if (count == 3) {
+                    if (count == 2) {
                       Navigator.pushNamed(context, Routes.loginScreen);
                     }
                     controller.nextPage(
@@ -126,7 +126,7 @@ class _OnboardingState extends State<Onboarding> {
                 Padding(
                   padding: EdgeInsetsGeometry.symmetric(vertical: 24.h),
                   child: Text(
-                    '$count of 3',
+                    '$count of 2',
                     style: TextStyle(fontSize: 14.sp, color: AppColors.white40),
                   ),
                 ),

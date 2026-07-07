@@ -28,7 +28,7 @@ class NotificationsCardItem extends StatelessWidget {
           style: AppTextStyles.white14w400alpha70,
         ),
 
-        subtitle: Text( 'Now', style: AppTextStyles.white12w400alpha40 ,),
+        subtitle: Text('Now', style: AppTextStyles.white12w400alpha40),
       ),
     );
   }

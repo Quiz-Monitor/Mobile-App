@@ -1,8 +1,3 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'exams_history_model.g.dart';
-
-@JsonSerializable()
 class ExamsHistoryModel {
   final String examTitle;
   final String status;
@@ -20,8 +15,36 @@ class ExamsHistoryModel {
 
   bool get isPending => status.toLowerCase() != 'graded';
 
-  factory ExamsHistoryModel.fromJson(Map<String, dynamic> json) =>
-      _$ExamsHistoryModelFromJson(json);
+  factory ExamsHistoryModel.fromJson(Map<String, dynamic> json) {
+    return ExamsHistoryModel(
+      examTitle:
+          json['examTitle']?.toString() ??
+          json['title']?.toString() ??
+          json['examName']?.toString() ??
+          'Untitled',
+      status:
+          json['status']?.toString() ??
+          json['examStatus']?.toString() ??
+          'Pending',
+      submitTime:
+          json['submitTime']?.toString() ??
+          json['submittedAt']?.toString() ??
+          json['completedAt']?.toString(),
+      finalScore:
+          (json['finalScore'] as num?)?.toInt() ??
+          (json['score'] as num?)?.toInt(),
+      examTotalPoints:
+          (json['examTotalPoints'] as num?)?.toInt() ??
+          (json['totalPoints'] as num?)?.toInt() ??
+          100,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$ExamsHistoryModelToJson(this);
+  Map<String, dynamic> toJson() => {
+    'examTitle': examTitle,
+    'status': status,
+    'submitTime': submitTime,
+    'finalScore': finalScore,
+    'examTotalPoints': examTotalPoints,
+  };
 }

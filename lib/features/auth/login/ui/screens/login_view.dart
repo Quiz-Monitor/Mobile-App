@@ -72,114 +72,135 @@ class _LoginViewState extends State<LoginView> {
             },
           );
         },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 120.h),
-                Image.asset(
-                  'assets/icons/app_logo.png',
-                  // colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                  height: 150.h,
-                ),
-
-                // SizedBox(height: 25.h, width: double.infinity),
-                Text(
-                  'Welcome Back',
-                  style: AppTextStyles.white16w400.copyWith(fontSize: 24.sp),
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  'Sign in to continue ',
-                  style: AppTextStyles.whit14w400alpha60.copyWith(
-                    fontSize: 16.sp,
-                  ),
-                ),
-                SizedBox(height: 27.h),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text('Email', style: AppTextStyles.whit14w400alpha60),
-                ),
-                SizedBox(height: 8.h),
-                CustomTextfield(
-                  controller: _emailController,
-                  hintText: 'your.email@example.com',
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16.h),
-                Row(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Password', style: AppTextStyles.whit14w400alpha60),
-                    Spacer(),
+                    SizedBox(height: 80.h),
+                    Image.asset(
+                      'assets/icons/app_logo.png',
+                      // colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      height: 150.h,
+                    ),
+
+                    // SizedBox(height: 25.h, width: double.infinity),
+                    Text(
+                      'Welcome Back',
+                      style: AppTextStyles.white16w400.copyWith(
+                        fontSize: 24.sp,
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    Text(
+                      'Sign in to continue ',
+                      style: AppTextStyles.whit14w400alpha60.copyWith(
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                    SizedBox(height: 27.h),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        'Email',
+                        style: AppTextStyles.whit14w400alpha60,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    CustomTextfield(
+                      controller: _emailController,
+                      hintText: 'your.email@example.com',
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.h),
+                    Row(
+                      children: [
+                        Text(
+                          'Password',
+                          style: AppTextStyles.whit14w400alpha60,
+                        ),
+                        Spacer(),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+
+                    CustomTextfield(
+                      controller: _passwordController,
+                      hintText: 'Enter your password',
+                      isPassword: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        if (value.length < 8) {
+                          return 'Password must be at least 8 characters';
+                        }
+                        return null;
+                      },
+                    ),
+                    verticalSpace12,
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.forgotPasswordScreen,
+                          );
+                        },
+                        child: Text(
+                          'Forgot Password?  ',
+                          style: AppTextStyles.blue14w400,
+                        ),
+                      ),
+                    ),
+                    verticalSpace24,
+
+                    CustomButton(
+                      onPressed: () {
+                        validateThenDoLogin(context);
+                      },
+                      buttonContent: BlocBuilder<LoginCubit, LoginState>(
+                        builder: (context, state) {
+                          return state.when(
+                            initial: () => Text(
+                              'Log in',
+                              style: AppTextStyles.white16w400,
+                            ),
+                            loading: () => CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 3,
+                            ),
+                            success: (loginResponse) => Text(
+                              'Log in',
+                              style: AppTextStyles.white16w400,
+                            ),
+                            failure: (error) => Text(
+                              'Log in',
+                              style: AppTextStyles.white16w400,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 24.h),
+                    DontHaveAccount(),
                   ],
                 ),
-                SizedBox(height: 8.h),
-
-                CustomTextfield(
-                  controller: _passwordController,
-                  hintText: 'Enter your password',
-                  isPassword: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (value.length < 8) {
-                      return 'Password must be at least 8 characters';
-                    }
-                    return null;
-                  },
-                ),
-                verticalSpace12,
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.forgotPasswordScreen);
-                    },
-                    child: Text(
-                      'Forgot Password?  ',
-                      style: AppTextStyles.blue14w400,
-                    ),
-                  ),
-                ),
-                verticalSpace24,
-
-                CustomButton(
-                  onPressed: () {
-                    validateThenDoLogin(context);
-                  },
-                  buttonContent: BlocBuilder<LoginCubit, LoginState>(
-                    builder: (context, state) {
-                      return state.when(
-                        initial: () =>
-                            Text('Log in', style: AppTextStyles.white16w400),
-                        loading: () => CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 3,
-                        ),
-                        success: (loginResponse) =>
-                            Text('Log in', style: AppTextStyles.white16w400),
-                        failure: (error) =>
-                            Text('Log in', style: AppTextStyles.white16w400),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                DontHaveAccount(),
-              ],
+              ),
             ),
           ),
         ),
