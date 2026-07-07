@@ -88,7 +88,7 @@ class ProfilePageBody extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white3,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.white10 , width: 1.74.w),
+        border: Border.all(color: AppColors.white10, width: 1.74.w),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +117,11 @@ class ProfilePageBody extends StatelessWidget {
           _PersonalInfoRow(
             iconPath: 'assets/icons/phone.svg',
             title: 'Phone',
-            value: profile.phoneNumber,
+            value:
+                (profile.phoneNumber == 'null' ||
+                    profile.phoneNumber.trim().isEmpty)
+                ? 'Not provided'
+                : profile.phoneNumber,
           ),
           Divider(color: AppColors.white10, height: 1),
           _PersonalInfoRow(
@@ -155,7 +159,10 @@ class _PersonalInfoRow extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.mainBlue.withAlpha(45),
               borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: AppColors.mainBlue.withAlpha(65), width: 1.74.w),
+              border: Border.all(
+                color: AppColors.mainBlue.withAlpha(65),
+                width: 1.74.w,
+              ),
             ),
             child: SvgPicture.asset(iconPath, height: 24.w, width: 24.w),
           ),
@@ -164,10 +171,7 @@ class _PersonalInfoRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: AppTextStyles.white12w400alpha60
-                ),
+                Text(title, style: AppTextStyles.white12w400alpha60),
                 Text(
                   value,
                   style: AppTextStyles.white16w400.copyWith(fontSize: 15.sp),

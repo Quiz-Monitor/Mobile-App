@@ -14,7 +14,8 @@ class ApiConstants {
   //static const String forgotPassword = "api/auth/forgot-password"; // in progress...
 
   // Student endpoints placeholders
-  static const String studentResult = "api/students/me/results";
+  static const String studentResult = "api/students/me/results"; // ✅ done
+  static const String studentStats = "/api/students/me/statistics"; // ✅ done
   static const String studentExamJoin = "api/exams/join"; // ✅ done
   static const String studentUpcomingExams = "/api/students/me/exams"; // ✅ done
   static const String studentExamHistory = "/api/students/me/results"; // ✅ done

@@ -108,7 +108,10 @@ class ProfileRepo {
       return null;
     }
     final text = value.toString().trim();
-    return text.isEmpty ? null : text;
+    if (text.isEmpty || text.toLowerCase() == 'null') {
+      return null;
+    }
+    return text;
   }
 
   int? _intOrNull(dynamic value) {

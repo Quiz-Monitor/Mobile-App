@@ -31,8 +31,5 @@ void main() async {
     }
   }
 
-  runApp(DevicePreview(
-    enabled: !kReleaseMode,
-    builder: (context) => MyApp(initialRoute: initialRoute),
-  ));
+  runApp(MyApp(initialRoute: initialRoute));
 }
