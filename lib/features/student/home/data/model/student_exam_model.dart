@@ -32,12 +32,10 @@ class StudentExamModel {
     required this.questionCount,
   });
 
-  /// Derived from [examStatus]. The API returns "Live" when the exam is active.
+  /// Strictly checks if the current time is between start and end time.
   bool get isLive {
     final now = DateTime.now();
-    return examStatus.toLowerCase() == 'live' ||
-        examStatus.toLowerCase() == 'inprogress' ||
-        (startTime.isBefore(now) && endTime.isAfter(now));
+    return startTime.isBefore(now) && endTime.isAfter(now);
   }
 
   factory StudentExamModel.fromJson(Map<String, dynamic> json) {

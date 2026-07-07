@@ -42,7 +42,7 @@ class CustomBottomNavBar extends StatelessWidget {
               _CenterAddButton(onTap: () => onTap(2)),
               _NavBarItem(
                 index: 3,
-                iconUrl: 'assets/icons/notifications.svg',
+                iconUrl: 'assets/icons/stats2.svg',
                 label: 'Stats',
                 isSelected: currentIndex == 3,
                 onTap: onTap,

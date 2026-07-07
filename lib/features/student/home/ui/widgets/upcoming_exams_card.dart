@@ -112,7 +112,10 @@ class _UpcomingExamsCardState extends State<UpcomingExamsCard>
             ? LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [AppColors.mainGreen.withAlpha(20)],
+                colors: [
+                  AppColors.mainGreen.withAlpha(20),
+                  AppColors.mainGreen.withAlpha(5),
+                ],
               )
             : null,
         color: !examModel.isLive ? AppColors.white5 : null,

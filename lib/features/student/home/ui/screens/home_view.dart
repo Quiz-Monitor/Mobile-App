@@ -135,6 +135,23 @@ class _HomeViewState extends State<HomeView> {
                     }
 
                     final exams = (state as StudentExamSuccess).exams;
+
+                    if (exams.isEmpty) {
+                      return ListView(
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        children: [
+                          SizedBox(height: 120.h),
+                          const _StateMessage(
+                            icon: Icons.event_available_rounded,
+                            message:
+                                'You have no live or upcoming exams right now.\nTake a break or review your history.',
+                          ),
+                        ],
+                      );
+                    }
+
                     final query = _searchQuery.trim().toLowerCase();
                     final filteredExams = query.isEmpty
                         ? exams
