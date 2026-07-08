@@ -14,10 +14,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:examify/core/routing/routes.dart';
-import 'package:file_saver/file_saver.dart';
 import 'package:toastification/toastification.dart';
 
 class InstructorExamDetailsView extends StatefulWidget {
@@ -144,21 +145,31 @@ class _InstructorExamDetailsViewState extends State<InstructorExamDetailsView> {
     final pdfBytes = await doc.save();
 
     try {
-      final fileName = '${widget.exam.title}_results';
-      final savedPath = await FileSaver.instance.saveFile(
-        name: fileName,
-        bytes: pdfBytes,
-        fileExtension: 'pdf',
-        mimeType: MimeType.pdf,
-      );
+      // Build a safe filename (replace spaces / special chars)
+      final safeTitle = widget.exam.title
+          .replaceAll(RegExp(r'[^\w\s-]'), '')
+          .replaceAll(RegExp(r'\s+'), '_');
+      final fileName = '${safeTitle}_results.pdf';
+
+      // Resolve the public Downloads directory.
+      // On Android this is /storage/emulated/0/Download
+      final Directory? downloadsDir = await _getDownloadsDirectory();
+      if (downloadsDir == null) {
+        throw Exception(
+          'Could not access the Downloads folder on this device.',
+        );
+      }
+
+      final File file = File('${downloadsDir.path}/$fileName');
+      await file.writeAsBytes(pdfBytes, flush: true);
 
       if (!mounted) return;
       toastification.show(
         context: context,
         type: ToastificationType.success,
         style: ToastificationStyle.flat,
-        title: const Text('Export Successful'),
-        description: Text('Report saved to:\n$savedPath'),
+        title: const Text('Saved to Downloads'),
+        description: Text('$fileName has been saved to your Downloads folder.'),
         alignment: Alignment.bottomCenter,
         autoCloseDuration: const Duration(seconds: 5),
         showProgressBar: false,
@@ -176,6 +187,35 @@ class _InstructorExamDetailsViewState extends State<InstructorExamDetailsView> {
         showProgressBar: false,
       );
     }
+  }
+
+  /// Returns the public Downloads directory.
+  /// On Android 10+ (API 29+) we use the well-known public Downloads path.
+  /// On older versions path_provider's getExternalStorageDirectory is used.
+  Future<Directory?> _getDownloadsDirectory() async {
+    if (Platform.isAndroid) {
+      // The public Downloads folder is always at this path on Android.
+      const downloadsPath = '/storage/emulated/0/Download';
+      final dir = Directory(downloadsPath);
+      if (await dir.exists()) return dir;
+      // Fallback: use path_provider's external storage + navigate to Download
+      final extDir = await getExternalStorageDirectory();
+      if (extDir != null) {
+        // Walk up from .../Android/data/... to the root storage, then Downloads
+        final parts = extDir.path.split('/');
+        final androidIdx = parts.indexOf('Android');
+        if (androidIdx > 0) {
+          final rootStorage = parts.sublist(0, androidIdx).join('/');
+          final fallback = Directory('$rootStorage/Download');
+          if (await fallback.exists()) return fallback;
+          await fallback.create(recursive: true);
+          return fallback;
+        }
+      }
+      return extDir; // last resort – app-private dir
+    }
+    // iOS / other: use the app documents directory
+    return await getApplicationDocumentsDirectory();
   }
 
   @override

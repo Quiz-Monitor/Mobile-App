@@ -152,21 +152,21 @@ class _LoginViewState extends State<LoginView> {
                       },
                     ),
                     verticalSpace12,
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.forgotPasswordScreen,
-                          );
-                        },
-                        child: Text(
-                          'Forgot Password?  ',
-                          style: AppTextStyles.blue14w400,
-                        ),
-                      ),
-                    ),
+                    // Align(
+                    //   alignment: Alignment.bottomRight,
+                    //   child: InkWell(
+                    //     onTap: () {
+                    //       Navigator.pushNamed(
+                    //         context,
+                    //         Routes.forgotPasswordScreen,
+                    //       );
+                    //     },
+                    //     child: Text(
+                    //       'Forgot Password?  ',
+                    //       style: AppTextStyles.blue14w400,
+                    //     ),
+                    //   ),
+                    // ),
                     verticalSpace24,
 
                     CustomButton(
