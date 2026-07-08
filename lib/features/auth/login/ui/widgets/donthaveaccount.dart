@@ -20,7 +20,7 @@ class DontHaveAccount extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            Navigator.pushReplacementNamed(context, Routes.roleSelectionScreen);
+            Navigator.pushNamed(context, Routes.roleSelectionScreen);
           },
           child: Text(
             'Sign up',
