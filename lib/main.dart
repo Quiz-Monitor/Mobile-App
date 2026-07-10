@@ -1,4 +1,3 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:examify/app.dart';
 import 'package:examify/core/config/cache/cache_constants.dart';
 import 'package:examify/core/config/cache/cache_helper.dart';
